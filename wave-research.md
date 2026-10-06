@@ -9,6 +9,12 @@ Latest diagnosis and mathematical shortlist: [wave-mathematical-research.md](wav
 
 **Status: primary-source research recorded; implementation experiments pending.** Findings below distinguish source mechanisms from proposed adaptations. Palette confirmed: black and purple, with energy expressed through dot density.
 
+## Representation finding — 2026-10-06
+
+The connected ligament diagnostic fails before detailed fluid selection: its initial thick centerline arc cannot express the approved broad foam patches, and elastic motion detaches the crown largely intact. Numerical splitting alone does not close the visual gap. See `wave-review.md` for reproducible evidence.
+
+Next bounded research question: can a two-dimensional supporting patch carry independently defined foam coverage through deformation and local separation while preserving the approved composition? This is a proposed experiment, not a selected solver. Separate surface area/thickness, foam coverage and detached spray state. Require a matching static formation first; then assess local deformation and breakup with persistent material coordinates. Reject the candidate if it behaves as cloth, collapses the hollow, or requires stamping new decorative fingers. Do not proceed to full ocean integration or choose PIC/FLIP merely because these reduced candidates failed.
+
 ## 1. Study Shan, Shui
 
 Primary source: [Lingdong Huang's shan-shui-inf repository](https://github.com/LingDong-/shan-shui-inf).

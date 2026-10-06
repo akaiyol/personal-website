@@ -5,7 +5,7 @@
 - Approved: [static composition](artifacts/references/wave-approved-2026-10-06.png), explicitly confirmed by the user.
 - Step 1: specifications reconciled; coupled-field source and earlier screenshot preserved in `archive/wave-baseline-2026-10-06/`.
 - Step 2: static Unicode Braille translation inspected at 1280×1000 and 390×844; broad shape and hollow retained.
-- Step 3: prescribed deformation probe implemented; breakup requirements not met. Steps 4–5 remain pending.
+- Step 3: prescribed warp and connected ligament diagnostics both fail acceptance; see the latest experiment below. Steps 4–5 remain pending.
 - Approval of the raster does not establish character fidelity or motion.
 
 ## Artistic acceptance criteria
@@ -81,3 +81,18 @@ Source: `studies/foam-static.html`, `studies/foam-deformation.html`, shared `stu
 - **Next experiment:** represent connected foam patches on supporting material, with persistent identities, narrowing roots, explicit splitting and inherited motion. Evaluate the same Braille renderer before selecting a full dynamics model. Do not extend the coordinate warp to imitate breakup with disappearing dots.
 
 Evidence: [desktop static](artifacts/study-2026-10-06/wave-static-desktop.jpg), [desktop Braille text](artifacts/study-2026-10-06/wave-static-desktop.txt), deformation frames [0](artifacts/study-2026-10-06/wave-motion-0.jpg), [2](artifacts/study-2026-10-06/wave-motion-2.jpg), [4](artifacts/study-2026-10-06/wave-motion-4.jpg), [6](artifacts/study-2026-10-06/wave-motion-6.jpg), and [mobile deformation](artifacts/study-2026-10-06/wave-motion-mobile.jpg).
+
+## Connected ligament experiment — 2026-10-06
+
+Source: `studies/material-model.mjs`, `studies/material-page.js`, `studies/foam-material.html`; reproducible checks: `node scripts/check-material.mjs`. Seed 270627, fixed step 1/240 s, duration 9 s, display domain 1200×800. This is an isolated diagnostic, not a replacement ocean.
+
+- Question: can persistent connected material narrow, separate and inherit motion without deleting material at separation?
+- Numerical result: six splits; first at approximately 3.854 s. Stored edge-area drift is approximately 2.22e-16. Finite state, lumped mass, identical split-point position/velocity, inherited interpolated velocity, deterministic replay and display bounds pass. Stored edge area is not rendered union area or incompressible fluid volume.
+- Desktop checkpoints at 1280×1000: initial thick arc with hanging strands already misses the broad layered reference; at 4 s a narrow root forms; at 6 s the crown falls largely intact; at 9 s it flattens along the diagnostic floor. First failure is in the backbone rather than fine fingers.
+- Decision: reject the centerline spring network as the primary crown representation. Width derived from edge area cannot supply the missing two-dimensional patch hierarchy; decorative texture would conceal rather than resolve the mismatch. Retain only the split bookkeeping experiment.
+- Verification limit: sampled states establish the major shape failure, not continuous motion quality. Reduced-motion and hidden-page behaviour remain unverified. Step 3 remains incomplete.
+- Next study must first reproduce broad connected patches and the hollow at time zero, using separate supporting geometry and foam coverage. Only then test stretching, thinning and local detachment. A visible foam branch must not automatically become a fluid ligament.
+
+Evidence: [start](artifacts/material-study-2026-10-06/material-start.jpg), [4 s](artifacts/material-study-2026-10-06/material-split.jpg), [6 s](artifacts/material-study-2026-10-06/material-fall.jpg), [9 s](artifacts/material-study-2026-10-06/material-end.jpg).
+
+Mobile diagnostic endpoint inspected at 390×844 (144×48 characters): controls and explanatory text fit; the same flattened ribbon failure remains visible. Scrubbing to 9 s correctly shows Replay. [Mobile evidence](artifacts/material-study-2026-10-06/material-mobile.jpg).

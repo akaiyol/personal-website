@@ -11,7 +11,7 @@ This sequence supersedes the earlier solver-first plan and the next-step recomme
 - User approved the static [reference image](artifacts/references/wave-approved-2026-10-06.png); provenance and scope are in `artifacts/references/README.md`.
 - Step 1 complete: reconciled active visual/feature/review guidance, refreshed current diagnosis, marked historical architecture and research recommendations, and preserved the baseline source plus prior capture and hashes.
 - Step 2: native Braille reference translation implemented and inspected at desktop and mobile sizes. The broad crown, layered foam, and hollow remain legible; smallest mobile details simplify. See `studies/foam-static.html` and the evidence in `wave-review.md`. This is a sampling study, not a procedural generator.
-- Step 3 in progress: `studies/foam-deformation.html` is a prescribed eight-second deformation probe. It preserves the silhouette but fails the material-breakup gate: no narrowing, detachment, or inherited fragment velocity. Next: connected patch/material representation with explicit splitting. Steps 4–5 remain pending; no replacement solver is selected.
+- Step 3 in progress: both the prescribed image warp and connected spring-ligament study fail the visual/material gate. The latter verifies split bookkeeping but produces a ribbon, root failure, and a largely intact falling crown. Next: separate broad supporting surface geometry from foam patches; require the approved static shape before another motion experiment. Steps 4–5 remain pending; no replacement solver is selected.
 
 ## 1. Reconcile the visual specification and baseline
 
