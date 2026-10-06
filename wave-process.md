@@ -6,6 +6,13 @@ Return to focused research and visual validation before further ocean implementa
 
 This sequence supersedes the earlier solver-first plan and the next-step recommendations in the historical records below. Existing research remains evidence to evaluate, not approval to implement its candidates. Complete each checkpoint before dependent work; checkpoints are evidence requirements, not additional permission requests.
 
+## Progress — 2026-10-06
+
+- User approved the static [reference image](artifacts/references/wave-approved-2026-10-06.png); provenance and scope are in `artifacts/references/README.md`.
+- Step 1 complete: reconciled active visual/feature/review guidance, refreshed current diagnosis, marked historical architecture and research recommendations, and preserved the baseline source plus prior capture and hashes.
+- Step 2 in progress: translate the approved foam coverage into actual Unicode Braille and inspect native desktop/mobile output.
+- Steps 3–5 pending. Do not infer motion or solver acceptance from the approved raster.
+
 ## 1. Reconcile the visual specification and baseline
 
 Record the latest visual direction in `design.md` and reconcile `wave.md` and `wave-review.md` with it:
