@@ -4,8 +4,8 @@
 
 - Approved: [static composition](artifacts/references/wave-approved-2026-10-06.png), explicitly confirmed by the user.
 - Step 1: specifications reconciled; coupled-field source and earlier screenshot preserved in `archive/wave-baseline-2026-10-06/`.
-- Step 2: actual Unicode Braille rendering at desktop/mobile sizes is pending.
-- Steps 3–5: deformation, dynamics selection, and full-ocean integration remain pending.
+- Step 2: static Unicode Braille translation inspected at 1280×1000 and 390×844; broad shape and hollow retained.
+- Step 3: prescribed deformation probe implemented; breakup requirements not met. Steps 4–5 remain pending.
 - Approval of the raster does not establish character fidelity or motion.
 
 ## Artistic acceptance criteria
@@ -67,3 +67,17 @@ The coarse uniformity, missing impact, numerical drain, detached-root gap, needl
 ## Reference-driven foam review — 2026-10-06
 
 The current foam pass targets the Hokusai feature map and quality tests in `wave.md`. Dense caps, curved pointed forks, black notches and a clear main hollow replace the earlier thin lip. Interior detail is less prominent, and occasional larger fragments accompany fine droplets. Desktop checkpoint evidence and scoped dot-density measurements are recorded in `wave-process.md`. Sampled live observation spanning more than 60 seconds and native mobile/reduced-motion inspections are recorded there too. The main caps and hollows remain legible, while the finest secondary forks merge on mobile. Further refinement should target that resolution limit rather than increase density across the whole ocean.
+
+## Static sampling and deformation checkpoint — 2026-10-06
+
+Source: `studies/foam-static.html`, `studies/foam-deformation.html`, shared `studies/foam-static.js`. Input is the approved raster; these studies do not claim procedural foam generation. No random seed is used.
+
+- Desktop: 220×73 Unicode Braille cells at a 1280×1000 viewport; mobile: 144×48 cells at 390×844. Display aspect remains 3:2. Background and water are blank; the broad base, downward fingers, layered foam and hollow remain readable. Fine mobile gaps simplify and dense roots read more solidly than the raster.
+- Original project-owned `WaveBraille-Regular.ttf` defines all 256 patterns with only active dots. U+2800 is empty. System fallback experiments were faint or exposed inactive-dot outlines in bold; those treatments were removed. The font source is `scripts/build-braille-font.py` and requires fontTools only for rebuilding.
+- Sampling: binary source mask uses red >70; dot activation uses area coverage >=0.16. Text and background colours remain exactly the approved CSS colours. Source antialiasing is not copied into the palette.
+- Inspected deformation states at 0, 2, 4, 6 and 8 seconds, including the loop endpoint. The 0/8-second character strings were identical. Play/pause and keyboard Home scrubbing worked. Mobile controls fit with no horizontal overflow; browser error logs were empty.
+- This was sampled inspection, not continuous video verification. Reduced-motion and hidden-page handling exist in source but have not been observed in this pass. Do not mark full motion acceptance passed.
+- **Failed step-3 criteria:** the smooth coordinate warp bends existing patches; it does not create connected growth, thinning, material detachment or fragment velocity. It is retained only as a sampling/shape probe and must not become the production ocean model.
+- **Next experiment:** represent connected foam patches on supporting material, with persistent identities, narrowing roots, explicit splitting and inherited motion. Evaluate the same Braille renderer before selecting a full dynamics model. Do not extend the coordinate warp to imitate breakup with disappearing dots.
+
+Evidence: [desktop static](artifacts/study-2026-10-06/wave-static-desktop.jpg), [desktop Braille text](artifacts/study-2026-10-06/wave-static-desktop.txt), deformation frames [0](artifacts/study-2026-10-06/wave-motion-0.jpg), [2](artifacts/study-2026-10-06/wave-motion-2.jpg), [4](artifacts/study-2026-10-06/wave-motion-4.jpg), [6](artifacts/study-2026-10-06/wave-motion-6.jpg), and [mobile deformation](artifacts/study-2026-10-06/wave-motion-mobile.jpg).
