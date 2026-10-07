@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Yolanda | Hello</title>
+    <link rel="stylesheet" href="navigation.css" />
     <style>
       :root {
         color-scheme: dark;
@@ -232,7 +233,7 @@
   <body>
     <div class="terminal">
       <header>
-        <span class="identity">yolanda@web:~</span>
+        <a class="identity" href="#home" aria-label="Yolanda, home">yolanda@web:~</a>
         <nav aria-label="Main navigation">
           <button data-command="about">[ about ]</button
           ><button data-command="work">[ work ]</button
@@ -252,6 +253,12 @@
             </button>
           </div>
         </div>
+        <section id="destination-view" hidden aria-labelledby="destination-title">
+          <h1 id="destination-title" tabindex="-1"></h1>
+          <p id="destination-copy" class="description"></p>
+          <div id="destination-links"></div>
+          <a class="back-link" href="#home">[ back to home ]</a>
+        </section>
         <div
           class="response"
           id="response"
@@ -260,49 +267,24 @@
         ></div>
       </main>
       <footer>
-        <form id="command-form">
-          <label for="command">yolanda@web:~ $</label
-          ><input
-            id="command"
-            autocomplete="off"
-            spellcheck="false"
-            aria-label="Terminal command"
-            placeholder="_"
-          />
-        </form>
-        <span class="hint">type: about / work / connect / help</span>
+        <div class="command-navigation">
+          <form id="command-form" role="search" aria-label="Navigate the website">
+            <label for="command" aria-label="Type to navigate">$</label>
+            <div class="command-input">
+              <div id="completion" class="completion" aria-hidden="true"></div>
+              <input id="command" type="text" role="combobox" autocomplete="off"
+                spellcheck="false" autocapitalize="none" aria-label="Type to navigate" aria-autocomplete="both"
+                aria-expanded="false" aria-controls="suggestions" aria-describedby="navigation-hint"
+                placeholder="work" />
+            </div>
+            <button class="go-button" type="submit" aria-label="Go to destination">[ enter ]</button>
+          </form>
+          <ul id="suggestions" role="listbox" aria-label="Destinations" hidden></ul>
+          <span class="hint" id="navigation-hint">type to navigate · ↑↓ select · tab complete · enter go</span>
+        </div>
       </footer>
     </div>
     <script>
-      const response = document.querySelector("#response");
-      const messages = {
-        about:
-          "I'm Yolanda, an Electrical and Computer Engineering student at the University of Waterloo.",
-        work: "Work is coming soon. This is the first version of my personal website.",
-        connect: "Contact links are coming soon.",
-        help: "Available commands: about, work, connect, help, clear.",
-        clear: "",
-      };
-      function run(value) {
-        const command = value.trim().toLowerCase();
-        if (!command) return;
-        response.textContent = Object.hasOwn(messages, command)
-          ? messages[command]
-          : `Unknown command: ${command}. Type help to see available commands.`;
-      }
-      document
-        .querySelectorAll("[data-command]")
-        .forEach((button) =>
-          button.addEventListener("click", () => run(button.dataset.command)),
-        );
-      document
-        .querySelector("#command-form")
-        .addEventListener("submit", (event) => {
-          event.preventDefault();
-          const input = document.querySelector("#command");
-          run(input.value);
-          input.value = "";
-        });
       const motion = matchMedia("(prefers-reduced-motion: reduce)");
       const binaryTitle = document.querySelector("#binary-title");
       const glyphs = [
@@ -408,5 +390,6 @@
         }
       }, 140);
     </script>
+    <script src="navigation.js"></script>
   </body>
 </html>
