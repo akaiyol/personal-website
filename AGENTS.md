@@ -3,7 +3,7 @@
 ## Scope and sources of truth
 
 - Follow the user's latest instructions and approved design direction.
-- Use `design.md` for visual rules and the relevant feature files for behaviour. The wave project brief is `wave.md`; follow `wave-process.md` for its research, design, and rebuild sequence.
+- Use `design.md` for visual rules and the relevant feature files for behaviour.
 - Keep visual rules, feature specifications, and agent workflow instructions in their respective files.
 - Implement only the requested scope. Do not add features, change copy, or introduce a new aesthetic without authorization.
 
@@ -38,7 +38,6 @@ Review the finished result before presenting it as complete. Fix concrete issues
 
 - Observe at least one complete sequence of any changed animation, including its transition into the next sequence.
 - Assess direction, timing, continuity, weight, and the intended emotional effect.
-- For waves, verify visible rightward travel, wall-triggered peak height, outward spray, falling water, and recoil against the motion specification.
 - Check that motion remains contained and does not cause layout shifts or interfere with reading.
 - Verify a suitable static presentation for reduced-motion preferences and that hidden-page animation work pauses.
 - Do not judge animation quality from a single screenshot or source inspection alone.

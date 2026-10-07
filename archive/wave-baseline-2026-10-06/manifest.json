@@ -1,9 +1,0 @@
-{
-  "ocean/main.js": "a9b39bcaa81ba956ccda14cd6b3d7750319fd5a38c8bc3a4a31042ae86bb94a1",
-  "ocean/math.js": "60f7022bf28125cdf8e1c60db49a0334727d931d90f5507f5c8ef7dbe897ead3",
-  "ocean/package.json": "89c47db7851f89caec72da4f215ebc21cf1e294aeef3b45d2583562d846ab035",
-  "ocean/render.js": "8725086f133b3cf62f11506c1985f2fbea249c529b7697fb12eac7b9b9bd8c5a",
-  "ocean/simulation.js": "21f14bdcca7f5dde50963091bbd306ec8ab85a309d3e8ff3b2a7b492bc85e377",
-  "wave-foam-refinement.jpg": "ff10b26de7720bbeb9811a3af9caf6ca51838ced08e409620ce0893ddf843549",
-  "wave-study.html": "14d284f30f1a3d2a576ce915cda28aa9dcc1a2cd280902ef5d3ceafbda662d18"
-}

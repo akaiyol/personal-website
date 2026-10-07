@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Yolanda | Hello</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #000000;
+        --text: #c5b5ec;
+        --muted: #c5b5ec;
+        --accent: #c5b5ec;
+        --line: #c5b5ec;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Menlo, Consolas, "Liberation Mono", monospace;
+        min-height: 100svh;
+        padding: 32px;
+        display: grid;
+        place-items: center;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      body {
+        font-size: 14px;
+      }
+      input::placeholder {
+        color: var(--accent);
+        opacity: 1;
+      }
+      button {
+        color: inherit;
+        background: none;
+        border: 0;
+        cursor: pointer;
+        min-height: 44px;
+        padding: 8px 10px;
+      }
+      button:hover {
+        color: var(--accent);
+      }
+      button:focus-visible,
+      input:focus-visible {
+        outline: 2px dashed var(--accent);
+        outline-offset: 4px;
+      }
+      .terminal {
+        min-width: 0;
+        width: min(1200px, 100%);
+        min-height: min(720px, calc(100svh - 64px));
+        border: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+      }
+      header,
+      footer {
+        padding: 15px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+      }
+      .identity {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      main {
+        position: relative;
+        overflow: hidden;
+        flex: 1;
+        padding: 40px 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .hero {
+        display: block;
+      }
+      h1 {
+        font-weight: 400;
+        margin: 0 0 36px;
+      }
+      pre {
+        margin: 0;
+        font-family: inherit;
+        white-space: pre;
+        line-height: 1.25;
+      }
+      .title {
+        font-size: clamp(4px, 0.5vw, 7px);
+        line-height: 1.1;
+        font-weight: 900;
+        color: var(--accent);
+        text-shadow: 0 0 1px currentColor;
+      }
+      .intro {
+        font-family: inherit;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        margin: 0 0 14px;
+      }
+      .description {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.8;
+        max-width: 420px;
+        margin: 0 0 28px;
+      }
+      .cta {
+        padding-left: 0;
+        color: var(--accent);
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        font-size: 12px;
+        color: var(--muted);
+      }
+      form label {
+        white-space: nowrap;
+      }
+      form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+      }
+      input {
+        width: 100%;
+        min-width: 0;
+        color: var(--text);
+        background: transparent;
+        border: 0;
+        padding: 8px 0;
+        outline: none;
+      }
+      .hint {
+        white-space: nowrap;
+      }
+      .response {
+        margin-top: 22px;
+        font-size: 13px;
+        line-height: 1.8;
+        color: var(--muted);
+        max-width: 600px;
+      }
+      .response:empty {
+        display: none;
+      }
+      @media (max-width: 700px) {
+        body {
+          padding: 14px;
+        }
+        .terminal {
+          min-height: calc(100svh - 28px);
+        }
+        header,
+        footer {
+          padding: 12px 16px;
+        }
+        header {
+          flex-wrap: wrap;
+          gap: 2px;
+        }
+        nav {
+          gap: 0;
+          margin-left: -10px;
+          font-size: 12px;
+        }
+        main {
+          padding: 40px 22px;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+        .title {
+          font-size: clamp(3px, 0.88vw, 6px);
+        }
+        h1 {
+          margin-bottom: 26px;
+        }
+        .intro {
+          font-size: 18px;
+        }
+        footer {
+          flex-wrap: wrap;
+          gap: 0;
+        }
+        .hint {
+          font-size: 10px;
+        }
+        form {
+          flex-basis: 100%;
+        }
+        .identity {
+          font-size: 12px;
+        }
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+      ::selection {
+        background: var(--accent);
+        color: var(--bg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="terminal">
+      <header>
+        <span class="identity">yolanda@web:~</span>
+        <nav aria-label="Main navigation">
+          <button data-command="about">[ about ]</button
+          ><button data-command="work">[ work ]</button
+          ><button data-command="connect">[ connect ]</button>
+        </nav>
+      </header>
+      <main>
+        <div class="hero">
+          <div>
+            <h1 aria-label="Hello,">
+              <pre class="title" id="binary-title" aria-hidden="true"></pre>
+            </h1>
+            <p class="intro">i'm yolanda</p>
+            <p class="description">ECE '27 @ uwaterloo</p>
+            <button class="cta" data-command="work">
+              [ explore my work ↵ ]
+            </button>
+          </div>
+        </div>
+        <div
+          class="response"
+          id="response"
+          role="status"
+          aria-live="polite"
+        ></div>
+      </main>
+      <footer>
+        <form id="command-form">
+          <label for="command">yolanda@web:~ $</label
+          ><input
+            id="command"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Terminal command"
+            placeholder="_"
+          />
+        </form>
+        <span class="hint">type: about / work / connect / help</span>
+      </footer>
+    </div>
+    <script>
+      const response = document.querySelector("#response");
+      const messages = {
+        about:
+          "I'm Yolanda, an Electrical and Computer Engineering student at the University of Waterloo.",
+        work: "Work is coming soon. This is the first version of my personal website.",
+        connect: "Contact links are coming soon.",
+        help: "Available commands: about, work, connect, help, clear.",
+        clear: "",
+      };
+      function run(value) {
+        const command = value.trim().toLowerCase();
+        if (!command) return;
+        response.textContent = Object.hasOwn(messages, command)
+          ? messages[command]
+          : `Unknown command: ${command}. Type help to see available commands.`;
+      }
+      document
+        .querySelectorAll("[data-command]")
+        .forEach((button) =>
+          button.addEventListener("click", () => run(button.dataset.command)),
+        );
+      document
+        .querySelector("#command-form")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          const input = document.querySelector("#command");
+          run(input.value);
+          input.value = "";
+        });
+      const motion = matchMedia("(prefers-reduced-motion: reduce)");
+      const binaryTitle = document.querySelector("#binary-title");
+      const glyphs = [
+        [
+          "1100011",
+          "1100011",
+          "1100011",
+          "1111111",
+          "1111111",
+          "1100011",
+          "1100011",
+          "1100011",
+          "1100011",
+        ],
+        [
+          "1111111",
+          "1111111",
+          "1100000",
+          "1111110",
+          "1111110",
+          "1100000",
+          "1100000",
+          "1111111",
+          "1111111",
+        ],
+        [
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1111111",
+          "1111111",
+        ],
+        [
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1111111",
+          "1111111",
+        ],
+        [
+          "0111110",
+          "1111111",
+          "1100011",
+          "1100011",
+          "1100011",
+          "1100011",
+          "1100011",
+          "1111111",
+          "0111110",
+        ],
+        [
+          "000",
+          "000",
+          "000",
+          "000",
+          "000",
+          "000",
+          "000",
+          "110",
+          "110",
+          "010",
+          "100",
+        ],
+      ];
+      const binaryMask = Array.from({ length: 33 }, (_, y) =>
+        glyphs
+          .map((glyph) => {
+            const source =
+              glyph[Math.floor(y / 3)] || "0".repeat(glyph[0].length);
+            return [...source].map((bit) => bit.repeat(3)).join("");
+          })
+          .join("   "),
+      );
+      let binaryStep = 0;
+      function drawBinary() {
+        binaryTitle.textContent = binaryMask
+          .map((row, y) =>
+            [...row]
+              .map((bit, x) =>
+                bit === "1"
+                  ? (Math.floor((y + binaryStep + x * 7) / 3) + x) % 2
+                    ? "1"
+                    : "0"
+                  : " ",
+              )
+              .join(""),
+          )
+          .join("\n");
+      }
+      drawBinary();
+      setInterval(() => {
+        if (!motion.matches && !document.hidden) {
+          binaryStep--;
+          drawBinary();
+        }
+      }, 140);
+    </script>
+  </body>
+</html>
