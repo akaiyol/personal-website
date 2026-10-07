@@ -9,6 +9,7 @@ const destinations = [
 const input = document.querySelector("#command");
 const list = document.querySelector("#suggestions");
 const completion = document.querySelector("#completion");
+const cursor = document.querySelector("#block-cursor");
 const response = document.querySelector("#response");
 const hint = document.querySelector("#navigation-hint");
 const normalHint = hint.textContent;
@@ -55,7 +56,7 @@ function renderSuggestions(reset = true) {
     label.textContent = item.label;
     const kind = document.createElement("span");
     kind.className = "suggestion-kind";
-    kind.textContent = item.external ? "external ↗" : "page";
+    kind.textContent = item.external ? "external ↗" : "";
     option.append(label, kind);
     // Keep focus on the combobox while a pointer selects an option.
     option.addEventListener("pointerdown", event => event.preventDefault());
@@ -70,6 +71,7 @@ function renderSuggestions(reset = true) {
 function navigate(item) {
   closeSuggestions();
   input.value = "";
+  updateCursor();
   hint.textContent = normalHint;
   if (item.external) location.assign(item.url);
   else {
@@ -106,9 +108,9 @@ document.querySelectorAll("[data-command]").forEach(button => button.addEventLis
   if (item) navigate(item);
   else location.hash = "#connect";
 }));
-input.addEventListener("focus", () => { stopPrompt(); input.placeholder = "work, projects, about me…"; dismissed = false; renderSuggestions(); });
+input.addEventListener("focus", () => { finishPrompt(); dismissed = false; renderSuggestions(); updateCursor(); });
 input.addEventListener("blur", () => { closeSuggestions(); hint.textContent = normalHint; startPrompt(); });
-input.addEventListener("input", () => { dismissed = false; renderSuggestions(); });
+input.addEventListener("input", () => { dismissed = false; renderSuggestions(); updateCursor(); });
 input.addEventListener("click", updateCompletion);
 input.addEventListener("keyup", updateCompletion);
 input.addEventListener("scroll", updateCompletion);
@@ -124,6 +126,7 @@ input.addEventListener("keydown", event => {
     event.preventDefault();
     input.value = matches[selected].label;
     renderSuggestions();
+    updateCursor();
   }
 });
 document.querySelector("#command-form").addEventListener("submit", event => {
@@ -136,30 +139,61 @@ document.querySelector("#command-form").addEventListener("submit", event => {
   else if (query === "clear") { response.textContent = ""; input.value = ""; renderSuggestions(); }
   else if (query === "help" || query === "connect") { dismissed = false; input.value = ""; renderSuggestions(); }
   else if (query) { response.textContent = "Choose work history, projects, about me, github or linkedin."; }
+  updateCursor();
 });
-// Only the placeholder animates. Typed text is never overwritten.
+// Demonstrate destinations once, then leave an empty terminal prompt.
 const prompts = ["work", "projects", "about me"];
-let promptTimer, promptIndex = 0, promptLength = 0, deleting = false;
+let promptTimer, cursorTimer, promptIndex = 0, promptLength = 0, deleting = false, promptFinished = false;
 function stopPrompt() { clearTimeout(promptTimer); }
+function updateCursor() {
+  const focused = document.activeElement === input;
+  const text = input.value || input.placeholder;
+  const position = input.value ? (focused ? input.selectionStart : input.value.length) : text.length;
+  cursor.style.left = `calc(${position}ch - ${input.scrollLeft}px)`;
+  const candidate = !list.hidden && matches[selected]?.label.startsWith(input.value.toLowerCase()) ? matches[selected].label : "";
+  cursor.textContent = input.value && focused ? input.value[position] || candidate[position] || "" : "";
+  cursor.hidden = focused && input.selectionStart !== input.selectionEnd;
+  cursor.classList.add("cursor-moving");
+  clearTimeout(cursorTimer);
+  cursorTimer = setTimeout(() => cursor.classList.remove("cursor-moving"), 500);
+}
+function finishPrompt() {
+  stopPrompt();
+  promptFinished = true;
+  input.placeholder = "";
+  updateCursor();
+}
 function promptTick() {
-  if (document.hidden || document.activeElement === input || input.value || reducedMotion.matches) return;
+  if (document.hidden || document.activeElement === input || input.value || reducedMotion.matches || promptFinished) return;
   const word = prompts[promptIndex];
   promptLength += deleting ? -1 : 1;
-  input.placeholder = word.slice(0, promptLength) || " ";
+  input.placeholder = word.slice(0, promptLength);
+  updateCursor();
   let delay = deleting ? 65 : 125;
-  if (!deleting && promptLength === word.length) { deleting = true; delay = 1500; }
-  else if (deleting && promptLength === 0) { deleting = false; promptIndex = (promptIndex + 1) % prompts.length; delay = 350; }
+  if (!deleting && promptLength === word.length) { deleting = true; delay = 1200; }
+  else if (deleting && promptLength === 0) {
+    deleting = false;
+    promptIndex++;
+    if (promptIndex === prompts.length) { finishPrompt(); return; }
+    delay = 350;
+  }
   promptTimer = setTimeout(promptTick, delay);
 }
 function startPrompt() {
   stopPrompt();
-  if (document.activeElement === input || input.value) return;
-  if (reducedMotion.matches) { input.placeholder = "work, projects, about me…"; return; }
+  if (reducedMotion.matches) { finishPrompt(); return; }
+  if (promptFinished || document.activeElement === input || input.value) { updateCursor(); return; }
   if (!document.hidden) {
-    input.placeholder = prompts[promptIndex].slice(0, promptLength) || " ";
+    input.placeholder = prompts[promptIndex].slice(0, promptLength);
+    updateCursor();
     promptTimer = setTimeout(promptTick, 400);
   }
 }
+["click", "keyup", "select", "scroll"].forEach(type => input.addEventListener(type, updateCursor));
+window.addEventListener("resize", updateCursor);
 reducedMotion.addEventListener("change", startPrompt);
-document.addEventListener("visibilitychange", () => document.hidden ? stopPrompt() : startPrompt());
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) { stopPrompt(); clearTimeout(cursorTimer); }
+  else startPrompt();
+});
 startPrompt();

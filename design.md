@@ -1,6 +1,6 @@
 # Design rules
 
-This file contains visual design rules only. Feature specifications and detailed animation behaviour belong in separate files.
+Shared visual source of truth. Record agreed design rules here. Use the open design notes below for ideas that need discussion; move approved decisions into the relevant component section. Detailed interaction behaviour belongs in `navigation.md`.
 
 ## Colour
 
@@ -13,7 +13,9 @@ This file contains visual design rules only. Feature specifications and detailed
 
 ## Visual language
 
-- Maintain a rustic coding-terminal aesthetic with expressive, abstract text artwork.
+- Use a macOS Terminal-inspired shell as the interface reference: a user/host identity, working-directory marker, shell prompt, fixed-width text, and block cursor.
+- Keep expressive character artwork within this terminal frame.
+- Prefer terminal line structure and character-grid alignment over conventional search-box styling.
 - Construct artwork from characters such as `0`, `1`, punctuation, and Unicode Braille.
 - Use character density and black gaps to define silhouettes, contours, and depth.
 - Avoid raster illustrations, photography, SVG artwork, emoji, and uniform decorative dot noise.
@@ -39,3 +41,40 @@ This file contains visual design rules only. Feature specifications and detailed
 ## Deferred artwork
 
 On 2026-10-07, the user moved wave development to a separate repository for possible later integration. This website currently has no wave implementation.
+
+## Interface language
+
+- Use no unnecessary words. Make interactions intuitive through design: prompt structure, cursor, alignment, focus, selected states, and responsive feedback.
+- Do not display persistent instructional text such as “type to navigate”, “tab to complete”, or “enter to go”.
+- Keep labels that identify destinations and essential state or error feedback. Keep keyboard guidance available to assistive technology without displaying it as decoration.
+
+## Components
+
+### Shell frame and identity
+
+- Keep the thin purple frame on black.
+- Header identity: `yolanda@web:~`, linking home.
+- Command-line identity: `yolanda@web ~ %`, following the shape of a macOS zsh prompt. Treat the prompt as a functional part of the terminal theme.
+
+### Command line and cursor
+
+- Keep the identity, typed text, completion, and cursor on the same baseline.
+- Use a rectangular block cursor with discrete visible/hidden blinking. No fading or smooth transitions.
+- Demonstration text plays once, then leaves an empty prompt and waiting block cursor. Typing takes control immediately.
+- Reduced motion uses a stationary cursor and skips demonstration typing.
+
+### Completion and recommendations
+
+- Use the same monospace family and size for the command text, candidate labels, and external-link annotation.
+- Use character-based horizontal spacing and consistent line rhythm, with slightly more vertical room than a terminal for pointer use.
+- Show the inline completion suffix with a simple underline. The cursor marks where the visitor's typed text ends.
+- Use inverse black-on-purple text for the selected candidate. Avoid secondary tiny category labels or separate search-widget typography.
+- Keep external destinations visibly identified.
+
+## Open design notes
+
+Use this section for future thoughts before adopting them as rules. Each note should identify the component, intended feeling or behaviour, and a reference when useful.
+
+- Header identity placement: retain for now; review how its role differs from the functional footer prompt.
+- Terminal density: command text and suggestions now share a type scale. Refine overall page spacing after reviewing this version.
+- Window chrome: no macOS traffic-light buttons or title bar added; the current reference applies to the terminal content and prompt.
