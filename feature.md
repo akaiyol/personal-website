@@ -1,6 +1,6 @@
 # About Me — framed life collection
 
-Status: design proposal, awaiting user review. The static mock is for composition only. Do not replace the live About Me view or add gallery interactions or animation yet.
+Status: overall layout approved 2026-10-07; revised frame designs await user review. The static mock is for composition only. Do not replace the live About Me view or add gallery interactions or animation yet.
 
 ## Purpose and visual direction
 
@@ -23,12 +23,12 @@ The static mock shows one selected Polaroid and two permanently highlighted term
 
 | Frame | Distinctive construction | Use in first mock |
 | --- | --- | --- |
-| Bevelled picture frame | Double perimeter, mitred corners, small corner details | Main portrait |
-| Postage stamp | Regular cut-out perforations and inner keyline | Hanging image |
+| Portrait stamp | Rounded perforated ridge on all four sides, dotted inset keyline | Main portrait |
+| Postage stamp | Coarse perforations, arched image window, dotted inner edge | Hanging image |
 | Polaroid | Narrow top/side margins and a deeper bottom band | Selected hanging image |
-| Film negative | Dark mount, rectangular sprocket holes, small frame number | Hanging image |
-| Deckled paper | Uneven torn-paper outline, restrained inner edge | Hanging image |
-| Slide mount | Square mount around a smaller image window | Hanging image |
+| Film negative | Contrasting sprocket rails and rectangular holes | Hanging image |
+| Notepad sheet | Torn binding ridge, loops, dotted margin and ruled baseline | Hanging image |
+| Oval mount | Curved double perimeter with dotted outer texture | Hanging image |
 | Contact sheet | Several small exposures within one border | Possible later variant |
 | Photo-album corners | Four diagonal mounting pockets, exposed paper between them | Possible later variant |
 | Ticket stub | Perforated end, narrow vertical stub, cropped corners | Possible later variant |
@@ -110,7 +110,7 @@ The mock uses lightly edited first-person copy. Product management and painting/
 
 ## Approval sequence
 
-1. Review this static layout, frame vocabulary, introduction hierarchy, and photo treatment.
+1. Layout approved. Review the revised frame vocabulary and photo treatment.
 2. Replace placeholder artwork and draft copy with user-supplied content; review the static page again.
 3. Implement selection and term emphasis, then drag and repin.
 4. Consider the animated hand only after the basic interactions pass review.
@@ -127,3 +127,7 @@ The mock uses lightly edited first-person copy. Product management and painting/
 - Mock contains no scripts or animation. Portrait and life artwork are character-built generic placeholders.
 - Biography uses the user's supplied information; emphasis is shown as a static appearance sample.
 - Live About Me remains unchanged. Only the redundant upper navigation tabs were removed from the live site.
+
+## Frame revision — 2026-10-07
+
+The user approved the layout and requested more variation through dots, lines, textures, and shapes, with a stamp ridge for the portrait. The static revision preserves the layout, biography, hanging line, and blank photo metadata. No animation or gallery interactions are introduced.

@@ -79,7 +79,7 @@ Use this section for future thoughts before adopting them as rules. Each note sh
 - Terminal density: command text and suggestions now share a type scale. Refine overall page spacing after reviewing this version.
 - Window chrome: no macOS traffic-light buttons or title bar added; the current reference applies to the terminal content and prompt.
 
-## About Me direction — awaiting composition review
+## About Me direction — layout approved; frames under review
 
 - A personal collection of framed images, combining character-built Braille artwork with thin line-art frames.
 - A framed portrait and background introduction sit above a hanging collection of life images.
@@ -89,3 +89,11 @@ Use this section for future thoughts before adopting them as rules. Each note sh
 - Important terms use a purple rectangle with black lettering when emphasized. Pointer proximity is a proposed interaction, not a static visual requirement.
 - Personal photographs will supply the subject matter; the proposed treatment converts them to black/purple Braille or line art. This page-specific treatment needs review before replacing the current restriction on displaying photography.
 - Composition and interaction specification: `feature.md`. Static proposal: `about-me-static.html`. Do not implement the live About Me gallery or animations before review.
+
+### Frame refinement — 2026-10-07
+
+- The user approved the portrait/introduction above the hanging image line. Preserve that composition.
+- Portrait uses a postage-stamp ridge: visible rounded perforations around all four sides and a dotted inset keyline.
+- Frame variation must come from silhouette, construction, and dot/line texture, rather than repeated rectangular outlines with different padding.
+- Hanging studies now contrast an arched stamp window, film sprocket rails, a broad-bottom Polaroid, torn notepad binding/ridges, and an oval dotted mount.
+- Keep all frame materials black and purple. Dates and optional captions remain blank.
