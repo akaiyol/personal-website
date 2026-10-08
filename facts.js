@@ -42,7 +42,8 @@
   const rowHeight = 48;
   function symbolRow(index, jackpot = false) {
     const row = document.createElement('span');
-    row.textContent = jackpot ? '✦' : symbols[index];
+    row.textContent = jackpot ? '⠀⠀⢰⡆⠀⠀\n⠈⢻⣿⣿⡟⠁\n⠀⠘⠉⠉⠃⠀' : symbols[index];
+    if (jackpot) row.className = 'braille-star';
     return row;
   }
   function finish() {

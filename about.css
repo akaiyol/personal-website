@@ -208,3 +208,7 @@ body.page-hidden .about-page .fact-machine.is-jackpot .fact-reel,body.page-hidde
 @keyframes star-spring{0%{visibility:hidden;transform:translate(-50%,0) scale(.3) rotate(0deg)}1%{visibility:visible}35%{transform:translate(calc(-50% + var(--dx)*.6),var(--dy)) scale(1) rotate(var(--turn));animation-timing-function:ease-in}99%{visibility:visible;transform:translate(calc(-50% + var(--dx)),54px) scale(.5) rotate(calc(var(--turn)*2))}100%{visibility:hidden;transform:translate(calc(-50% + var(--dx)),54px) scale(.5) rotate(calc(var(--turn)*2))}}
 @media(prefers-reduced-motion:reduce){.about-page .fact-machine.is-jackpot .star-confetti{display:none}}
 body.page-hidden .about-page .fact-machine.is-jackpot .star-confetti,.about-page[hidden] .fact-machine.is-jackpot .star-confetti{display:none}
+
+.about-page .fact-track span.braille-star{white-space:pre;font-size:12px;line-height:1;letter-spacing:0}
+.about-page .star-confetti span{white-space:pre}
+@media(max-width:600px){.about-page .fact-track span.braille-star{font-size:10px}}
