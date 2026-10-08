@@ -28,7 +28,7 @@ The static mock shows one selected Polaroid and two permanently highlighted term
 | Polaroid | Narrow top/side margins and a deeper bottom band | Selected hanging image |
 | Film negative | Contrasting sprocket rails and rectangular holes | Hanging image |
 | Notepad sheet | Torn binding ridge, loops, dotted margin and ruled baseline | Hanging image |
-| Oval mount | Curved double perimeter with dotted outer texture | Hanging image |
+| Oval mount | Removed at user request | Do not use |
 | Contact sheet | Several small exposures within one border | Possible later variant |
 | Photo-album corners | Four diagonal mounting pockets, exposed paper between them | Possible later variant |
 | Ticket stub | Perforated end, narrow vertical stub, cropped corners | Possible later variant |
@@ -48,12 +48,13 @@ Use a curated set. Do not include every variant simply because it exists. Keep i
 
 ## Proposed interactions — later implementation
 
-### Select an image
+### Bring an image to the front
 
-- Click or keyboard-select an image to bring it to the front without navigating away.
+- Hovering a photo brings it in front of neighbouring photos without navigating away. Leaving it restores its place unless it has been explicitly selected.
+- Keyboard focus offers the same preview. Touch or clicking selects an image and keeps it in front until another selection or dismissal.
 - Lift and slightly enlarge it, retaining a visible relationship to its original pin and place on the line.
 - Keep the image subject clear; do not hide the introduction or terminal input.
-- Another selection returns the previous image to its hanging state. Escape restores the line.
+- Another selection returns the previous image to its hanging state. Escape restores the line. Moving between neighbouring hover targets must not cause flickering or unreachable images.
 - Provide a keyboard focus indicator and an accessible selected state. Do not communicate selection through motion alone.
 
 ### Drag and repin
@@ -131,3 +132,11 @@ The mock uses lightly edited first-person copy. Product management and painting/
 ## Frame revision — 2026-10-07
 
 The user approved the layout and requested more variation through dots, lines, textures, and shapes, with a stamp ridge for the portrait. The static revision preserves the layout, biography, hanging line, and blank photo metadata. No animation or gallery interactions are introduced.
+
+## Crowded line revision — 2026-10-07
+
+- Remove the circular/oval frame from the static mock and planned frame set.
+- Keep the stamp perforations but remove the outer straight rectangular outline from both the portrait stamp and the hanging stamp. Inner image boundaries may remain.
+- During implementation, add more user-supplied photos to create a somewhat crowded line with varied sizes and intentional overlaps. Start by evaluating approximately seven to nine photos rather than four widely spaced images; the final count depends on supplied content and available width.
+- Hover raises the targeted photo above its neighbours. Do not reshuffle the line or move adjacent photos just to reveal it. Every photo needs an exposed area that can be hovered, tapped, or focused.
+- Additional photos and hover behaviour are deferred to implementation; this revision only changes the static frame treatment. Keep dates and optional captions blank.
