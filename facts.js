@@ -40,9 +40,9 @@
   }
   let played = false, animation = null, pending = null;
   const rowHeight = 48;
-  function symbolRow(index) {
+  function symbolRow(index, jackpot = false) {
     const row = document.createElement('span');
-    row.textContent = symbols[index];
+    row.textContent = jackpot ? '✦' : symbols[index];
     return row;
   }
   function finish() {
@@ -52,7 +52,7 @@
     const result = pending;
     pending = null;
     tracks.forEach((track, i) => {
-      track.replaceChildren(symbolRow(result.values[i]));
+      track.replaceChildren(symbolRow(result.values[i], result.jackpot));
       track.style.transform = '';
     });
     const texts = result.jackpot ? [jackpotFact] : result.values.map(i => facts[i]);
@@ -78,7 +78,7 @@
     const stops = [1100, 1350, 1600, 1850];
     const steps = [20, 24, 28, 32];
     tracks.forEach((track, reel) => {
-      track.replaceChildren(...Array.from({length: steps[reel] + 1}, (_, step) => symbolRow(step === steps[reel] ? pending.values[reel] : (step + reel * 4) % symbols.length)));
+      track.replaceChildren(...Array.from({length: steps[reel] + 1}, (_, step) => symbolRow(step === steps[reel] ? pending.values[reel] : (step + reel * 4) % symbols.length, step === steps[reel] && pending.jackpot)));
     });
     const start = performance.now();
     function tick(now) {

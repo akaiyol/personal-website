@@ -200,3 +200,11 @@ body.page-hidden .about-page .signal-name:before,body.page-hidden .about-page .s
 @media(prefers-reduced-motion:reduce){.about-page .fact-machine.is-jackpot .fact-console:after{display:none}.about-page .fact-machine.is-jackpot .fact-reel,.about-page .fact-results .jackpot{animation:none}.about-page .fact-machine.is-jackpot .fact-reel{background:var(--ink);color:var(--ground)}}
 body.page-hidden .about-page .fact-machine.is-jackpot .fact-console:after,.about-page[hidden] .fact-machine.is-jackpot .fact-console:after{display:none}
 body.page-hidden .about-page .fact-machine.is-jackpot .fact-reel,body.page-hidden .about-page .fact-results .jackpot,.about-page[hidden] .fact-machine.is-jackpot .fact-reel,.about-page[hidden] .fact-results .jackpot{animation:none}
+
+.about-page .fact-reels{position:relative}
+.about-page .star-confetti{display:none;position:absolute;inset:-48px -8px -64px;overflow:hidden;pointer-events:none;z-index:3}
+.about-page .fact-machine.is-jackpot .star-confetti{display:block}
+.about-page .star-confetti span{position:absolute;top:72px;line-height:1;color:var(--ink);font-size:var(--size);animation:star-spring 1.35s var(--delay) both}
+@keyframes star-spring{0%{visibility:hidden;transform:translate(-50%,0) scale(.3) rotate(0deg)}1%{visibility:visible}35%{transform:translate(calc(-50% + var(--dx)*.6),var(--dy)) scale(1) rotate(var(--turn));animation-timing-function:ease-in}99%{visibility:visible;transform:translate(calc(-50% + var(--dx)),54px) scale(.5) rotate(calc(var(--turn)*2))}100%{visibility:hidden;transform:translate(calc(-50% + var(--dx)),54px) scale(.5) rotate(calc(var(--turn)*2))}}
+@media(prefers-reduced-motion:reduce){.about-page .fact-machine.is-jackpot .star-confetti{display:none}}
+body.page-hidden .about-page .fact-machine.is-jackpot .star-confetti,.about-page[hidden] .fact-machine.is-jackpot .star-confetti{display:none}
