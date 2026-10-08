@@ -164,3 +164,18 @@ body.page-hidden .about-page .memory { transition: none; }
 @media(prefers-reduced-motion:reduce){.about-page .signal-name:before,.about-page .signal-name:after{animation:none;clip-path:inset(50% 0 50%)}}
 body.page-hidden .about-page .signal-name:before,body.page-hidden .about-page .signal-name:after{animation-play-state:paused}
 .about-page[hidden] .signal-name:before,.about-page[hidden] .signal-name:after{animation-play-state:paused}
+
+.about-page .fact-machine{margin:24px 0 0;--roll-width:110px;--reel-gap:24px}
+.about-page .fact-console{display:flex;align-items:center;gap:var(--reel-gap);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:10px 0}
+.about-page .fact-reels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));flex:1;min-width:0}
+.about-page .fact-reel{height:48px;overflow:hidden;border-right:1px dotted var(--ink);position:relative}
+.about-page .fact-reel:first-child{border-left:1px dotted var(--ink)}
+.about-page .fact-track span{height:48px;display:flex;align-items:center;justify-content:center;font-size:30px;line-height:1;font-weight:400;letter-spacing:3px}
+.about-page .fact-roll{flex:0 0 var(--roll-width);font:inherit;white-space:nowrap;min-height:48px;padding:8px 10px;cursor:pointer}
+.about-page .fact-roll:disabled{cursor:wait}
+.about-page .fact-roll:focus-visible{outline:1px dashed var(--ink);outline-offset:3px}
+.about-page .fact-results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;min-height:54px;padding:12px calc(var(--roll-width) + var(--reel-gap)) 0 0}
+.about-page .fact-results p{margin:0;font-size:13px;line-height:1.7;text-align:center}
+.about-page .fact-results .jackpot{grid-column:1/-1;background:var(--ink);color:var(--ground);padding:7px}
+.about-page .fact-machine.is-jackpot .fact-reel{border-right-style:solid}
+@media(max-width:600px){.about-page .fact-machine{--roll-width:76px;--reel-gap:8px}.about-page .fact-roll{font-size:12px;padding:8px 3px}.about-page .fact-track span{font-size:23px;letter-spacing:0}.about-page .fact-results{gap:4px}.about-page .fact-results p{font-size:12px}}
