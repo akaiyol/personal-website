@@ -31,3 +31,6 @@ a:focus-visible { outline: 2px dashed var(--accent); outline-offset: 4px; }
   .command-navigation { font-size: 13px; }
   .go-button { padding-right: 0; }
 }
+
+/* The shell command and its menu always sit above page artwork. */
+.terminal > footer{position:relative;z-index:1000;background:var(--bg);isolation:isolate}

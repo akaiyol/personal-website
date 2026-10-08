@@ -150,3 +150,17 @@ body.page-hidden .about-page .memory { transition: none; }
 
 .about-page .clip { touch-action: none; cursor: grab; }
 .about-page .clip::before { content: ""; position: absolute; inset: -8px -17px; }
+
+/* Intermittent signal breakup keeps the underlying name readable. */
+.about-page .signal-name{position:relative;display:inline-block;isolation:isolate}
+.about-page .signal-name:before,.about-page .signal-name:after{content:attr(data-text);position:absolute;inset:0;color:var(--ink);background:var(--ground);pointer-events:none;animation:signal-breakup 6s steps(1,end) infinite}
+.about-page .signal-name:after{content:"⢿⣻⡿⣽⣿⠷⣟⠿";overflow:hidden;animation-delay:-2.7s}
+@keyframes signal-breakup{
+  0%,78%,88%,100%{clip-path:inset(50% 0 50%);transform:translateX(0)}
+  80%{clip-path:inset(18% 0 66%);transform:translateX(2px)}
+  84%{clip-path:inset(62% 0 23%);transform:translateX(-2px)}
+  86%{clip-path:inset(38% 0 48%);transform:translateX(1px)}
+}
+@media(prefers-reduced-motion:reduce){.about-page .signal-name:before,.about-page .signal-name:after{animation:none;clip-path:inset(50% 0 50%)}}
+body.page-hidden .about-page .signal-name:before,body.page-hidden .about-page .signal-name:after{animation-play-state:paused}
+.about-page[hidden] .signal-name:before,.about-page[hidden] .signal-name:after{animation-play-state:paused}
