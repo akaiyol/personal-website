@@ -47,3 +47,6 @@ __pycache__/
 .cache/
 tmp/
 output/
+
+# Keep redistributed font licenses.
+!/assets/fonts/**/OFL.txt

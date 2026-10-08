@@ -151,10 +151,11 @@ body.page-hidden .about-page .memory { transition: none; }
 .about-page .clip { touch-action: none; cursor: grab; }
 .about-page .clip::before { content: ""; position: absolute; inset: -8px -17px; }
 
-/* Intermittent signal breakup keeps the underlying name readable. */
-.about-page .signal-name{position:relative;display:inline-block;isolation:isolate;filter:blur(.35px);text-shadow:1px 0 1px var(--ink),-1px 0 1px var(--ink);animation:signal-fuzz .24s steps(2,end) infinite}
+@font-face{font-family:Orbitron;src:url("assets/fonts/orbitron/Orbitron.ttf") format("truetype");font-weight:400 900;font-display:swap}
+/* Sharp geometric lettering with occasional displaced signal slices. */
+.about-page .signal-name{position:relative;display:inline-block;isolation:isolate;font-family:Orbitron,monospace;font-weight:650;letter-spacing:1.2px;transform:skewX(-7deg)}
 .about-page .signal-name:before,.about-page .signal-name:after{content:attr(data-text);position:absolute;inset:0;color:var(--ink);background:var(--ground);pointer-events:none;animation:signal-breakup 6s steps(1,end) infinite}
-.about-page .signal-name:after{content:"⢿⣻⡿⣽⣿⠷⣟⠿";overflow:hidden;animation-delay:-2.7s}
+.about-page .signal-name:after{overflow:hidden;animation-delay:-2.7s}
 @keyframes signal-breakup{
   0%,78%,88%,100%{clip-path:inset(50% 0 50%);transform:translateX(0)}
   80%{clip-path:inset(18% 0 66%);transform:translateX(2px)}
@@ -174,12 +175,28 @@ body.page-hidden .about-page .signal-name:before,body.page-hidden .about-page .s
 .about-page .fact-roll{flex:0 0 var(--roll-width);font:inherit;white-space:nowrap;min-height:48px;padding:8px 10px;cursor:pointer}
 .about-page .fact-roll:disabled{cursor:wait}
 .about-page .fact-roll:focus-visible{outline:1px dashed var(--ink);outline-offset:3px}
-.about-page .fact-results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;min-height:54px;padding:12px calc(var(--roll-width) + var(--reel-gap)) 0 0}
+.about-page .fact-results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;min-height:72px;padding:12px calc(var(--roll-width) + var(--reel-gap)) 0 0}
 .about-page .fact-results p{margin:0;font-size:13px;line-height:1.7;text-align:center}
 .about-page .fact-results .jackpot{grid-column:1/-1;background:var(--ink);color:var(--ground);padding:7px}
 .about-page .fact-machine.is-jackpot .fact-reel{border-right-style:solid}
 @media(max-width:600px){.about-page .fact-machine{--roll-width:76px;--reel-gap:8px}.about-page .fact-roll{font-size:12px;padding:8px 3px}.about-page .fact-track span{font-size:23px;letter-spacing:0}.about-page .fact-results{gap:4px}.about-page .fact-results p{font-size:12px}}
 
-@keyframes signal-fuzz{0%,100%{text-shadow:1px 0 1px var(--ink),-1px 0 1px var(--ink)}50%{text-shadow:1.4px .3px 1px var(--ink),-1px -.3px 1px var(--ink)}}
-@media(prefers-reduced-motion:reduce){.about-page .signal-name{animation:none}}
-body.page-hidden .about-page .signal-name,.about-page[hidden] .signal-name{animation-play-state:paused}
+/* A single scan locks the four matching reels before revealing one fact. */
+.about-page .fact-results p{overflow-wrap:anywhere}
+.about-page .fact-machine.is-jackpot .fact-console{position:relative}
+.about-page .fact-machine.is-jackpot .fact-console:after{content:"";position:absolute;inset:0;border-left:2px solid var(--ink);pointer-events:none;animation:jackpot-scan .9s linear both}
+.about-page .fact-machine.is-jackpot .fact-reel{animation:jackpot-lock .45s steps(1,end) both}
+.about-page .fact-machine.is-jackpot .fact-reel:nth-child(2){animation-delay:.12s}
+.about-page .fact-machine.is-jackpot .fact-reel:nth-child(3){animation-delay:.24s}
+.about-page .fact-machine.is-jackpot .fact-reel:nth-child(4){animation-delay:.36s}
+.about-page .fact-machine.is-jackpot .fact-results{padding-right:0}
+.about-page .fact-results .jackpot{position:relative;letter-spacing:1px;padding:12px 24px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);animation:jackpot-reveal .5s .9s both}
+.about-page .fact-results .jackpot:before,.about-page .fact-results .jackpot:after{content:"";position:absolute;top:18px;width:6px;height:6px;border:1px dotted var(--ground)}
+.about-page .fact-results .jackpot:before{left:8px}
+.about-page .fact-results .jackpot:after{right:8px}
+@keyframes jackpot-scan{0%{clip-path:inset(0 100% 0 0);background:var(--ink)}35%{clip-path:inset(0 65% 0 33%);background:var(--ink)}99%{clip-path:inset(0 0 0 98%);background:var(--ink)}100%{clip-path:inset(0 0 0 100%)}}
+@keyframes jackpot-lock{0%{background:var(--ground);color:var(--ink)}100%{background:var(--ink);color:var(--ground);border-color:var(--ground)}}
+@keyframes jackpot-reveal{from{transform:translateY(-7px);clip-path:inset(0 100% 0 0)}to{transform:translateY(0);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}}
+@media(prefers-reduced-motion:reduce){.about-page .fact-machine.is-jackpot .fact-console:after{display:none}.about-page .fact-machine.is-jackpot .fact-reel,.about-page .fact-results .jackpot{animation:none}.about-page .fact-machine.is-jackpot .fact-reel{background:var(--ink);color:var(--ground)}}
+body.page-hidden .about-page .fact-machine.is-jackpot .fact-console:after,.about-page[hidden] .fact-machine.is-jackpot .fact-console:after{display:none}
+body.page-hidden .about-page .fact-machine.is-jackpot .fact-reel,body.page-hidden .about-page .fact-results .jackpot,.about-page[hidden] .fact-machine.is-jackpot .fact-reel,.about-page[hidden] .fact-results .jackpot{animation:none}
