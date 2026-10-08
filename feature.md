@@ -1,0 +1,129 @@
+# About Me — framed life collection
+
+Status: design proposal, awaiting user review. The static mock is for composition only. Do not replace the live About Me view or add gallery interactions or animation yet.
+
+## Purpose and visual direction
+
+Introduce Yolanda through her background and a personal collection of images. Use the established black `#000000` and purple `#C5B5EC` palette, monospace text, and terminal frame. Remove the upper navigation tabs; use the existing command line for destination navigation.
+
+Frames use thin line art, Braille, or both. Personal photo subjects should remain recognizable when converted to the chosen character-art treatment. The mock uses generic placeholder scenes rather than representing actual events or likenesses.
+
+No unnecessary words. Convey interaction through cursor, pins, overlap, selection, and focus states. Keep meaningful labels and accessible descriptions; avoid persistent tutorials.
+
+## Composition
+
+1. A framed portrait paired with the About Me heading and background introduction. Use the user-supplied background and interests below. Refine wording and emphasis through the static review.
+2. Below it, a slightly sagging laundry or film-drying line holds a series of personal images. Vary frame dimensions, orientation, and small rotations. Clips or pins visibly connect each frame to the line.
+3. Show one selected image in front of its neighbours, with an unobstructed subject and a small increase in scale. Preserve enough of the hanging arrangement to retain context.
+4. Keep the footer terminal prompt and home identity. Avoid a second navigation bar.
+
+The static mock shows one selected Polaroid and two permanently highlighted terms as samples of the proposed states. It has no pointer-driven highlighting, drag behaviour, gallery selection, or animation.
+
+## Frame vocabulary
+
+| Frame | Distinctive construction | Use in first mock |
+| --- | --- | --- |
+| Bevelled picture frame | Double perimeter, mitred corners, small corner details | Main portrait |
+| Postage stamp | Regular cut-out perforations and inner keyline | Hanging image |
+| Polaroid | Narrow top/side margins and a deeper bottom band | Selected hanging image |
+| Film negative | Dark mount, rectangular sprocket holes, small frame number | Hanging image |
+| Deckled paper | Uneven torn-paper outline, restrained inner edge | Hanging image |
+| Slide mount | Square mount around a smaller image window | Hanging image |
+| Contact sheet | Several small exposures within one border | Possible later variant |
+| Photo-album corners | Four diagonal mounting pockets, exposed paper between them | Possible later variant |
+| Ticket stub | Perforated end, narrow vertical stub, cropped corners | Possible later variant |
+| Oval locket | Double oval perimeter with a small hanging loop | Possible later variant |
+| Postcard | Simple border, stamp corner, divided reverse side | Possible later variant |
+
+Use a curated set. Do not include every variant simply because it exists. Keep image art dominant over frame decoration.
+
+## Photo dates and captions
+
+- Each life photo has a date tag. Dates are blank in the current mock; do not invent dates or show placeholder date text.
+- Some photos may have a short caption. Keep all captions blank until the user supplies them. An empty caption should not display explanatory copy.
+- Keep the date and caption attached to the image when it moves, is selected, or is repinned. They must never become detached gallery labels.
+- Store photo identity, source, accessible description, date, and optional caption separately from the frame style and position.
+- Use a semantic `time` element when a date is available. Leave its machine-readable date absent while blank. Exact date presentation will be reviewed with real content.
+- Reserve a small space for date tags within the paper mount or Polaroid band. Keep metadata quieter than the photo without shrinking it to an unreadable size.
+
+## Proposed interactions — later implementation
+
+### Select an image
+
+- Click or keyboard-select an image to bring it to the front without navigating away.
+- Lift and slightly enlarge it, retaining a visible relationship to its original pin and place on the line.
+- Keep the image subject clear; do not hide the introduction or terminal input.
+- Another selection returns the previous image to its hanging state. Escape restores the line.
+- Provide a keyboard focus indicator and an accessible selected state. Do not communicate selection through motion alone.
+
+### Drag and repin
+
+- Drag from the image body after a small movement threshold; a click selects instead of accidentally dragging.
+- Constrain repositioning to the gallery. On release, snap the image's clip to an allowed position on the line and update overlap order.
+- Keep images reachable and prevent overlapping the terminal or introduction. Do not persist arbitrary positions unless explicitly requested.
+- Support touch and a keyboard alternative for changing position; retain normal page scrolling outside the active drag.
+- Decide after the static review whether selected images stay tethered or can temporarily leave the line.
+
+### Important terms
+
+- Author a small explicit list of important phrases in the introduction.
+- As the pointer approaches a phrase, show black words on a purple rectangular background. Remove the highlight when the pointer moves away.
+- Use proximity to the term, not unrelated mouse movement anywhere on the screen. Avoid flashing several distant terms at once.
+- Highlighting must not alter font metrics, line breaks, or layout. Keep the base text readable without the effect.
+- Keyboard focus and touch must offer an equivalent way to reveal emphasis. The information must never require hover.
+- Tune proximity range and transition timing after the composition is approved. Static mock highlights demonstrate appearance only.
+
+### Stretch goal: animated hand
+
+A line-art or Braille hand enters, grasps an image, lifts it, and pins it back to the line. Add only after basic selection, dragging, and repinning feel coherent. The hand must not obscure content, block input, or imply controls that do not exist. Reduced motion uses an immediate position change. Final hand style and choreography remain unapproved.
+
+## Responsive and accessibility requirements
+
+- Desktop: portrait and introduction side by side; a wide hanging collection underneath.
+- Narrow screens: portrait above text; retain readable type. The image line may scroll horizontally, keeping frames at a useful size and revealing part of the next frame as an affordance.
+- Use semantic introduction text and meaningful image descriptions. Hide decorative character art and frames from assistive technology.
+- Interactive image targets must support keyboard operation, visible focus, and comfortable touch sizes.
+- Reduced motion removes lift, sway, and hand animation; selection and repinning still work.
+- Pause animation work when the page is hidden. Avoid constant ambient movement.
+
+## User-supplied biography content
+
+Provided 2026-10-07:
+
+- Electrical and Computer Engineering at the University of Waterloo (ECE '27 already present on the site).
+- Loves product management and coding fun projects.
+- Has painted and drawn since childhood.
+- Plays piano: RCM level 10.
+- Loves reading; The Poppy War is the all-time favourite series.
+- Built their own PC; also enjoys video games and frisbee.
+- Closing sentiment: “I'm someone that gets inspired by everything around me and would love to experience more.”
+
+The mock uses lightly edited first-person copy. Product management and painting/drawing are highlighted as sample emphasis states; the final list of important terms remains open for review.
+
+## Content required before implementation
+
+- Portrait source and preferred crop.
+- Review of the drafted background introduction and important phrases (the user has supplied the content).
+- Initial personal photos, intended order, dates, short meaningful descriptions, and optional captions. Dates and captions remain blank for now.
+- Choice of Braille versus line-art conversion for photo subjects; compare recognizability before adopting a technique.
+- Preferred selected-image position and scale, approved frame mix, and mobile treatment.
+
+## Approval sequence
+
+1. Review this static layout, frame vocabulary, introduction hierarchy, and photo treatment.
+2. Replace placeholder artwork and draft copy with user-supplied content; review the static page again.
+3. Implement selection and term emphasis, then drag and repin.
+4. Consider the animated hand only after the basic interactions pass review.
+
+## Current deliverables
+
+- `about-me-static.html`: standalone static mock, separate from the live About Me view.
+- `design.md`: shared visual direction and open design notes.
+- Upper navigation tabs removed from the existing website; terminal navigation retained.
+
+## Static study verification
+
+- Rendered desktop and a narrow layout at approximately 389 CSS pixels. The document has no horizontal overflow; only the hanging collection scrolls horizontally on narrow screens.
+- Mock contains no scripts or animation. Portrait and life artwork are character-built generic placeholders.
+- Biography uses the user's supplied information; emphasis is shown as a static appearance sample.
+- Live About Me remains unchanged. Only the redundant upper navigation tabs were removed from the live site.

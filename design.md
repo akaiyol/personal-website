@@ -53,7 +53,7 @@ On 2026-10-07, the user moved wave development to a separate repository for poss
 ### Shell frame and identity
 
 - Keep the thin purple frame on black.
-- Header identity: `yolanda@web:~`, linking home.
+- Header identity: `yolanda@web:~`, linking home. Do not add upper navigation tabs; the terminal command line provides destination navigation.
 - Command-line identity: `yolanda@web ~ %`, following the shape of a macOS zsh prompt. Treat the prompt as a functional part of the terminal theme.
 
 ### Command line and cursor
@@ -78,3 +78,14 @@ Use this section for future thoughts before adopting them as rules. Each note sh
 - Header identity placement: retain for now; review how its role differs from the functional footer prompt.
 - Terminal density: command text and suggestions now share a type scale. Refine overall page spacing after reviewing this version.
 - Window chrome: no macOS traffic-light buttons or title bar added; the current reference applies to the terminal content and prompt.
+
+## About Me direction — awaiting composition review
+
+- A personal collection of framed images, combining character-built Braille artwork with thin line-art frames.
+- A framed portrait and background introduction sit above a hanging collection of life images.
+- Mix picture frames, Polaroids, perforated postage-stamp edges, film negatives, and paper mounts. Keep them recognizably related through the same palette and line weight.
+- Life-photo frames include attached date tags and optional short captions. Leave these blank until supplied.
+- The image line should feel physically pinned and irregularly arranged, with believable overlaps and clear negative space.
+- Important terms use a purple rectangle with black lettering when emphasized. Pointer proximity is a proposed interaction, not a static visual requirement.
+- Personal photographs will supply the subject matter; the proposed treatment converts them to black/purple Braille or line art. This page-specific treatment needs review before replacing the current restriction on displaying photography.
+- Composition and interaction specification: `feature.md`. Static proposal: `about-me-static.html`. Do not implement the live About Me gallery or animations before review.
