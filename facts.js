@@ -6,23 +6,23 @@
   const results = machine.querySelector('.fact-results');
   // Replace these strings with personal facts when ready.
   const facts = [
-    'fact 1',
-    'fact 2',
-    'fact 3',
-    'fact 4',
-    'fact 5',
-    'fact 6',
-    'fact 7',
-    'fact 8',
-    'fact 9',
-    'fact 10',
-    'fact 11',
-    'fact 12',
-    'fact 13',
-    'fact 14',
-    'fact 15',
+    '#larp-maxxing',
+    '#piano',
+    '#purple',
+    '#heytea-guava-green-grape',
+    '#tft',
+    '#nonchalant',
+    '#joji',
+    '#BASS',
+    '#fuzhounese',
+    '#chinese-canadian',
+    '#tangyuan',
+    '#ENTP',
+    '#capture-every-moment',
+    '#nerd',
+    '#real-one',
   ];
-  const jackpotFact = 'jackpot';
+  const jackpotFact = 'labubu';
   const symbols = ['⠿⠿','⣀⣿','⣿⣀','⣾⡇','⡇⣷','⢸⣇','⣹⢾','⡯⣽','⣶⣶','⢿⡿','⣤⠛','⠛⣤','⣧⣴','⣰⣆','⢾⡷'];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   function randomInt(limit) {
@@ -32,7 +32,7 @@
     return value % limit;
   }
   function outcome() {
-    const jackpot = randomInt(100) < 50;
+    const jackpot = randomInt(100) < 1;
     const pool = [...facts.keys()];
     const values = [];
     for (let i = 0; i < 4; i++) values.push(pool.splice(randomInt(pool.length), 1)[0]);

@@ -212,3 +212,7 @@ body.page-hidden .about-page .fact-machine.is-jackpot .star-confetti,.about-page
 .about-page .fact-track span.braille-star{white-space:pre;font-size:12px;line-height:1;letter-spacing:0}
 .about-page .star-confetti span{white-space:pre}
 @media(max-width:600px){.about-page .fact-track span.braille-star{font-size:10px}}
+
+.about-page .portrait .image img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+
+@media(max-width:600px){.about-page .fact-results{min-height:120px}}
