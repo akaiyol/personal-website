@@ -83,9 +83,13 @@ function showRoute(focus = false) {
   const id = location.hash.slice(1) || "home";
   const item = destinations.find(item => !item.external && item.id === id);
   const connect = id === "connect";
+  const about = id === "about";
+  document.querySelector("#about-view").hidden = !about;
+  document.body.classList.toggle("about-active", about);
+  document.querySelector(".identity").textContent = about ? "yolanda@web:~/about" : "yolanda@web:~";
   const view = document.querySelector("#destination-view");
   document.querySelector(".hero").hidden = Boolean(item || connect);
-  view.hidden = !item && !connect;
+  view.hidden = about || (!item && !connect);
   response.textContent = "";
   const title = document.querySelector("#destination-title");
   title.textContent = item?.label || "connect";
@@ -99,7 +103,9 @@ function showRoute(focus = false) {
     links.append(link);
   });
   document.title = `Yolanda | ${item?.label || (connect ? "Connect" : "Hello")}`;
-  if (focus && !view.hidden) title.focus();
+  if (focus && about) document.querySelector("#about-title").focus();
+  else if (focus && !view.hidden) title.focus();
+  window.dispatchEvent(new Event("site:route"));
 }
 window.addEventListener("hashchange", () => showRoute(true));
 showRoute();
@@ -135,7 +141,7 @@ document.querySelector("#command-form").addEventListener("submit", event => {
   const exact = destinations.find(item => [item.label, ...item.aliases].includes(query));
   const item = exact || (!list.hidden ? matches[selected] : null);
   if (item) navigate(item);
-  else if (query === "home") { location.hash = "#home"; input.value = ""; closeSuggestions(); }
+  else if (query === "home") { location.hash = "#home"; input.value = ""; hint.textContent = normalHint; closeSuggestions(); }
   else if (query === "clear") { response.textContent = ""; input.value = ""; renderSuggestions(); }
   else if (query === "help" || query === "connect") { dismissed = false; input.value = ""; renderSuggestions(); }
   else if (query) { response.textContent = "Choose work history, projects, about me, github or linkedin."; }

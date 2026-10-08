@@ -1,6 +1,6 @@
 # About Me — framed life collection
 
-Status: overall layout approved 2026-10-07; revised frame designs await user review. The static mock is for composition only. Do not replace the live About Me view or add gallery interactions or animation yet.
+Status: approved for website implementation 2026-10-07. The live `#about` route uses the approved layout and frame treatment. Source photos are still pending; character-art placeholders and blank dates/captions remain. The standalone static mock remains as a reference.
 
 ## Purpose and visual direction
 
@@ -32,7 +32,7 @@ The static mock shows one selected Polaroid and two permanently highlighted term
 | Contact sheet | Several small exposures within one border | Possible later variant |
 | Photo-album corners | Four diagonal mounting pockets, exposed paper between them | Possible later variant |
 | Ticket stub | Perforated end, narrow vertical stub, cropped corners | Possible later variant |
-| Oval locket | Double oval perimeter with a small hanging loop | Possible later variant |
+| Oval locket | Removed with circular/oval frames | Do not use |
 | Postcard | Simple border, stamp corner, divided reverse side | Possible later variant |
 
 Use a curated set. Do not include every variant simply because it exists. Keep image art dominant over frame decoration.
@@ -46,7 +46,7 @@ Use a curated set. Do not include every variant simply because it exists. Keep i
 - Use a semantic `time` element when a date is available. Leave its machine-readable date absent while blank. Exact date presentation will be reviewed with real content.
 - Reserve a small space for date tags within the paper mount or Polaroid band. Keep metadata quieter than the photo without shrinking it to an unreadable size.
 
-## Proposed interactions — later implementation
+## Implemented interactions
 
 ### Bring an image to the front
 
@@ -63,7 +63,7 @@ Use a curated set. Do not include every variant simply because it exists. Keep i
 - Constrain repositioning to the gallery. On release, snap the image's clip to an allowed position on the line and update overlap order.
 - Keep images reachable and prevent overlapping the terminal or introduction. Do not persist arbitrary positions unless explicitly requested.
 - Support touch and a keyboard alternative for changing position; retain normal page scrolling outside the active drag.
-- Decide after the static review whether selected images stay tethered or can temporarily leave the line.
+- Selected photos stay near their original pin. Mouse dragging lifts them temporarily; release returns them vertically to the line at the new horizontal pin position.
 
 ### Important terms
 
@@ -72,7 +72,7 @@ Use a curated set. Do not include every variant simply because it exists. Keep i
 - Use proximity to the term, not unrelated mouse movement anywhere on the screen. Avoid flashing several distant terms at once.
 - Highlighting must not alter font metrics, line breaks, or layout. Keep the base text readable without the effect.
 - Keyboard focus and touch must offer an equivalent way to reveal emphasis. The information must never require hover.
-- Tune proximity range and transition timing after the composition is approved. Static mock highlights demonstrate appearance only.
+- Pointer proximity uses a 24-pixel range and emphasizes only the closest authored phrase. Static mock highlights demonstrate appearance only.
 
 ### Stretch goal: animated hand
 
@@ -101,7 +101,7 @@ Provided 2026-10-07:
 
 The mock uses lightly edited first-person copy. Product management and painting/drawing are highlighted as sample emphasis states; the final list of important terms remains open for review.
 
-## Content required before implementation
+## Content still needed
 
 - Portrait source and preferred crop.
 - Review of the drafted background introduction and important phrases (the user has supplied the content).
@@ -109,11 +109,11 @@ The mock uses lightly edited first-person copy. Product management and painting/
 - Choice of Braille versus line-art conversion for photo subjects; compare recognizability before adopting a technique.
 - Preferred selected-image position and scale, approved frame mix, and mobile treatment.
 
-## Approval sequence
+## Remaining milestones
 
 1. Layout approved. Review the revised frame vocabulary and photo treatment.
 2. Replace placeholder artwork and draft copy with user-supplied content; review the static page again.
-3. Implement selection and term emphasis, then drag and repin.
+3. Selection, term emphasis, and drag/repin are implemented; refine with the user's actual photos.
 4. Consider the animated hand only after the basic interactions pass review.
 
 ## Current deliverables
@@ -139,4 +139,22 @@ The user approved the layout and requested more variation through dots, lines, t
 - Keep the stamp perforations but remove the outer straight rectangular outline from both the portrait stamp and the hanging stamp. Inner image boundaries may remain.
 - During implementation, add more user-supplied photos to create a somewhat crowded line with varied sizes and intentional overlaps. Start by evaluating approximately seven to nine photos rather than four widely spaced images; the final count depends on supplied content and available width.
 - Hover raises the targeted photo above its neighbours. Do not reshuffle the line or move adjacent photos just to reveal it. Every photo needs an exposed area that can be hovered, tapped, or focused.
-- Additional photos and hover behaviour are deferred to implementation; this revision only changes the static frame treatment. Keep dates and optional captions blank.
+- This direction is now implemented with eight placeholder frames. Keep dates and optional captions blank.
+
+## Website implementation — 2026-10-07
+
+- Integrated the portrait, biography, stamp edges, and eight overlapping placeholder frames at `#about`.
+- Hover/focus brings photos forward. Click/tap or Enter/Space selects; Escape dismisses.
+- Mouse dragging repins along the line. Touch uses the pin as its drag handle so the image body can scroll the gallery. Alt+Left/Right repins with a keyboard. Positions remain local to the current page session.
+- Repinning preserves at least a small exposed strip between pin positions so every photo remains reachable.
+- Important phrases respond to pointer proximity, focus, and tap/keyboard toggling without changing text metrics.
+- Reduced motion removes lift transitions; visibility and route changes clear pending proximity work. Hidden hero artwork stops updating on the About route.
+- The animated hand remains deferred. No source photographs or dates have been invented.
+
+### Live implementation verification
+
+- Browser: eight frames rendered on desktop; a narrow layout at 389 CSS pixels had no horizontal document overflow and a scrollable gallery. Dates and captions remain empty.
+- Verified keyboard selection, Escape dismissal, Alt+Arrow repinning, access to the last photo, and terminal navigation from Home to About.
+- Verified mouse dragging changed a photo's pin position and cleared transient drag styles on release. Pointer proximity added term emphasis, and moving away removed it.
+- JavaScript syntax, whitespace checks, and browser error checks passed.
+- Touch pin dragging and reduced-motion styling are implemented but were not verified on a physical touchscreen or through OS preference changes.

@@ -79,16 +79,16 @@ Use this section for future thoughts before adopting them as rules. Each note sh
 - Terminal density: command text and suggestions now share a type scale. Refine overall page spacing after reviewing this version.
 - Window chrome: no macOS traffic-light buttons or title bar added; the current reference applies to the terminal content and prompt.
 
-## About Me direction — layout approved; frames under review
+## About Me direction — implemented
 
 - A personal collection of framed images, combining character-built Braille artwork with thin line-art frames.
 - A framed portrait and background introduction sit above a hanging collection of life images.
 - Mix picture frames, Polaroids, perforated postage-stamp edges, film negatives, and paper mounts. Keep them recognizably related through the same palette and line weight.
 - Life-photo frames include attached date tags and optional short captions. Leave these blank until supplied.
 - The image line should feel physically pinned and irregularly arranged, with believable overlaps and clear negative space.
-- Important terms use a purple rectangle with black lettering when emphasized. Pointer proximity is a proposed interaction, not a static visual requirement.
+- Important terms use a purple rectangle with black lettering when emphasized. The live page reveals this emphasis on pointer proximity, focus, or touch selection.
 - Personal photographs will supply the subject matter; the proposed treatment converts them to black/purple Braille or line art. This page-specific treatment needs review before replacing the current restriction on displaying photography.
-- Composition and interaction specification: `feature.md`. Static proposal: `about-me-static.html`. Do not implement the live About Me gallery or animations before review.
+- Composition and interaction specification: `feature.md`. Static reference: `about-me-static.html`. The user authorized implementation on 2026-10-07; the live About route now follows this direction.
 
 ### Frame refinement — 2026-10-07
 
@@ -100,6 +100,6 @@ Use this section for future thoughts before adopting them as rules. Each note sh
 
 ### Hanging collection density
 
-- The user wants a somewhat crowded line, with more photos and intentional overlaps during implementation. Preserve an exposed area for every photo.
+- The user wants a somewhat crowded line, with eight placeholder photos and intentional overlaps in the live implementation. Preserve an exposed area for every photo.
 - Hovering a photo brings it to the front; keyboard focus and touch selection provide equivalent access. Keep neighbouring photos in place.
 - Do not use circular/oval frames. Stamp edges have perforations without an enclosing straight outer rectangle.
