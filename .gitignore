@@ -8,6 +8,8 @@ planning/
 research/
 notes/
 studies/
+*-static.html
+*-mock.html
 
 # Private documents and exports
 *.pdf
