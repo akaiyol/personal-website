@@ -76,7 +76,7 @@
 .about-page .polaroid{flex-basis:174px}
 .about-page .memory .image pre{font-size:6px}
 .about-page .memories{gap:12px}}
-.about-page .portrait{padding:21px;overflow:hidden;border:0}
+.about-page .portrait{padding:21px;overflow:hidden;border:0;box-shadow:inset 0 0 0 1px var(--ink)}
 .about-page .portrait:before{inset:12px;border:1px dotted var(--ink)}
 .about-page .portrait:after{display:none}
 .about-page .portrait .perforation{width:15px;height:15px}
@@ -85,7 +85,7 @@
 .about-page .portrait .perforation.left{left:-8px}
 .about-page .portrait .perforation.right{right:-8px}
 .about-page .portrait .image{border:1px solid var(--ink)}
-.about-page .stamp .paper{padding:17px 14px 19px;outline:none;border:0}
+.about-page .stamp .paper{padding:17px 14px 19px;outline:none;border:0;box-shadow:inset 0 0 0 1px var(--ink)}
 .about-page .stamp .perforation{width:11px;height:11px}
 .about-page .stamp .perforation.top{top:-6px}
 .about-page .stamp .perforation.bottom{bottom:-6px}

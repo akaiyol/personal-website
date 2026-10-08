@@ -93,7 +93,7 @@ Use this section for future thoughts before adopting them as rules. Each note sh
 ### Frame refinement — 2026-10-07
 
 - The user approved the portrait/introduction above the hanging image line. Preserve that composition.
-- Portrait uses a postage-stamp ridge: visible rounded perforations around all four sides and a dotted inset keyline. Remove the outer straight rectangular outline; keep the perforated edge.
+- Portrait uses a postage-stamp ridge: visible rounded perforations around all four sides and a dotted inset keyline. Connect the rounded cut-outs with short straight ridges to form one continuous scalloped perimeter, without a separate enclosing rectangle.
 - Frame variation must come from silhouette, construction, and dot/line texture, rather than repeated rectangular outlines with different padding.
 - Hanging studies now contrast an arched stamp window, film sprocket rails, a broad-bottom Polaroid, torn notepad binding/ridges, with no circular/oval frame.
 - Keep all frame materials black and purple. Dates and optional captions remain blank.

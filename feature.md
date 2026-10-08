@@ -136,7 +136,7 @@ The user approved the layout and requested more variation through dots, lines, t
 ## Crowded line revision — 2026-10-07
 
 - Remove the circular/oval frame from the static mock and planned frame set.
-- Keep the stamp perforations but remove the outer straight rectangular outline from both the portrait stamp and the hanging stamp. Inner image boundaries may remain.
+- Keep one continuous scalloped perimeter on both the portrait stamp and hanging stamps: short straight ridges connect the rounded cut-outs. Do not add a separate enclosing rectangle. Inner image boundaries may remain.
 - During implementation, add more user-supplied photos to create a somewhat crowded line with varied sizes and intentional overlaps. Start by evaluating approximately seven to nine photos rather than four widely spaced images; the final count depends on supplied content and available width.
 - Hover raises the targeted photo above its neighbours. Do not reshuffle the line or move adjacent photos just to reveal it. Every photo needs an exposed area that can be hovered, tapped, or focused.
 - This direction is now implemented with eight placeholder frames. Keep dates and optional captions blank.
