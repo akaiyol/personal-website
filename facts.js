@@ -32,7 +32,7 @@
     return value % limit;
   }
   function outcome() {
-    const jackpot = randomInt(100) === 0;
+    const jackpot = randomInt(100) < 50;
     const pool = [...facts.keys()];
     const values = [];
     for (let i = 0; i < 4; i++) values.push(pool.splice(randomInt(pool.length), 1)[0]);
