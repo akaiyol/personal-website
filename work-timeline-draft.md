@@ -1,6 +1,6 @@
 # Work experience timeline — editable draft
 
-Status: draft for review. Not implemented on the website.
+Status: content approved for mockup. Standalone reference: `work-timeline-mock.html`. Not integrated into the website.
 
 ## Content
 
@@ -10,7 +10,7 @@ Order entries by start date, newest first. Each entry has a date, employer/team 
 
 - Employer/team: RBC · Global Asset Management
 - Role: AI Product Management Intern
-- Summary: Shaping features and adoption for an AI agent platform supporting investment management.
+- Summary: Shaping features and adoption for an AI agent platform supporting investment and portfolio management.
 
 ### may 2026 — present
 
@@ -22,7 +22,7 @@ Order entries by start date, newest first. Each entry has a date, employer/team 
 
 - Employer/product: SAP · HANA Cloud
 - Role: AI Product Management Intern
-- Summary: Shaping cloud database AI agents through customer research, product analytics, and roadmaps.
+- Summary: Scoping the roadmap for cloud database AI agents through customer research and product analytics.
 
 ### may — aug 2025
 
@@ -51,6 +51,9 @@ Order entries by start date, newest first. Each entry has a date, employer/team 
 ## Layout direction
 
 - One vertical timeline, with dates and content aligned beside a continuous line.
+- List 2026, 2025, 2024, and 2023 vertically on the right in a sticky year selector. Clicking or pressing Enter on a year jumps to the first experience in that year.
+- Keep the selector on the right on narrow screens; allow summaries to wrap. Indicate the current year with black text on a purple rectangle.
+- Year jumps are immediate in the mockup; animation proposals remain unapproved.
 - Use the existing black/purple palette, monospace typography, and terminal shell.
 - Keep every experience visible from the start.
 - Include the research assistant role; keep the capstone under Projects.
