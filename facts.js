@@ -5,7 +5,23 @@
   const button = machine.querySelector('.fact-roll');
   const results = machine.querySelector('.fact-results');
   // Replace these strings with personal facts when ready.
-  const facts = Array.from({length: 15}, (_, i) => `fact ${i + 1}`);
+  const facts = [
+    'fact 1',
+    'fact 2',
+    'fact 3',
+    'fact 4',
+    'fact 5',
+    'fact 6',
+    'fact 7',
+    'fact 8',
+    'fact 9',
+    'fact 10',
+    'fact 11',
+    'fact 12',
+    'fact 13',
+    'fact 14',
+    'fact 15',
+  ];
   const jackpotFact = 'jackpot';
   const symbols = ['⠿⠿','⣀⣿','⣿⣀','⣾⡇','⡇⣷','⢸⣇','⣹⢾','⡯⣽','⣶⣶','⢿⡿','⣤⠛','⠛⣤','⣧⣴','⣰⣆','⢾⡷'];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -83,6 +99,13 @@
     else if (!played) roll();
   }
   button.addEventListener('click', roll);
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Enter' || event.repeat || event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || page.hidden) return;
+    // Preserve Enter for terminal navigation, links, and photo controls.
+    if (event.target.closest('input, textarea, select, button, a, [role="button"], [role="checkbox"], [contenteditable="true"]')) return;
+    event.preventDefault();
+    roll();
+  });
   addEventListener('site:route', route);
   document.addEventListener('visibilitychange', route);
   reduced.addEventListener('change', () => { if (reduced.matches) finish(); });
