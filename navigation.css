@@ -1,0 +1,33 @@
+[hidden] { display: none !important; }
+.identity, .back-link, #destination-links a { color: var(--text); text-decoration: none; }
+a:focus-visible { outline: 2px dashed var(--accent); outline-offset: 4px; }
+.identity:hover, .back-link:hover, #destination-links a:hover { text-decoration: underline; }
+/* The prompt, completion, and candidate rows share one terminal type scale. */
+.command-navigation { position: relative; width: 100%; min-width: 0; font-size: 14px; line-height: 1.75; }
+.command-navigation form { gap: 1ch; }
+.command-input { position: relative; flex: 1; min-width: 0; font: inherit; overflow: hidden; }
+#command:focus-visible { outline: none; }
+.command-navigation form:focus-within { outline: 1px dashed var(--accent); outline-offset: 5px; }
+#command { position: relative; height: 44px; padding: 10px 0; font: inherit; caret-color: transparent; }
+.completion { position: absolute; inset: 0; display: flex; align-items: center; pointer-events: none; white-space: pre; overflow: hidden; }
+.completion-prefix { visibility: hidden; }
+.completion-suffix { text-decoration: underline; text-underline-offset: 4px; }
+#block-cursor { position: absolute; top: 50%; transform: translateY(-50%); width: 1ch; height: 1.2em; line-height: 1.2em; color: var(--bg); background: var(--accent); pointer-events: none; white-space: pre; animation: cursor-blink 1.1s step-end infinite; }
+#block-cursor.cursor-moving { animation: none; }
+@keyframes cursor-blink { 0%, 100% { visibility: visible; } 50% { visibility: hidden; } }
+.go-button { font: inherit; width: 44px; flex-shrink: 0; padding: 8px 0; }
+#suggestions { position: absolute; bottom: calc(100% + 15px); left: -29px; right: -29px; margin: 0; padding: 8px 28px; list-style: none; border: 1px solid var(--line); background: var(--bg); max-height: min(280px, 42svh); overflow-y: auto; z-index: 2; font: inherit; }
+#suggestions li { min-height: 44px; padding: 9px 1ch; display: flex; justify-content: space-between; align-items: center; gap: 2ch; cursor: pointer; font: inherit; }
+#suggestions li[aria-selected="true"] { background: var(--accent); color: var(--bg); }
+.suggestion-kind { font: inherit; }
+
+@media (prefers-reduced-motion: reduce) { #block-cursor { animation: none; } }
+#destination-title { font-size: 28px; margin-bottom: 24px; }
+#destination-copy { font-size: 14px; }
+#destination-links { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 28px; }
+.back-link { display: inline-block; padding: 12px 0; font-size: 12px; }
+@media (max-width: 700px) {
+  #suggestions { left: -17px; right: -17px; padding: 8px 16px; }
+  .command-navigation { font-size: 13px; }
+  .go-button { padding-right: 0; }
+}

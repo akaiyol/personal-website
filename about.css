@@ -1,0 +1,152 @@
+.about-page *{box-sizing:border-box}
+.about-page h1{font-size:30px;font-weight:400;margin:0 0 25px}
+.about-page p{margin:0 0 22px}
+.about-page .introduction{display:grid;grid-template-columns:240px minmax(0,1fr);gap:64px;align-items:center}
+.about-page .story{max-width:600px}
+.about-page .greeting{font-size:22px;margin-bottom:20px}
+.about-page .background{font-size:14px;line-height:1.9;margin-bottom:18px}
+.about-page .closing{font-size:14px;line-height:1.9;margin:25px 0 0;padding-left:16px;border-left:1px solid var(--ink)}
+.about-page .term{color:var(--ground);background:var(--ink);padding:2px 4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.about-page .year{font-size:13px}
+.about-page .portrait{position:relative;padding:14px;border:1px solid var(--ink);transform:rotate(-3deg);margin:8px 0 22px}
+.about-page .portrait:before{content:"";position:absolute;inset:5px;border:1px solid var(--ink)}
+.about-page .portrait:after{content:"+";position:absolute;bottom:0;right:1px;line-height:1}
+.about-page .portrait .image{height:252px}
+.about-page .image{display:grid;place-items:center;overflow:hidden;border:1px solid var(--ink);background:var(--ground)}
+.about-page pre{margin:0;font-family:inherit;line-height:1.05;font-size:7px;white-space:pre}
+.about-page .portrait pre{font-size:7px;line-height:1.04}
+.about-page .gallery{position:relative;padding:38px 8px 16px;margin:55px -25px 0;min-height:300px}
+.about-page .wire{position:absolute;top:38px;left:-8px;right:-8px;height:37px;border-bottom:1px solid var(--ink);border-radius:0 0 50% 50%;transform:rotate(-1deg)}
+.about-page .wire:before,.about-page .wire:after{content:"+";position:absolute;top:10px;font-size:18px}
+.about-page .wire:before{left:-3px}
+.about-page .wire:after{right:-3px}
+.about-page .memories{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding-top:33px}
+.about-page .memory{position:relative;flex:0 0 162px;margin:0;transform:rotate(var(--tilt));background:var(--ground)}
+.about-page .paper{position:relative;background:var(--ground);border:1px solid var(--ink);padding:10px}
+.about-page .memory .image{height:141px}
+.about-page .memory figcaption{font-size:11px;line-height:1;margin-top:8px;letter-spacing:1px}
+.about-page .clip{position:absolute;top:-25px;left:calc(50% - 5px);width:10px;height:30px;border:1px solid var(--ink);background:var(--ground);transform:rotate(5deg);z-index:4}
+.about-page .clip:after{content:"";position:absolute;top:13px;left:-3px;width:14px;border-top:1px solid var(--ink)}
+.about-page .stamp{margin-top:0}
+.about-page .stamp .paper{overflow:hidden;border:1px solid var(--ink);outline:1px solid var(--ink);outline-offset:-5px;padding:15px}
+.about-page .negative{margin-top:19px;flex-basis:154px}
+.about-page .negative .paper{padding:17px 18px}
+.about-page .negative .paper:before,.about-page .negative .paper:after{content:"▯ ▯ ▯ ▯ ▯";position:absolute;left:7px;right:7px;font-size:14px;line-height:10px;letter-spacing:6px;overflow:hidden;height:10px;white-space:nowrap}
+.about-page .negative .paper:before{top:4px}
+.about-page .negative .paper:after{bottom:4px}
+.about-page .negative figcaption{margin-bottom:9px}
+.about-page .polaroid{flex-basis:190px;margin-top:0;z-index:3}
+.about-page .polaroid .paper{padding:12px 12px 36px;outline:1px solid var(--ink);outline-offset:5px}
+.about-page .polaroid .image{height:160px}
+.about-page .polaroid figcaption{position:absolute;bottom:12px;left:14px}
+.about-page .selected{transform:translateY(13px) rotate(var(--tilt)) scale(1.08)}
+.about-page .deckle{margin-top:11px;flex-basis:165px}
+.about-page .deckle .paper{border-style:dashed;padding:12px 10px 18px}
+.about-page .deckle .paper:before{content:"";position:absolute;inset:4px;border:1px dotted var(--ink);pointer-events:none}
+.about-page .slide{margin-top:3px;flex-basis:157px}
+.about-page .slide .paper{padding:21px 18px 26px}
+.about-page .slide .image{height:112px}
+.about-page .slide figcaption{position:absolute;bottom:9px;right:13px}
+@media(max-width:1000px){.about-page .introduction{gap:35px;grid-template-columns:220px minmax(0,1fr)}
+.about-page .gallery{margin-left:-12px;margin-right:-12px;overflow-x:auto;padding-bottom:25px}
+.about-page .memories{width:950px;justify-content:flex-start;gap:29px}
+.about-page .wire{width:950px;right:auto}}
+@media(max-width:600px){.about-page .introduction{display:flex;flex-direction:column;gap:24px;align-items:flex-start}
+.about-page .portrait{width:205px;margin:8px auto 0}
+.about-page .portrait .image{height:220px}
+.about-page .portrait pre{font-size:6.5px}
+.about-page .story{width:100%}
+.about-page h1{font-size:25px;margin-bottom:18px}
+.about-page .greeting{font-size:20px;margin-bottom:14px}
+.about-page .background{font-size:14px}
+.about-page .gallery{margin-top:25px;margin-left:-12px;margin-right:-12px;min-height:305px}
+.about-page .year{font-size:12px}}
+.about-page .perforation{position:absolute;width:8px;height:8px;border:1px solid var(--ink);border-radius:50%;background:var(--ground);z-index:2}
+.about-page .perforation.top{top:-4px;left:var(--position)}
+.about-page .perforation.bottom{bottom:-4px;left:var(--position)}
+.about-page .perforation.left{left:-4px;top:var(--position)}
+.about-page .perforation.right{right:-4px;top:var(--position)}
+.about-page .memory figcaption{display:flex;flex-direction:column;gap:4px;min-height:16px;letter-spacing:0}
+.about-page .photo-date{display:block;min-height:14px;width:10ch;border-bottom:1px solid var(--ink)}
+.about-page .photo-caption:empty{display:none}
+.about-page .polaroid figcaption{bottom:10px;left:14px}
+.about-page .slide figcaption{bottom:7px;left:18px;right:auto}
+.about-page .negative figcaption{margin-bottom:8px}
+@media(min-width:1001px) and (max-width:1150px){.about-page .memory{flex-basis:145px}
+.about-page .polaroid{flex-basis:174px}
+.about-page .memory .image pre{font-size:6px}
+.about-page .memories{gap:12px}}
+.about-page .portrait{padding:21px;overflow:hidden;border:0;box-shadow:inset 0 0 0 1px var(--ink)}
+.about-page .portrait:before{inset:12px;border:1px dotted var(--ink)}
+.about-page .portrait:after{display:none}
+.about-page .portrait .perforation{width:15px;height:15px}
+.about-page .portrait .perforation.top{top:-8px}
+.about-page .portrait .perforation.bottom{bottom:-8px}
+.about-page .portrait .perforation.left{left:-8px}
+.about-page .portrait .perforation.right{right:-8px}
+.about-page .portrait .image{border:1px solid var(--ink)}
+.about-page .stamp .paper{padding:17px 14px 19px;outline:none;border:0;box-shadow:inset 0 0 0 1px var(--ink)}
+.about-page .stamp .perforation{width:11px;height:11px}
+.about-page .stamp .perforation.top{top:-6px}
+.about-page .stamp .perforation.bottom{bottom:-6px}
+.about-page .stamp .perforation.left{left:-6px}
+.about-page .stamp .perforation.right{right:-6px}
+.about-page .stamp .image{border:1px dotted var(--ink);border-radius:48% 48% 0 0}
+.about-page .negative .paper{padding:22px 9px 25px;border:1px solid var(--ink)}
+.about-page .negative .paper:before,.about-page .negative .paper:after{content:"▪ ▪ ▪ ▪ ▪ ▪";background:var(--ink);color:var(--ground);left:3px;right:3px;height:14px;line-height:14px;font-size:17px;letter-spacing:5px;text-align:center}
+.about-page .negative .paper:before{top:3px}
+.about-page .negative .paper:after{bottom:3px}
+.about-page .negative .image{border:0;height:130px}
+.about-page .negative .photo-date{border-bottom-style:dotted}
+.about-page .polaroid .paper{outline:none;border:1px solid var(--ink);padding:10px 10px 44px}
+.about-page .polaroid .paper:after{content:"⠂ ⠄ ⠠ ⠂ ⠐ ⠄ ⠂ ⠠ ⠂ ⠐";position:absolute;left:11px;right:11px;bottom:28px;font-size:10px;line-height:1;overflow:hidden;white-space:nowrap}
+.about-page .polaroid .image{border:1px solid var(--ink)}
+.about-page .notepad{margin-top:12px;flex-basis:165px}
+.about-page .notepad .paper{padding:24px 10px 21px;border:1px solid var(--ink);border-top:1px dashed var(--ink)}
+.about-page .notepad .paper:before{content:"";position:absolute;left:19px;top:16px;bottom:7px;border-left:1px dotted var(--ink)}
+.about-page .notepad .paper:after{content:"";position:absolute;bottom:18px;left:7px;right:7px;border-bottom:1px dotted var(--ink)}
+.about-page .notepad .binding{position:absolute;top:-5px;width:7px;height:15px;border:1px solid var(--ink);border-radius:5px;transform:rotate(-12deg);background:var(--ground)}
+.about-page .notepad .image{height:127px;margin-left:16px;border:0;border-bottom:1px dotted var(--ink)}
+.about-page .notepad figcaption{margin-left:16px}
+.about-page .oval{margin-top:9px;flex-basis:157px}
+.about-page .oval .paper{height:195px;border:2px dotted var(--ink);border-radius:50%;padding:19px 14px 32px}
+.about-page .oval .paper:before{content:"";position:absolute;inset:6px;border:1px solid var(--ink);border-radius:50%;pointer-events:none}
+.about-page .oval .image{height:127px;border-radius:50%;border:1px dotted var(--ink)}
+.about-page .oval figcaption{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);margin:0;min-height:12px}
+.about-page .oval .photo-date{width:6ch;min-height:10px;border-bottom-style:dotted}
+.about-page .oval .clip{top:-23px}
+@media(min-width:1001px) and (max-width:1150px){.about-page .notepad,.about-page .oval{flex-basis:145px}}
+.about-page { --ink: var(--text); --ground: var(--bg); font-size: 14px; line-height: 1.8; }
+body.about-active main { padding: 48px 58px 18px; overflow: visible; justify-content: flex-start; }
+.about-page #about-title { outline: none; }
+.about-page .gallery { overflow: visible; margin-top: 55px; padding-bottom: 30px; }
+.about-page .memories { position: relative; display: block; width: 100%; height: 300px; margin-top: 33px; padding: 0; }
+.about-page .memory { position: absolute; left: var(--slot); top: var(--hang); width: 162px; margin: 0; cursor: grab; touch-action: pan-x pan-y; user-select: none; z-index: var(--layer); transform: rotate(var(--tilt)); transform-origin: 50% 0; transition: transform 180ms ease; }
+.about-page .memory.polaroid { width: 190px; }
+.about-page .memory.notepad { width: 165px; }
+.about-page .memory.negative { width: 154px; }
+.about-page .memory:is(:hover,:focus-visible) { z-index: 80; transform: translateY(-12px) rotate(0deg) scale(1.08); }
+.about-page .memory[aria-pressed="true"] { z-index: 60; transform: translateY(-12px) rotate(0deg) scale(1.08); }
+.about-page .memory:focus-visible { outline: 2px dashed var(--ink); outline-offset: 6px; }
+.about-page .memory.dragging { z-index: 100; cursor: grabbing; transition: none; transform: translate(var(--drag-x, 0px), var(--drag-y, 0px)) rotate(0deg) scale(1.06); }
+.about-page .term { background: transparent; color: inherit; cursor: default; outline-offset: 3px; }
+.about-page .term:is(.emphasized,:focus-visible,[aria-pressed="true"]) { background: var(--ink); color: var(--ground); }
+.about-page .term:focus-visible { outline: 1px dashed var(--ink); }
+@media (max-width: 1150px) and (min-width: 1001px) {
+ .about-page .memory { width: 145px; }.about-page .memory.polaroid { width: 174px; }.about-page .memory.notepad { width: 145px; }.about-page .memory.negative { width: 145px; }
+}
+@media (max-width: 1000px) {
+ body.about-active main { padding: 38px 34px 16px; }
+ .about-page .gallery { overflow-x: auto; overflow-y: hidden; padding-top: 50px; }
+ .about-page .memories { width: 1160px; height: 300px; }
+ .about-page .wire { width: 1160px; }
+}
+@media (max-width: 600px) { body.about-active main { padding: 30px 22px 12px; } .about-page .gallery { margin-top: 25px; } }
+@media (prefers-reduced-motion: reduce) {
+ .about-page .memory { transition: none; }
+ .about-page .memory:is(:hover,:focus-visible,[aria-pressed="true"]) { transform: rotate(var(--tilt)); }
+}
+body.page-hidden .about-page .memory { transition: none; }
+
+.about-page .clip { touch-action: none; cursor: grab; }
+.about-page .clip::before { content: ""; position: absolute; inset: -8px -17px; }

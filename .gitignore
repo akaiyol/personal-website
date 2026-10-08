@@ -1,0 +1,49 @@
+# Local design, research, planning, and agent instructions
+*.md
+!README.md
+*.txt
+!assets/fonts/OFL.txt
+plans/
+planning/
+research/
+notes/
+studies/
+*-static.html
+*-mock.html
+
+# Private documents and exports
+*.pdf
+*.doc
+*.docx
+*.ppt
+*.pptx
+*.xls
+*.xlsx
+*.csv
+*.zip
+private/
+sensitive/
+resumes/
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+secrets*.json
+.codex/
+.agents/
+.aws/
+
+# Local tooling and generated files
+.DS_Store
+node_modules/
+__pycache__/
+*.pyc
+.cache/
+tmp/
+output/

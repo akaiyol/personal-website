@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Yolanda | Hello</title>
+    <link rel="stylesheet" href="navigation.css?v=3" />
+    <link rel="stylesheet" href="about.css?v=3" />
+    <link rel="stylesheet" href="work.css?v=1" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #000000;
+        --text: #c5b5ec;
+        --muted: #c5b5ec;
+        --accent: #c5b5ec;
+        --line: #c5b5ec;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Menlo, Consolas, "Liberation Mono", monospace;
+        min-height: 100svh;
+        padding: 32px;
+        display: grid;
+        align-items: start;
+        justify-items: center;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      body {
+        font-size: 14px;
+      }
+      input::placeholder {
+        color: var(--accent);
+        opacity: 1;
+      }
+      button {
+        color: inherit;
+        background: none;
+        border: 0;
+        cursor: pointer;
+        min-height: 44px;
+        padding: 8px 10px;
+      }
+      button:hover {
+        color: var(--accent);
+      }
+      button:focus-visible,
+      input:focus-visible {
+        outline: 2px dashed var(--accent);
+        outline-offset: 4px;
+      }
+      .terminal {
+        min-width: 0;
+        width: min(1200px, 100%);
+        min-height: calc(100svh - 64px);
+        border: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+      }
+      header,
+      footer {
+        padding: 15px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+      }
+      .identity {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      main {
+        position: relative;
+        overflow: hidden;
+        flex: 1;
+        padding: 40px 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .hero {
+        display: block;
+      }
+      h1 {
+        font-weight: 400;
+        margin: 0 0 36px;
+      }
+      pre {
+        margin: 0;
+        font-family: inherit;
+        white-space: pre;
+        line-height: 1.25;
+      }
+      .title {
+        font-size: clamp(4px, 0.5vw, 7px);
+        line-height: 1.1;
+        font-weight: 900;
+        color: var(--accent);
+        text-shadow: 0 0 1px currentColor;
+      }
+      .intro {
+        font-family: inherit;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        margin: 0 0 14px;
+      }
+      .description {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.8;
+        max-width: 420px;
+        margin: 0 0 28px;
+      }
+      .cta {
+        padding-left: 0;
+        color: var(--accent);
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        font-size: 12px;
+        color: var(--muted);
+      }
+      form label {
+        white-space: nowrap;
+      }
+      form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+      }
+      input {
+        width: 100%;
+        min-width: 0;
+        color: var(--text);
+        background: transparent;
+        border: 0;
+        padding: 8px 0;
+        outline: none;
+      }
+      .hint {
+        white-space: nowrap;
+      }
+      .response {
+        margin-top: 22px;
+        font-size: 13px;
+        line-height: 1.8;
+        color: var(--muted);
+        max-width: 600px;
+      }
+      .response:empty {
+        display: none;
+      }
+      @media (max-width: 700px) {
+        body {
+          padding: 14px;
+        }
+        .terminal {
+          min-height: calc(100svh - 28px);
+        }
+        header,
+        footer {
+          padding: 12px 16px;
+        }
+        header {
+          flex-wrap: wrap;
+          gap: 2px;
+        }
+        main {
+          padding: 40px 22px;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+        .title {
+          font-size: clamp(3px, 0.88vw, 6px);
+        }
+        h1 {
+          margin-bottom: 26px;
+        }
+        .intro {
+          font-size: 18px;
+        }
+        footer {
+          flex-wrap: wrap;
+          gap: 0;
+        }
+        .hint {
+          font-size: 10px;
+        }
+        form {
+          flex-basis: 100%;
+        }
+        .identity {
+          font-size: 12px;
+        }
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+      ::selection {
+        background: var(--accent);
+        color: var(--bg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="terminal">
+      <header>
+        <a class="identity" href="#home" aria-label="Yolanda, home">yolanda@web:~</a>
+      </header>
+      <main>
+        <div class="hero">
+          <div>
+            <h1 aria-label="Hello,">
+              <pre class="title" id="binary-title" aria-hidden="true"></pre>
+            </h1>
+            <p class="intro">i'm yolanda!</p>
+            <p class="description">ECE '27 @ uwaterloo</p>
+            <button class="cta" data-command="work">
+              [ explore my work ↵ ]
+            </button>
+          </div>
+        </div>
+        <section id="about-view" class="about-page" hidden aria-labelledby="about-title"><section class="introduction" aria-labelledby="about-title"><figure class="portrait" aria-label="Portrait placeholder in a perforated postage-stamp frame"><i class="perforation top" style="--position:5%" aria-hidden="true"></i><i class="perforation top" style="--position:13%" aria-hidden="true"></i><i class="perforation top" style="--position:21%" aria-hidden="true"></i><i class="perforation top" style="--position:29%" aria-hidden="true"></i><i class="perforation top" style="--position:37%" aria-hidden="true"></i><i class="perforation top" style="--position:45%" aria-hidden="true"></i><i class="perforation top" style="--position:53%" aria-hidden="true"></i><i class="perforation top" style="--position:61%" aria-hidden="true"></i><i class="perforation top" style="--position:69%" aria-hidden="true"></i><i class="perforation top" style="--position:77%" aria-hidden="true"></i><i class="perforation top" style="--position:85%" aria-hidden="true"></i><i class="perforation top" style="--position:93%" aria-hidden="true"></i><i class="perforation bottom" style="--position:5%" aria-hidden="true"></i><i class="perforation bottom" style="--position:13%" aria-hidden="true"></i><i class="perforation bottom" style="--position:21%" aria-hidden="true"></i><i class="perforation bottom" style="--position:29%" aria-hidden="true"></i><i class="perforation bottom" style="--position:37%" aria-hidden="true"></i><i class="perforation bottom" style="--position:45%" aria-hidden="true"></i><i class="perforation bottom" style="--position:53%" aria-hidden="true"></i><i class="perforation bottom" style="--position:61%" aria-hidden="true"></i><i class="perforation bottom" style="--position:69%" aria-hidden="true"></i><i class="perforation bottom" style="--position:77%" aria-hidden="true"></i><i class="perforation bottom" style="--position:85%" aria-hidden="true"></i><i class="perforation bottom" style="--position:93%" aria-hidden="true"></i><i class="perforation left" style="--position:5%" aria-hidden="true"></i><i class="perforation left" style="--position:13%" aria-hidden="true"></i><i class="perforation left" style="--position:21%" aria-hidden="true"></i><i class="perforation left" style="--position:29%" aria-hidden="true"></i><i class="perforation left" style="--position:37%" aria-hidden="true"></i><i class="perforation left" style="--position:45%" aria-hidden="true"></i><i class="perforation left" style="--position:53%" aria-hidden="true"></i><i class="perforation left" style="--position:61%" aria-hidden="true"></i><i class="perforation left" style="--position:69%" aria-hidden="true"></i><i class="perforation left" style="--position:77%" aria-hidden="true"></i><i class="perforation left" style="--position:85%" aria-hidden="true"></i><i class="perforation left" style="--position:93%" aria-hidden="true"></i><i class="perforation right" style="--position:5%" aria-hidden="true"></i><i class="perforation right" style="--position:13%" aria-hidden="true"></i><i class="perforation right" style="--position:21%" aria-hidden="true"></i><i class="perforation right" style="--position:29%" aria-hidden="true"></i><i class="perforation right" style="--position:37%" aria-hidden="true"></i><i class="perforation right" style="--position:45%" aria-hidden="true"></i><i class="perforation right" style="--position:53%" aria-hidden="true"></i><i class="perforation right" style="--position:61%" aria-hidden="true"></i><i class="perforation right" style="--position:69%" aria-hidden="true"></i><i class="perforation right" style="--position:77%" aria-hidden="true"></i><i class="perforation right" style="--position:85%" aria-hidden="true"></i><i class="perforation right" style="--position:93%" aria-hidden="true"></i><div class="image"><pre aria-hidden="true">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣶⠶⠶⣶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣤⣼⣿⣥⣤⣤⣤⣤⣬⣿⣧⣤⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⡟⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⢻⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀⠿⠿⠀⠀⠀⠀⠿⠿⠀⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⢹⡄⠀⠀⠀⢀⣀⣀⣀⣀⡀⠀⠀⠀⢠⡏⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢷⡀⠀⠀⠈⠉⠉⠉⠉⠁⠀⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣦⣄⡀⠀⠀⢀⣠⣴⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠙⠛⠿⠿⠛⠋⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⣼⣧⣤⣴⣶⣶⣦⣤⣼⣧⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣶⠾⠟⠛⠉⠉⠁⠀⠀⠀⠀⠀⠀⠈⠉⠉⠛⠻⠷⣶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢀⣤⣾⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣷⣤⡀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣰⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣿⣆⠀⠀⠀⠀
+⠀⠀⠀⣼⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣧⠀⠀⠀
+⠀⠀⢸⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⡇⠀⠀
+⠀⠀⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀
+⠀⠀⢸⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⡇⠀⠀
+⠀⠀⠀⢿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⡿⠀⠀⠀</pre></div></figure><div class="story"><h1 id="about-title" tabindex="-1">about me</h1><p class="greeting">i'm yolanda!</p><p class="background">i'm an electrical and computer engineering student at the university of waterloo. i love <span class="term" role="button" tabindex="0" aria-pressed="false">product management</span> and coding fun projects.</p><p class="background">i've loved <span class="term" role="button" tabindex="0" aria-pressed="false">painting and drawing</span> since i was a kid. i also play piano (RCM level 10) and love reading — the poppy war series is my all-time favourite.</p><p class="background">my other hobbies include PC building (i built my own!), video games, and frisbee.</p><p class="closing">i'm someone who gets inspired by everything around me and would love to experience more.</p></div></section><section class="gallery" aria-label="Life image collection"><div class="wire" aria-hidden="true"></div><div class="memories"><figure id="photo-1" role="button" tabindex="0" aria-pressed="false" aria-describedby="gallery-keys" class="memory stamp " style="--tilt:-7deg;--slot:0.0%;--hang:0px;--layer:1" aria-label="Photo 1, placeholder image in a stamp frame"><span class="clip" aria-hidden="true"></span><div class="paper"><i class="perforation top" style="--position:6%" aria-hidden="true"></i><i class="perforation top" style="--position:15%" aria-hidden="true"></i><i class="perforation top" style="--position:24%" aria-hidden="true"></i><i class="perforation top" style="--position:33%" aria-hidden="true"></i><i class="perforation top" style="--position:42%" aria-hidden="true"></i><i class="perforation top" style="--position:51%" aria-hidden="true"></i><i class="perforation top" style="--position:60%" aria-hidden="true"></i><i class="perforation top" style="--position:69%" aria-hidden="true"></i><i class="perforation top" style="--position:78%" aria-hidden="true"></i><i class="perforation top" style="--position:87%" aria-hidden="true"></i><i class="perforation top" style="--position:96%" aria-hidden="true"></i><i class="perforation bottom" style="--position:6%" aria-hidden="true"></i><i class="perforation bottom" style="--position:15%" aria-hidden="true"></i><i class="perforation bottom" style="--position:24%" aria-hidden="true"></i><i class="perforation bottom" style="--position:33%" aria-hidden="true"></i><i class="perforation bottom" style="--position:42%" aria-hidden="true"></i><i class="perforation bottom" style="--position:51%" aria-hidden="true"></i><i class="perforation bottom" style="--position:60%" aria-hidden="true"></i><i class="perforation bottom" style="--position:69%" aria-hidden="true"></i><i class="perforation bottom" style="--position:78%" aria-hidden="true"></i><i class="perforation bottom" style="--position:87%" aria-hidden="true"></i><i class="perforation bottom" style="--position:96%" aria-hidden="true"></i><i class="perforation left" style="--position:6%" aria-hidden="true"></i><i class="perforation left" style="--position:15%" aria-hidden="true"></i><i class="perforation left" style="--position:24%" aria-hidden="true"></i><i class="perforation left" style="--position:33%" aria-hidden="true"></i><i class="perforation left" style="--position:42%" aria-hidden="true"></i><i class="perforation left" style="--position:51%" aria-hidden="true"></i><i class="perforation left" style="--position:60%" aria-hidden="true"></i><i class="perforation left" style="--position:69%" aria-hidden="true"></i><i class="perforation left" style="--position:78%" aria-hidden="true"></i><i class="perforation left" style="--position:87%" aria-hidden="true"></i><i class="perforation left" style="--position:96%" aria-hidden="true"></i><i class="perforation right" style="--position:6%" aria-hidden="true"></i><i class="perforation right" style="--position:15%" aria-hidden="true"></i><i class="perforation right" style="--position:24%" aria-hidden="true"></i><i class="perforation right" style="--position:33%" aria-hidden="true"></i><i class="perforation right" style="--position:42%" aria-hidden="true"></i><i class="perforation right" style="--position:51%" aria-hidden="true"></i><i class="perforation right" style="--position:60%" aria-hidden="true"></i><i class="perforation right" style="--position:69%" aria-hidden="true"></i><i class="perforation right" style="--position:78%" aria-hidden="true"></i><i class="perforation right" style="--position:87%" aria-hidden="true"></i><i class="perforation right" style="--position:96%" aria-hidden="true"></i><div class="image"><pre aria-hidden="true">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡾⠛⠛⢶⡀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣇⠀⠀⣸⠇⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠓⠚⠋⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⣤⠞⠳⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣠⡴⠛⠁⠀⠀⠀⠙⢶⣄⠀⠀⠀⠀⠀⣀⣤⠶⠶⠶⠶⠦⣤⣀⠀⠀
+⠀⢀⣤⠞⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣦⣠⠴⠋⠁⠀⠀⠀⠀⠀⠀⠀⠉⠓⢦
+⡿⢿⣅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡴⠋⠙⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠈⠙⠶⢤⣤⣀⣀⣤⡤⠖⠋⠁⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡐⠠⢀⠂⠅⡀⠨⢀⠀⠅⡂⠈⢐⠀⠁⡂⠈⠐
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠅⡀⠨⢀⠀⠅⡂⠈⢐⠀⠁⡂⠈⠐⠠⠁⠂
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠁⠂⠈⠐⠀⠁⠂⠈⠐⠀⠁⠂⠈⠐⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</pre></div><figcaption><time class="photo-date"></time><span class="photo-caption"></span></figcaption></div></figure><figure id="photo-2" role="button" tabindex="0" aria-pressed="false" aria-describedby="gallery-keys" class="memory negative " style="--tilt:5deg;--slot:11.4%;--hang:12px;--layer:3" aria-label="Photo 2, placeholder image in a negative frame"><span class="clip" aria-hidden="true"></span><div class="paper"><div class="image"><pre aria-hidden="true">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⡶⠟⠻⢶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⣀⣤⠶⠛⠉⠀⠀⠀⠀⠀⠀⠉⠛⠶⣤⣀⡀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣴⢾⡟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢻⡷⣦⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠛⣿⠛⠛⠛⠛⠛⠛⠛⠛⣿⠛⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⢀⣴⠶⠶⣦⡀⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⣿⠁⠀⠀⠈⣿⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⣿⠀⠀⠀⠀⣿⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⣿⠀⠀⠀⠀⣿⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⣿⠀⠀⠀⠀⣿⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</pre></div><figcaption><time class="photo-date"></time><span class="photo-caption"></span></figcaption></div></figure><figure id="photo-3" role="button" tabindex="0" aria-pressed="false" aria-describedby="gallery-keys" class="memory polaroid" style="--tilt:-3deg;--slot:22.8%;--hang:18px;--layer:6" aria-label="Photo 3, placeholder image in a polaroid frame"><span class="clip" aria-hidden="true"></span><div class="paper"><div class="image"><pre aria-hidden="true">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡶⠶⢄⠀⠀⡠⠶⢶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢧⠀⠀⠳⠞⠀⠀⡼⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠼⠆⣠⡴⢦⣄⠰⠧⠤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢿⡁⠀⠀⠀⣿⠀⠀⣿⠀⠀⠀⢈⡿⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⢻⠂⠈⠛⠛⠁⠐⡟⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡎⠀⢀⡼⢧⡀⠀⢱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⠖⠋⢰⡆⠙⠲⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⡠⠔⠒⠒⠒⠠⢼⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠘⠧⢀⣀⣀⣀⡠⢼⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</pre></div><figcaption><time class="photo-date"></time><span class="photo-caption"></span></figcaption></div></figure><figure id="photo-4" role="button" tabindex="0" aria-pressed="false" aria-describedby="gallery-keys" class="memory notepad " style="--tilt:7deg;--slot:34.2%;--hang:21px;--layer:2" aria-label="Photo 4, placeholder image on a ruled notepad sheet with torn binding ridges"><span class="clip" aria-hidden="true"></span><div class="paper"><span class="binding" style="left:12%" aria-hidden="true"></span><span class="binding" style="left:28%" aria-hidden="true"></span><span class="binding" style="left:44%" aria-hidden="true"></span><span class="binding" style="left:60%" aria-hidden="true"></span><span class="binding" style="left:76%" aria-hidden="true"></span><span class="binding" style="left:92%" aria-hidden="true"></span><div class="image"><pre aria-hidden="true">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡾⠛⠛⢶⡀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣇⠀⠀⣸⠇⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠓⠚⠋⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⣤⠞⠳⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣠⡴⠛⠁⠀⠀⠀⠙⢶⣄⠀⠀⠀⠀⠀⣀⣤⠶⠶⠶⠶⠦⣤⣀⠀⠀
+⠀⢀⣤⠞⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣦⣠⠴⠋⠁⠀⠀⠀⠀⠀⠀⠀⠉⠓⢦
+⡿⢿⣅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡴⠋⠙⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠈⠙⠶⢤⣤⣀⣀⣤⡤⠖⠋⠁⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡐⠠⢀⠂⠅⡀⠨⢀⠀⠅⡂⠈⢐⠀⠁⡂⠈⠐
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠅⡀⠨⢀⠀⠅⡂⠈⢐⠀⠁⡂⠈⠐⠠⠁⠂
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠁⠂⠈⠐⠀⠁⠂⠈⠐⠀⠁⠂⠈⠐⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</pre></div><figcaption><time class="photo-date"></time><span class="photo-caption"></span></figcaption></div></figure><figure id="photo-5" role="button" tabindex="0" aria-pressed="false" aria-describedby="gallery-keys" class="memory stamp " style="--tilt:-4deg;--slot:45.6%;--hang:19px;--layer:5" aria-label="Photo 5, placeholder image in a stamp frame"><span class="clip" aria-hidden="true"></span><div class="paper"><i class="perforation top" style="--position:6%" aria-hidden="true"></i><i class="perforation top" style="--position:15%" aria-hidden="true"></i><i class="perforation top" style="--position:24%" aria-hidden="true"></i><i class="perforation top" style="--position:33%" aria-hidden="true"></i><i class="perforation top" style="--position:42%" aria-hidden="true"></i><i class="perforation top" style="--position:51%" aria-hidden="true"></i><i class="perforation top" style="--position:60%" aria-hidden="true"></i><i class="perforation top" style="--position:69%" aria-hidden="true"></i><i class="perforation top" style="--position:78%" aria-hidden="true"></i><i class="perforation top" style="--position:87%" aria-hidden="true"></i><i class="perforation top" style="--position:96%" aria-hidden="true"></i><i class="perforation bottom" style="--position:6%" aria-hidden="true"></i><i class="perforation bottom" style="--position:15%" aria-hidden="true"></i><i class="perforation bottom" style="--position:24%" aria-hidden="true"></i><i class="perforation bottom" style="--position:33%" aria-hidden="true"></i><i class="perforation bottom" style="--position:42%" aria-hidden="true"></i><i class="perforation bottom" style="--position:51%" aria-hidden="true"></i><i class="perforation bottom" style="--position:60%" aria-hidden="true"></i><i class="perforation bottom" style="--position:69%" aria-hidden="true"></i><i class="perforation bottom" style="--position:78%" aria-hidden="true"></i><i class="perforation bottom" style="--position:87%" aria-hidden="true"></i><i class="perforation bottom" style="--position:96%" aria-hidden="true"></i><i class="perforation left" style="--position:6%" aria-hidden="true"></i><i class="perforation left" style="--position:15%" aria-hidden="true"></i><i class="perforation left" style="--position:24%" aria-hidden="true"></i><i class="perforation left" style="--position:33%" aria-hidden="true"></i><i class="perforation left" style="--position:42%" aria-hidden="true"></i><i class="perforation left" style="--position:51%" aria-hidden="true"></i><i class="perforation left" style="--position:60%" aria-hidden="true"></i><i class="perforation left" style="--position:69%" aria-hidden="true"></i><i class="perforation left" style="--position:78%" aria-hidden="true"></i><i class="perforation left" style="--position:87%" aria-hidden="true"></i><i class="perforation left" style="--position:96%" aria-hidden="true"></i><i class="perforation right" style="--position:6%" aria-hidden="true"></i><i class="perforation right" style="--position:15%" aria-hidden="true"></i><i class="perforation right" style="--position:24%" aria-hidden="true"></i><i class="perforation right" style="--position:33%" aria-hidden="true"></i><i class="perforation right" style="--position:42%" aria-hidden="true"></i><i class="perforation right" style="--position:51%" aria-hidden="true"></i><i class="perforation right" style="--position:60%" aria-hidden="true"></i><i class="perforation right" style="--position:69%" aria-hidden="true"></i><i class="perforation right" style="--position:78%" aria-hidden="true"></i><i class="perforation right" style="--position:87%" aria-hidden="true"></i><i class="perforation right" style="--position:96%" aria-hidden="true"></i><div class="image"><pre aria-hidden="true">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡾⠛⠛⢶⡀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣇⠀⠀⣸⠇⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠓⠚⠋⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⣤⠞⠳⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣠⡴⠛⠁⠀⠀⠀⠙⢶⣄⠀⠀⠀⠀⠀⣀⣤⠶⠶⠶⠶⠦⣤⣀⠀⠀
+⠀⢀⣤⠞⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣦⣠⠴⠋⠁⠀⠀⠀⠀⠀⠀⠀⠉⠓⢦
+⡿⢿⣅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡴⠋⠙⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠈⠙⠶⢤⣤⣀⣀⣤⡤⠖⠋⠁⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡐⠠⢀⠂⠅⡀⠨⢀⠀⠅⡂⠈⢐⠀⠁⡂⠈⠐
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠅⡀⠨⢀⠀⠅⡂⠈⢐⠀⠁⡂⠈⠐⠠⠁⠂
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠁⠂⠈⠐⠀⠁⠂⠈⠐⠀⠁⠂⠈⠐⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</pre></div><figcaption><time class="photo-date"></time><span class="photo-caption"></span></figcaption></div></figure><figure id="photo-6" role="button" tabindex="0" aria-pressed="false" aria-describedby="gallery-keys" class="memory negative " style="--tilt:6deg;--slot:57.0%;--hang:14px;--layer:4" aria-label="Photo 6, placeholder image in a negative frame"><span class="clip" aria-hidden="true"></span><div class="paper"><div class="image"><pre aria-hidden="true">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⡶⠟⠻⢶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⣀⣤⠶⠛⠉⠀⠀⠀⠀⠀⠀⠉⠛⠶⣤⣀⡀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣴⢾⡟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢻⡷⣦⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠛⣿⠛⠛⠛⠛⠛⠛⠛⠛⣿⠛⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⢀⣴⠶⠶⣦⡀⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⣿⠁⠀⠀⠈⣿⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⣿⠀⠀⠀⠀⣿⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⣿⠀⠀⠀⠀⣿⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⣿⠀⣿⠀⠀⠀⠀⣿⠀⣿⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</pre></div><figcaption><time class="photo-date"></time><span class="photo-caption"></span></figcaption></div></figure><figure id="photo-7" role="button" tabindex="0" aria-pressed="false" aria-describedby="gallery-keys" class="memory polaroid" style="--tilt:3deg;--slot:68.4%;--hang:9px;--layer:7" aria-label="Photo 7, placeholder image in a polaroid frame"><span class="clip" aria-hidden="true"></span><div class="paper"><div class="image"><pre aria-hidden="true">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡶⠶⢄⠀⠀⡠⠶⢶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢧⠀⠀⠳⠞⠀⠀⡼⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠼⠆⣠⡴⢦⣄⠰⠧⠤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢿⡁⠀⠀⠀⣿⠀⠀⣿⠀⠀⠀⢈⡿⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⢻⠂⠈⠛⠛⠁⠐⡟⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡎⠀⢀⡼⢧⡀⠀⢱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⠖⠋⢰⡆⠙⠲⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⡠⠔⠒⠒⠒⠠⢼⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠘⠧⢀⣀⣀⣀⡠⢼⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</pre></div><figcaption><time class="photo-date"></time><span class="photo-caption"></span></figcaption></div></figure><figure id="photo-8" role="button" tabindex="0" aria-pressed="false" aria-describedby="gallery-keys" class="memory notepad " style="--tilt:-6deg;--slot:79.8%;--hang:0px;--layer:8" aria-label="Photo 8, placeholder image on a ruled notepad sheet with torn binding ridges"><span class="clip" aria-hidden="true"></span><div class="paper"><span class="binding" style="left:12%" aria-hidden="true"></span><span class="binding" style="left:28%" aria-hidden="true"></span><span class="binding" style="left:44%" aria-hidden="true"></span><span class="binding" style="left:60%" aria-hidden="true"></span><span class="binding" style="left:76%" aria-hidden="true"></span><span class="binding" style="left:92%" aria-hidden="true"></span><div class="image"><pre aria-hidden="true">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡾⠛⠛⢶⡀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣇⠀⠀⣸⠇⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠓⠚⠋⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⣤⠞⠳⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣠⡴⠛⠁⠀⠀⠀⠙⢶⣄⠀⠀⠀⠀⠀⣀⣤⠶⠶⠶⠶⠦⣤⣀⠀⠀
+⠀⢀⣤⠞⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣦⣠⠴⠋⠁⠀⠀⠀⠀⠀⠀⠀⠉⠓⢦
+⡿⢿⣅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡴⠋⠙⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠈⠙⠶⢤⣤⣀⣀⣤⡤⠖⠋⠁⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒⠒
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡐⠠⢀⠂⠅⡀⠨⢀⠀⠅⡂⠈⢐⠀⠁⡂⠈⠐
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠅⡀⠨⢀⠀⠅⡂⠈⢐⠀⠁⡂⠈⠐⠠⠁⠂
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠁⠂⠈⠐⠀⠁⠂⠈⠐⠀⠁⠂⠈⠐⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</pre></div><figcaption><time class="photo-date"></time><span class="photo-caption"></span></figcaption></div></figure></div></section><p class="sr-only" id="gallery-keys">Enter selects a photo. Escape returns it to the line. Alt plus Left or Right moves its pin along the line. Drag with a mouse, or drag the pin on a touchscreen, to repin.</p></section>
+        <section id="work-view" class="work-page" hidden aria-labelledby="work-title"><h1 id="work-title" tabindex="-1">work experience</h1><div class="layout"><div class="timeline"><section id="work-year-2026" aria-labelledby="work-heading-2026"><h2 id="work-heading-2026" tabindex="-1">2026</h2><ol><li class="entry"><time>sep 2026 — present</time><div class="details"><h3>RBC · Global Asset Management</h3><p class="role">AI Product Management Intern</p><p class="summary">Shaping features and adoption for an AI agent platform supporting investment and portfolio management.</p></div></li><li class="entry"><time>may 2026 — present</time><div class="details"><h3>University of Waterloo</h3><p class="role">Undergraduate Research Assistant</p><p class="summary">Building an AI-assisted storefront to study how generative AI influences consumer decisions.</p></div></li><li class="entry"><time>jan — apr 2026</time><div class="details"><h3>SAP · HANA Cloud</h3><p class="role">AI Product Management Intern</p><p class="summary">Scoping the roadmap for cloud database AI agents through customer research and product analytics.</p></div></li></ol></section><section id="work-year-2025" aria-labelledby="work-heading-2025"><h2 id="work-heading-2025" tabindex="-1">2025</h2><ol><li class="entry"><time>may — aug 2025</time><div class="details"><h3>SAP · HANA Cloud</h3><p class="role">Product Management Intern</p><p class="summary">Developing knowledge graph requirements and improving onboarding for a cloud database product.</p></div></li></ol></section><section id="work-year-2024" aria-labelledby="work-heading-2024"><h2 id="work-heading-2024" tabindex="-1">2024</h2><ol><li class="entry"><time>sep — dec 2024</time><div class="details"><h3>Visfuture</h3><p class="role">Product &amp; Software Engineering Intern</p><p class="summary">Designing and developing an integrated CRM and truck-routing SaaS platform.</p></div></li><li class="entry"><time>jan — apr 2024</time><div class="details"><h3>WSP · Buildings</h3><p class="role">Electrical Engineering Intern</p><p class="summary">Working with the Buildings team at an engineering consulting firm.</p></div></li></ol></section><section id="work-year-2023" aria-labelledby="work-heading-2023"><h2 id="work-heading-2023" tabindex="-1">2023</h2><ol><li class="entry"><time>may — aug 2023</time><div class="details"><h3>WSP · Buildings</h3><p class="role">Electrical Engineering Intern</p><p class="summary">Working with the Buildings team at an engineering consulting firm.</p></div></li></ol></section></div><nav class="years" aria-label="Experience years"><a href="#work/2026" aria-label="Jump to 2026" aria-current="location">2026</a><a href="#work/2025" aria-label="Jump to 2025">2025</a><a href="#work/2024" aria-label="Jump to 2024">2024</a><a href="#work/2023" aria-label="Jump to 2023">2023</a></nav></div></section>
+        <section id="destination-view" hidden aria-labelledby="destination-title">
+          <h1 id="destination-title" tabindex="-1"></h1>
+          <p id="destination-copy" class="description"></p>
+          <div id="destination-links"></div>
+          <a class="back-link" href="#home">[ back to home ]</a>
+        </section>
+        <div
+          class="response"
+          id="response"
+          role="status"
+          aria-live="polite"
+        ></div>
+      </main>
+      <footer>
+        <div class="command-navigation">
+          <form id="command-form" role="search" aria-label="Navigate the website">
+            <label for="command" aria-label="Type to navigate">yolanda@web ~ %</label>
+            <div class="command-input">
+              <div id="completion" class="completion" aria-hidden="true"></div>
+              <span id="block-cursor" aria-hidden="true"></span>
+              <input id="command" type="text" role="combobox" autocomplete="off"
+                spellcheck="false" autocapitalize="none" aria-label="Type to navigate" aria-autocomplete="both"
+                aria-expanded="false" aria-controls="suggestions" aria-describedby="navigation-hint"
+                placeholder="" />
+            </div>
+            <button class="go-button" type="submit" aria-label="Go to destination">↵</button>
+          </form>
+          <ul id="suggestions" role="listbox" aria-label="Destinations" hidden></ul>
+          <span class="sr-only" id="navigation-hint">type to navigate · tab complete · enter go</span>
+        </div>
+      </footer>
+    </div>
+    <script>
+      const motion = matchMedia("(prefers-reduced-motion: reduce)");
+      const binaryTitle = document.querySelector("#binary-title");
+      const glyphs = [
+        [
+          "1100011",
+          "1100011",
+          "1100011",
+          "1111111",
+          "1111111",
+          "1100011",
+          "1100011",
+          "1100011",
+          "1100011",
+        ],
+        [
+          "1111111",
+          "1111111",
+          "1100000",
+          "1111110",
+          "1111110",
+          "1100000",
+          "1100000",
+          "1111111",
+          "1111111",
+        ],
+        [
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1111111",
+          "1111111",
+        ],
+        [
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1100000",
+          "1111111",
+          "1111111",
+        ],
+        [
+          "0111110",
+          "1111111",
+          "1100011",
+          "1100011",
+          "1100011",
+          "1100011",
+          "1100011",
+          "1111111",
+          "0111110",
+        ],
+        [
+          "000",
+          "000",
+          "000",
+          "000",
+          "000",
+          "000",
+          "000",
+          "110",
+          "110",
+          "010",
+          "100",
+        ],
+      ];
+      const binaryMask = Array.from({ length: 33 }, (_, y) =>
+        glyphs
+          .map((glyph) => {
+            const source =
+              glyph[Math.floor(y / 3)] || "0".repeat(glyph[0].length);
+            return [...source].map((bit) => bit.repeat(3)).join("");
+          })
+          .join("   "),
+      );
+      let binaryStep = 0;
+      function drawBinary() {
+        binaryTitle.textContent = binaryMask
+          .map((row, y) =>
+            [...row]
+              .map((bit, x) =>
+                bit === "1"
+                  ? (Math.floor((y + binaryStep + x * 7) / 3) + x) % 2
+                    ? "1"
+                    : "0"
+                  : " ",
+              )
+              .join(""),
+          )
+          .join("\n");
+      }
+      drawBinary();
+      setInterval(() => {
+        if (!motion.matches && !document.hidden && !document.querySelector(".hero").hidden) {
+          binaryStep--;
+          drawBinary();
+        }
+      }, 140);
+    </script>
+    <script src="navigation.js?v=6"></script>
+    <script src="about.js?v=2"></script>
+    <script src="work.js?v=1"></script>
+  </body>
+</html>
