@@ -1,5 +1,6 @@
 // Destinations and aliases are local; navigation does not require an API.
 const destinations = [
+  { id: "home", label: "home", aliases: [], url: "#home" },
   { id: "work", label: "work history", aliases: ["work", "experience", "career", "resume", "résumé"], url: "#work", copy: "" },
   { id: "projects", label: "projects", aliases: ["project", "portfolio", "builds"], url: "#projects", copy: "Projects are coming soon." },
   { id: "about", label: "about me", aliases: ["about", "bio", "yolanda"], url: "#about", copy: "I'm Yolanda, an Electrical and Computer Engineering student at the University of Waterloo." },
@@ -18,7 +19,8 @@ const normalize = value => value.trim().toLowerCase().replace(/\s+/g, " ");
 let matches = [], selected = 0, dismissed = false;
 function matching(value) {
   const query = normalize(value);
-  return destinations.filter(item => [item.label, ...item.aliases].some(name => name.startsWith(query)));
+  const current = location.hash.slice(1).split("/")[0] || "home";
+  return destinations.filter(item => (item.external || item.id !== current) && [item.label, ...item.aliases].some(name => name.startsWith(query)));
 }
 function closeSuggestions() {
   list.hidden = true;
@@ -45,7 +47,7 @@ function renderSuggestions(reset = true) {
   matches = matching(input.value);
   if (reset) selected = 0;
   list.replaceChildren();
-  hint.textContent = matches.length ? normalHint : "No matches. Try work, projects, about me, github or linkedin.";
+  hint.textContent = matches.length ? normalHint : "No matching destination.";
   if (!matches.length) { closeSuggestions(); return; }
   matches.forEach((item, index) => {
     const option = document.createElement("li");
@@ -81,7 +83,7 @@ function navigate(item) {
 }
 function showRoute(focus = false) {
   const id = location.hash.slice(1).split("/")[0] || "home";
-  const item = destinations.find(item => !item.external && item.id === id);
+  const item = destinations.find(item => !item.external && item.id !== "home" && item.id === id);
   const connect = id === "connect";
   const about = id === "about";
   const work = id === "work";
@@ -111,6 +113,7 @@ function showRoute(focus = false) {
   else if (focus && !view.hidden) title.focus();
   if (!location.hash.includes("/")) window.scrollTo({top: 0, behavior: "instant"});
   window.dispatchEvent(new Event("site:route"));
+  if (document.activeElement === input) renderSuggestions();
 }
 window.addEventListener("hashchange", () => showRoute(true));
 showRoute();
@@ -149,7 +152,7 @@ document.querySelector("#command-form").addEventListener("submit", event => {
   else if (query === "home") { location.hash = "#home"; input.value = ""; hint.textContent = normalHint; closeSuggestions(); }
   else if (query === "clear") { response.textContent = ""; input.value = ""; renderSuggestions(); }
   else if (query === "help" || query === "connect") { dismissed = false; input.value = ""; renderSuggestions(); }
-  else if (query) { response.textContent = "Choose work history, projects, about me, github or linkedin."; }
+  else if (query) { response.textContent = "Choose home, work history, projects, about me, github or linkedin."; }
   updateCursor();
 });
 // Demonstrate destinations once, then leave an empty terminal prompt.

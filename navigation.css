@@ -3,7 +3,7 @@
 a:focus-visible { outline: 2px dashed var(--accent); outline-offset: 4px; }
 .identity:hover, .back-link:hover, #destination-links a:hover { text-decoration: underline; }
 /* The prompt, completion, and candidate rows share one terminal type scale. */
-.command-navigation { position: relative; width: 100%; min-width: 0; font-size: 14px; line-height: 1.75; }
+.command-navigation { position: relative; z-index: 200; width: 100%; min-width: 0; font-size: 14px; line-height: 1.75; }
 .command-navigation form { gap: 1ch; }
 .command-input { position: relative; flex: 1; min-width: 0; font: inherit; overflow: hidden; }
 #command:focus-visible { outline: none; }
