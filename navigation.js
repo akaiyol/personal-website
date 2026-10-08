@@ -109,6 +109,7 @@ function showRoute(focus = false) {
   if (focus && about) document.querySelector("#about-title").focus();
   else if (focus && work && !location.hash.includes("/")) document.querySelector("#work-title").focus();
   else if (focus && !view.hidden) title.focus();
+  if (!location.hash.includes("/")) window.scrollTo({top: 0, behavior: "instant"});
   window.dispatchEvent(new Event("site:route"));
 }
 window.addEventListener("hashchange", () => showRoute(true));

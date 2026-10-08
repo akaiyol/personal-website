@@ -27,7 +27,8 @@
         min-height: 100svh;
         padding: 32px;
         display: grid;
-        place-items: center;
+        align-items: start;
+        justify-items: center;
       }
       button,
       input {
@@ -59,7 +60,7 @@
       .terminal {
         min-width: 0;
         width: min(1200px, 100%);
-        min-height: min(720px, calc(100svh - 64px));
+        min-height: calc(100svh - 64px);
         border: 1px solid var(--line);
         display: flex;
         flex-direction: column;
@@ -525,7 +526,7 @@
         }
       }, 140);
     </script>
-    <script src="navigation.js?v=5"></script>
+    <script src="navigation.js?v=6"></script>
     <script src="about.js?v=2"></script>
     <script src="work.js?v=1"></script>
   </body>

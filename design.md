@@ -32,7 +32,9 @@ Shared visual source of truth. Record agreed design rules here. Use the open des
 
 ## Composition
 
-- Keep the landing page compact, with a single-screen desktop composition when space permits.
+- Keep a consistent shell width and top position across routes. The shell has a minimum height filling the available viewport inside its outer margins.
+- Keep the landing page compact when space permits; longer pages extend naturally and scroll with the document. Do not constrain them inside a second vertical scrollbar.
+- Changing destinations starts at the top; work year links jump to their sections while the year selector stays visible.
 - Use generous black space to balance dense character artwork.
 - Maintain clear separation between text, artwork, and interface elements.
 - Keep artwork from obscuring text or controls.
