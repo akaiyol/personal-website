@@ -1,6 +1,6 @@
 # Work experience timeline — editable draft
 
-Status: content approved for mockup. Standalone reference: `work-timeline-mock.html`. Not integrated into the website.
+Status: implemented at `#work`. Standalone reference: `work-timeline-mock.html`. Approved content and year styling retained.
 
 ## Content
 
@@ -54,7 +54,7 @@ Order entries by start date, newest first. Each entry has a date, employer/team 
 - Year headings use Georgia serif type and outlined diamond markers. Role markers and ordinary text remain square and monospace. This is a timeline-specific font variation for review.
 - List 2026, 2025, 2024, and 2023 vertically on the right in a sticky year selector. Clicking or pressing Enter on a year jumps to the first experience in that year.
 - Keep the selector on the right on narrow screens; allow summaries to wrap. Indicate the current year with black text on a purple rectangle.
-- Year jumps are immediate in the mockup; animation proposals remain unapproved.
+- Year jumps are immediate. Each year has a shareable route such as `#work/2024`; keyboard activation moves focus to its heading. Animation proposals remain unapproved.
 - Use the existing black/purple palette, monospace typography, and terminal shell.
 - Keep every experience visible from the start.
 - Include the research assistant role; keep the capstone under Projects.

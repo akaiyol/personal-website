@@ -1,6 +1,6 @@
 // Destinations and aliases are local; navigation does not require an API.
 const destinations = [
-  { id: "work", label: "work history", aliases: ["work", "experience", "career", "resume", "résumé"], url: "#work", copy: "Work history is coming soon." },
+  { id: "work", label: "work history", aliases: ["work", "experience", "career", "resume", "résumé"], url: "#work", copy: "" },
   { id: "projects", label: "projects", aliases: ["project", "portfolio", "builds"], url: "#projects", copy: "Projects are coming soon." },
   { id: "about", label: "about me", aliases: ["about", "bio", "yolanda"], url: "#about", copy: "I'm Yolanda, an Electrical and Computer Engineering student at the University of Waterloo." },
   { id: "github", label: "github", aliases: ["git", "code", "repositories"], url: "https://github.com/akaiyol", external: true },
@@ -80,16 +80,19 @@ function navigate(item) {
   }
 }
 function showRoute(focus = false) {
-  const id = location.hash.slice(1) || "home";
+  const id = location.hash.slice(1).split("/")[0] || "home";
   const item = destinations.find(item => !item.external && item.id === id);
   const connect = id === "connect";
   const about = id === "about";
+  const work = id === "work";
+  document.querySelector("#work-view").hidden = !work;
+  document.body.classList.toggle("work-active", work);
   document.querySelector("#about-view").hidden = !about;
   document.body.classList.toggle("about-active", about);
-  document.querySelector(".identity").textContent = about ? "yolanda@web:~/about" : "yolanda@web:~";
+  document.querySelector(".identity").textContent = about ? "yolanda@web:~/about" : work ? "yolanda@web:~/work" : "yolanda@web:~";
   const view = document.querySelector("#destination-view");
   document.querySelector(".hero").hidden = Boolean(item || connect);
-  view.hidden = about || (!item && !connect);
+  view.hidden = about || work || (!item && !connect);
   response.textContent = "";
   const title = document.querySelector("#destination-title");
   title.textContent = item?.label || "connect";
@@ -104,6 +107,7 @@ function showRoute(focus = false) {
   });
   document.title = `Yolanda | ${item?.label || (connect ? "Connect" : "Hello")}`;
   if (focus && about) document.querySelector("#about-title").focus();
+  else if (focus && work && !location.hash.includes("/")) document.querySelector("#work-title").focus();
   else if (focus && !view.hidden) title.focus();
   window.dispatchEvent(new Event("site:route"));
 }

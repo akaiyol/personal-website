@@ -103,3 +103,10 @@ Use this section for future thoughts before adopting them as rules. Each note sh
 - The user wants a somewhat crowded line, with eight placeholder photos and intentional overlaps in the live implementation. Preserve an exposed area for every photo.
 - Hovering a photo brings it to the front; keyboard focus and touch selection provide equivalent access. Keep neighbouring photos in place.
 - Do not use circular/oval frames. Stamp edges have perforations without an enclosing straight outer rectangle.
+
+## Work timeline — implemented
+
+- Use one vertical line with reverse chronological year sections and concise role summaries.
+- Year breaks use outlined diamond markers and Georgia serif labels, an approved exception to ordinary monospace typography. Individual role markers remain square.
+- Keep a vertical sticky year selector on the right, including on narrow screens. Use black text on purple for the current year.
+- Retain the terminal header and functional footer prompt. Specification: `work-timeline-draft.md`.
