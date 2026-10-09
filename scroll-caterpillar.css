@@ -1,4 +1,4 @@
-.scroll-caterpillar{position:fixed;right:calc(max(32px,(100vw - 1200px)/2) + 3px);top:84px;width:36px;height:calc(100% - 198px);pointer-events:none;z-index:999}
+.scroll-caterpillar{position:fixed;right:calc(max(32px,(100vw - 1200px)/2) + 3px);top:84px;width:27px;height:calc(100% - 198px);pointer-events:none;z-index:999}
 html{scrollbar-width:none}
 html::-webkit-scrollbar{display:none}
-@media(max-width:700px){.scroll-caterpillar{right:17px;top:66px;width:28px;height:calc(100% - 156px)}}
+@media(max-width:700px){.scroll-caterpillar{right:17px;top:66px;width:21px;height:calc(100% - 156px)}}

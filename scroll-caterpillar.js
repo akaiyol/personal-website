@@ -20,13 +20,14 @@
     const phase = reduced.matches ? 0 : scrollY / 110 * Math.PI * 2;
     const arch = (1 - Math.cos(phase)) / 2;
     const compact = innerWidth <= 700;
-    const lift = (compact ? 9 : 13) * arch;
-    const fullLength = Math.min(compact ? 64 : 78, width * .18);
-    const length = fullLength - (compact ? 7 : 9) * arch;
+    const size = .75;
+    const lift = (compact ? 9 : 13) * size * arch;
+    const fullLength = Math.min(compact ? 64 : 78, width * .18) * size;
+    const length = fullLength - (compact ? 7 : 9) * size * arch;
     const maxScroll = Math.max(0, document.documentElement.scrollHeight - innerHeight);
     const progress = maxScroll ? Math.min(1, Math.max(0, scrollY / maxScroll)) : 0;
     const inset = 6 + progress * Math.max(0, width - fullLength - 12) + (fullLength - length) / 2;
-    const baseline = compact ? 10 : 12;
+    const baseline = (compact ? 10 : 12) * size;
     const y = t => baseline + lift * Math.sin(Math.PI * t) ** 2;
     const body = () => {
       ctx.beginPath();
@@ -38,28 +39,28 @@
     };
     // Rounded nubs underneath the body; no eyes, face, or antennae.
     ctx.strokeStyle = '#C5B5EC';
-    ctx.lineWidth = compact ? 3 : 4;
+    ctx.lineWidth = (compact ? 3 : 4) * size;
     ctx.lineCap = 'round';
     ctx.setLineDash([]);
-    const feet = Math.max(4, Math.floor(length / 12));
+    const feet = Math.max(4, Math.floor(length / (12 * size)));
     for (let i = 1; i < feet; i++) {
       const t = i / feet;
       const x = inset + t * length;
-      const step = reduced.matches ? 0 : Math.sin(phase + i * Math.PI) * 1.5;
+      const step = reduced.matches ? 0 : Math.sin(phase + i * Math.PI) * 1.5 * size;
       ctx.beginPath();
-      ctx.moveTo(x, y(t) - (compact ? 5 : 6));
-      ctx.lineTo(x + step, y(t) - (compact ? 8 : 10));
+      ctx.moveTo(x, y(t) - (compact ? 5 : 6) * size);
+      ctx.lineTo(x + step, y(t) - (compact ? 8 : 10) * size);
       ctx.stroke();
     }
     body();
-    ctx.lineWidth = compact ? 14 : 18;
+    ctx.lineWidth = (compact ? 14 : 18) * size;
     ctx.stroke();
     body();
     ctx.strokeStyle = '#000000';
-    ctx.lineWidth = compact ? 9 : 12;
+    ctx.lineWidth = (compact ? 9 : 12) * size;
     ctx.lineCap = 'butt';
-    ctx.setLineDash([3, 7]);
-    ctx.lineDashOffset = reduced.matches ? 0 : -scrollY * .18;
+    ctx.setLineDash([3 * size, 7 * size]);
+    ctx.lineDashOffset = reduced.matches ? 0 : -scrollY * .18 * size;
     ctx.stroke();
     ctx.setLineDash([]);
   }
