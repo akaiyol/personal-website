@@ -91,7 +91,8 @@ function showRoute(focus = false) {
   document.body.classList.toggle("work-active", work);
   document.querySelector("#about-view").hidden = !about;
   document.body.classList.toggle("about-active", about);
-  document.querySelector(".identity").textContent = about ? "yolanda@web:~/about-me" : work ? "yolanda@web:~/work history" : "yolanda@web:~";
+  const pageName = item?.label || (connect ? "connect" : "home");
+  document.querySelector(".identity").textContent = `yolanda@web:~/${pageName.replace(/\s+/g, "-")}`;
   const view = document.querySelector("#destination-view");
   document.querySelector(".hero").hidden = Boolean(item || connect);
   view.hidden = about || work || (!item && !connect);
@@ -107,7 +108,7 @@ function showRoute(focus = false) {
     link.textContent = `[ ${item.label} ↗ ]`;
     links.append(link);
   });
-  document.title = `Yolanda | ${item?.label || (connect ? "Connect" : "Hello")}`;
+  document.title = `Yolanda | ${pageName}`;
   if (focus && about) document.querySelector("#about-title").focus();
   else if (focus && work && !location.hash.includes("/")) document.querySelector("#work-title").focus();
   else if (focus && !view.hidden) title.focus();
