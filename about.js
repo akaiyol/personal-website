@@ -109,7 +109,42 @@
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && !page.hidden) select(null);
   });
+  const gallery = page.querySelector('.gallery');
+  const assembly = gallery.querySelector('.line-assembly');
+  const releaseButtons = [...gallery.querySelectorAll('.line-release')];
+  const lineStatus = gallery.querySelector('.line-status');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let repairing = false;
+  function finishRepair() {
+    if (!repairing) return;
+    repairing = false;
+    gallery.classList.remove('line-repairing', 'repair-left');
+    assembly.inert = false;
+    releaseButtons.forEach(button => { button.disabled = false; });
+    lineStatus.textContent = 'Photo line reattached.';
+  }
+  function releaseLine(button) {
+    if (repairing || page.hidden || document.hidden || drag) return;
+    select(null);
+    clearTerms();
+    if (reducedMotion.matches) {
+      lineStatus.textContent = 'Photo line reattached.';
+      return;
+    }
+    repairing = true;
+    assembly.inert = true;
+    releaseButtons.forEach(control => { control.disabled = true; });
+    lineStatus.textContent = 'Photo line detached. Reattaching.';
+    gallery.classList.toggle('repair-left', button.dataset.end === 'left');
+    gallery.classList.add('line-repairing');
+  }
+  releaseButtons.forEach(button => button.addEventListener('click', () => releaseLine(button)));
+  assembly.addEventListener('animationend', event => {
+    if (event.target === assembly && event.animationName === 'line-drop-repair') finishRepair();
+  });
+  reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) finishRepair(); });
   const pause = () => {
+    if (page.hidden || document.hidden) finishRepair();
     document.body.classList.toggle('page-hidden', document.hidden);
     cancelAnimationFrame(frame); frame = 0; pointer = null; clearTerms();
     if (drag) {

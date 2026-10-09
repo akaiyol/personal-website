@@ -216,3 +216,51 @@ body.page-hidden .about-page .fact-machine.is-jackpot .star-confetti,.about-page
 .about-page .portrait .image img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
 
 @media(max-width:600px){.about-page .fact-results{min-height:120px}}
+
+/* Drop the entire hanging assembly; the hand repairs the selected end. */
+.about-page .line-assembly{position:relative;display:flow-root;transform-origin:50% 0}
+.about-page .line-assembly .wire{top:0;left:22px;right:22px}
+.about-page .wire:before,.about-page .wire:after{display:none}
+.about-page .line-pins{position:absolute;top:32px;left:0;right:0;height:44px;pointer-events:none;z-index:120}
+.about-page .line-release{position:absolute;top:0;width:44px;height:44px;padding:0;font:inherit;font-size:18px;background:var(--ground);border:0;cursor:pointer;pointer-events:auto}
+.about-page .line-release:first-child{left:0}
+.about-page .line-release:last-child{right:0}
+.about-page .line-release:focus-visible{outline:1px dashed var(--ink);outline-offset:-6px}
+.about-page .line-release:disabled{cursor:default}
+.about-page .repair-hand{position:absolute;top:-54px;right:-6px;width:86px;height:120px;visibility:hidden;pointer-events:none;z-index:130;transform-origin:50% 100%;--mirror:1}
+.about-page .repair-left .repair-hand{left:-4px;right:auto;--mirror:-1}
+.about-page .repair-hand i{display:block;position:absolute;border:1px solid var(--ink);background:var(--ground)}
+.about-page .hand-wrist{left:32px;top:0;width:29px;height:49px;border-bottom:0!important}
+.about-page .hand-wrist:after{content:"";position:absolute;left:-4px;right:-4px;top:12px;border-top:1px dotted var(--ink)}
+.about-page .hand-palm{left:20px;top:42px;width:48px;height:49px;border-radius:18px 12px 10px 18px}
+.about-page .hand-finger{top:77px;width:11px;height:26px;border-radius:4px 4px 8px 8px}
+.about-page .finger-one{left:22px;height:22px}
+.about-page .finger-two{left:33px}
+.about-page .finger-three{left:44px;height:29px}
+.about-page .finger-index{left:55px;height:31px;transform:rotate(-14deg);transform-origin:50% 0}
+.about-page .hand-thumb{left:59px;top:57px;width:17px;height:33px;border-radius:10px;transform:rotate(-36deg)}
+.about-page .line-repairing .line-assembly{animation:line-drop-repair 4.4s both;pointer-events:none}
+.about-page .line-repairing .repair-hand{animation:hand-repin 4.4s both}
+.about-page .line-repairing .memory{transition:none;transform:rotate(var(--tilt))}
+@keyframes line-drop-repair{
+  0%{transform:translateY(0) rotate(0);animation-timing-function:ease-in}
+  12%{transform:translateY(103px) rotate(1deg);animation-timing-function:ease-out}
+  18%,52%{transform:translateY(96px) rotate(0)}
+  73%{transform:translateY(-3px) rotate(0);animation-timing-function:ease-out}
+  80%,100%{transform:translateY(0) rotate(0);animation-timing-function:ease-in}
+}
+@keyframes hand-repin{
+  0%,30%{visibility:hidden;transform:translateY(-120px) scaleX(var(--mirror))}
+  31%{visibility:visible;transform:translateY(-120px) scaleX(var(--mirror))}
+  48%,52%{visibility:visible;transform:translateY(96px) scaleX(var(--mirror))}
+  73%{visibility:visible;transform:translateY(-3px) scaleX(var(--mirror))}
+  80%{visibility:visible;transform:translateY(0) scaleX(var(--mirror))}
+  99%{visibility:visible;transform:translateY(-120px) scaleX(var(--mirror))}
+  100%{visibility:hidden;transform:translateY(-120px) scaleX(var(--mirror))}
+}
+@media(max-width:1000px){.about-page .line-assembly{width:1160px}.about-page .line-assembly .wire{width:1116px}.about-page .line-pins{width:1160px;right:auto}.about-page .repair-hand{left:1080px;right:auto}.about-page .repair-left .repair-hand{left:-4px}}
+@media(prefers-reduced-motion:reduce){.about-page .line-repairing .line-assembly,.about-page .line-repairing .repair-hand{animation:none}.about-page .repair-hand{display:none}}
+
+.about-page .line-assembly .wire:before,.about-page .line-assembly .wire:after{display:block;content:"";position:absolute;top:16px;width:0;height:20px;border-left:1px solid var(--ink)}
+.about-page .line-assembly .wire:before{left:0;right:auto}
+.about-page .line-assembly .wire:after{right:0;left:auto}
