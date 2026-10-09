@@ -91,7 +91,7 @@ function showRoute(focus = false) {
   document.body.classList.toggle("work-active", work);
   document.querySelector("#about-view").hidden = !about;
   document.body.classList.toggle("about-active", about);
-  document.querySelector(".identity").textContent = about ? "yolanda@web:~/about me" : work ? "yolanda@web:~/work history" : "yolanda@web:~";
+  document.querySelector(".identity").textContent = about ? "yolanda@web:~/about-me" : work ? "yolanda@web:~/work history" : "yolanda@web:~";
   const view = document.querySelector("#destination-view");
   document.querySelector(".hero").hidden = Boolean(item || connect);
   view.hidden = about || work || (!item && !connect);
