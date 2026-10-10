@@ -218,10 +218,10 @@ body.page-hidden .about-page .fact-machine.is-jackpot .star-confetti,.about-page
 @media(max-width:600px){.about-page .fact-results{min-height:120px}}
 
 /* Keep the original handwriting; extract paper luminance into transparency in SVG. */
-.about-page .handwritten-poem{width:min(840px,100%);margin:64px auto 48px;pointer-events:none}
+.about-page .handwritten-poem{width:min(840px,100%);margin:-16px auto 48px;pointer-events:none}
 .about-page .handwritten-poem svg{display:block;width:100%;height:auto;overflow:hidden}
-@media(max-width:600px){.about-page .handwritten-poem{margin:40px auto 28px}}
+@media(max-width:600px){.about-page .handwritten-poem{margin:-40px auto 28px}}
 
 .about-page .handwritten-poem{position:relative;left:-24px}
-.about-page .handwritten-poem figcaption{text-align:right;font-size:13px;line-height:1.7;margin-top:8px}
-@media(max-width:600px){.about-page .handwritten-poem{left:-8px}.about-page .handwritten-poem figcaption{font-size:11px}}
+.about-page .handwritten-poem figcaption{text-align:right;font-size:17px;line-height:1.7;margin-top:-64px;position:relative}
+@media(max-width:600px){.about-page .handwritten-poem{left:-8px}.about-page .handwritten-poem figcaption{font-size:14px;margin-top:-24px}}
