@@ -91,7 +91,7 @@
 .about-page .stamp .perforation.bottom{bottom:-6px}
 .about-page .stamp .perforation.left{left:-6px}
 .about-page .stamp .perforation.right{right:-6px}
-.about-page .stamp .image{border:1px dotted var(--ink);border-radius:48% 48% 0 0}
+.about-page .stamp .image{border:1px dotted var(--ink);border-radius:0}
 .about-page .negative .paper{padding:22px 9px 25px;border:1px solid var(--ink)}
 .about-page .negative .paper:before,.about-page .negative .paper:after{content:"▪ ▪ ▪ ▪ ▪ ▪";background:var(--ink);color:var(--ground);left:3px;right:3px;height:14px;line-height:14px;font-size:17px;letter-spacing:5px;text-align:center}
 .about-page .negative .paper:before{top:3px}
@@ -214,8 +214,55 @@ body.page-hidden .about-page .fact-machine.is-jackpot .star-confetti,.about-page
 @media(max-width:600px){.about-page .fact-track span.braille-star{font-size:10px}}
 
 .about-page .portrait .image img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.about-page .memory.landscape{width:220px}
+.about-page .memory .image{position:relative;height:auto;aspect-ratio:var(--photo-ratio,3 / 4)}
+.about-page .memory .image img{position:absolute;inset:0;display:block;width:100%;height:100%;min-width:0;object-fit:cover;pointer-events:none}
 
 @media(max-width:600px){.about-page .fact-results{min-height:120px}}
+
+/* Three discrete ink impressions create a hand-traced line boil. */
+.about-page .has-line-boil { --ink: transparent; }
+.about-page .has-line-boil::before,
+.about-page .has-line-boil::after { color: transparent; }
+.about-page .frame-drawing {
+ --ink: var(--text);
+ position: absolute;
+ inset: 0;
+ width: auto;
+ height: auto;
+ margin: 0;
+ transform: none;
+ background: transparent;
+ pointer-events: none;
+ z-index: 3;
+ animation: frame-line-boil .72s steps(1,end) infinite;
+}
+.about-page .frame-drawing .image { background: transparent; }
+.about-page .paper.frame-drawing { inset: -1px; }
+.about-page .stamp .paper.frame-drawing { inset: 0; }
+.about-page .frame-drawing figcaption { color: transparent; }
+.about-page .memory .clip { animation: frame-line-boil .72s steps(1,end) infinite; }
+.about-page .memory:nth-child(3n + 1) { --boil-delay: -.24s; }
+.about-page .memory:nth-child(3n + 2) { --boil-delay: -.48s; }
+.about-page .memory :is(.frame-drawing,.clip) { animation-delay: var(--boil-delay,0s); }
+@keyframes frame-line-boil {
+ 0%,100% { filter: url("#frame-trace-1"); }
+ 33.333% { filter: url("#frame-trace-2"); }
+ 66.666% { filter: url("#frame-trace-3"); }
+}
+body.page-hidden .about-page :is(.frame-drawing,.clip),
+.about-page[hidden] :is(.frame-drawing,.clip) { animation-play-state: paused; }
+@media(prefers-reduced-motion:reduce) {
+ .about-page :is(.frame-drawing,.clip) { animation: none; filter: none; }
+}
+
+/* A modest enlargement retains the original paper and animated ink. */
+.photo-zoom{position:fixed;inset:0;margin:auto;padding:48px 22px 22px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);border:0;background:transparent;color:var(--text);overflow:visible}
+.photo-zoom::backdrop{background:rgb(0 0 0 / .7)}
+.photo-zoom.about-page .memory{position:relative;left:auto;top:auto;width:var(--zoom-width);max-width:calc(100vw - 72px);margin:0;transform:none!important;cursor:default;transition:none}
+.photo-zoom .photo-zoom-content{pointer-events:none}
+.photo-zoom-close{position:absolute;top:0;right:16px;min-height:36px;padding:4px 8px;font:inherit;color:inherit;background:var(--bg);border:0;cursor:pointer}
+.photo-zoom-close:focus-visible{outline:1px dashed var(--text);outline-offset:2px}
 
 /* Keep the original handwriting; extract paper luminance into transparency in SVG. */
 .about-page .handwritten-poem{width:min(840px,100%);margin:-16px auto 48px;pointer-events:none}
