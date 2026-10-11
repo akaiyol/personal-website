@@ -242,3 +242,28 @@
     frame.append(drawing);
   });
 })();
+
+
+(() => {
+  const portrait = document.querySelector('#about-view .portrait');
+  const image = portrait.querySelector('.image');
+  const trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = 'portrait-wink-trigger';
+  trigger.setAttribute('aria-label', 'Play a wink on Yolanda’s photo');
+  trigger.innerHTML = `<span class="portrait-wink-art" aria-hidden="true"><span class="portrait-eyes"><span>⢰⣿⡆</span><span class="portrait-eye-open">⢰⣿⡆</span><span class="portrait-eye-wink">⠤⠤⠤</span></span><span class="portrait-smile">⠈⠳⣤⣀⣀⣤⠞⠁</span></span><span class="portrait-spark spark-one" aria-hidden="true">⠐⣦⠂<br>⠒⣿⠒<br>⠠⠟⠄</span><span class="portrait-spark spark-two" aria-hidden="true">⠐⣦⠂<br>⠒⣿⠒<br>⠠⠟⠄</span><span class="portrait-spark spark-three" aria-hidden="true">⠐⣦⠂<br>⠒⣿⠒<br>⠠⠟⠄</span>`;
+  image.append(trigger);
+  let timer;
+  const stop = () => {
+    clearTimeout(timer);
+    portrait.classList.remove('is-winking');
+  };
+  trigger.addEventListener('click', () => {
+    if (portrait.classList.contains('is-winking')) return;
+    portrait.classList.add('is-winking');
+    timer = setTimeout(stop, 1900);
+  });
+  trigger.addEventListener('keydown', event => { if (event.key === 'Escape') stop(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
+  window.addEventListener('hashchange', stop);
+})();
