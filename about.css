@@ -333,18 +333,21 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 .about-page .spark-one{left:12%;top:25%;--sx:-8px;--sy:-23px;--sr:-18deg}
 .about-page .spark-two{right:10%;top:30%;--sx:9px;--sy:-18px;--sr:22deg}
 .about-page .spark-three{right:22%;top:65%;--sx:10px;--sy:15px;--sr:15deg}
-.about-page .is-winking:not(.frame-drawing) .image>img{animation:portrait-zoom 1.9s ease-in-out both}
 .about-page .is-winking .portrait-wink-art{display:block;animation:portrait-reveal 1.9s steps(1,end) both}
 .about-page .is-winking .portrait-eye-open{animation:portrait-open-eye 1.9s steps(1,end) both}
 .about-page .is-winking .portrait-eye-wink{animation:portrait-closed-eye 1.9s steps(1,end) both}
 .about-page .is-winking .portrait-spark{display:block;animation:portrait-stars 1.9s ease-out both}
-@keyframes portrait-zoom{0%,100%{transform:scale(1)}20%,76%{transform:scale(1.09)}}
 @keyframes portrait-reveal{0%,84%,100%{visibility:hidden}18%{visibility:visible}}
 @keyframes portrait-open-eye{0%,62%,100%{visibility:visible}38%{visibility:hidden}}
 @keyframes portrait-closed-eye{0%,62%,100%{visibility:hidden}38%{visibility:visible}}
 @keyframes portrait-stars{0%,44%{visibility:hidden;transform:scale(.4)}45%{visibility:visible;transform:scale(.4)}68%,84%{visibility:visible;transform:translate(var(--sx),var(--sy)) rotate(var(--sr)) scale(1)}85%,100%{visibility:hidden;transform:translate(var(--sx),var(--sy)) scale(1)}}
 @media(prefers-reduced-motion:reduce){
- .about-page .is-winking:not(.frame-drawing) .image>img,.about-page .is-winking .portrait-wink-art,.about-page .is-winking .portrait-eye-open,.about-page .is-winking .portrait-eye-wink,.about-page .is-winking .portrait-spark{animation:none}
+ .about-page .is-winking .portrait-wink-art,.about-page .is-winking .portrait-eye-open,.about-page .is-winking .portrait-eye-wink,.about-page .is-winking .portrait-spark{animation:none}
  .about-page .is-winking .portrait-eye-open{visibility:hidden}
  .about-page .is-winking .portrait-eye-wink{visibility:visible}
 }
+
+.photo-zoom.about-page .portrait:not(.frame-drawing){width:100%;margin:0;transform:none}
+.photo-zoom.about-page .portrait .image{height:auto;aspect-ratio:3 / 4}
+.photo-zoom.about-page .portrait.frame-drawing .image{height:100%}
+.photo-zoom .portrait-wink-trigger{cursor:default;text-align:center;pointer-events:none}
