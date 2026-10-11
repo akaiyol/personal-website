@@ -325,11 +325,11 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 .about-page .portrait-wink-trigger{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:transparent;color:var(--text);font-family:inherit;cursor:pointer}
 .about-page .portrait-wink-trigger:focus-visible{outline:2px dashed var(--text);outline-offset:-6px}
 .about-page .portrait-wink-art,.about-page .portrait-spark{display:none;pointer-events:none;text-shadow:1px 1px var(--ground),-1px -1px var(--ground),1px -1px var(--ground),-1px 1px var(--ground)}
-.about-page .portrait-wink-art{position:absolute;left:50%;top:36%;width:132px;margin-left:-66px;font-size:20px;line-height:1.1}
+.about-page .portrait-wink-art{position:absolute;left:50%;top:36%;width:174px;margin-left:-87px;font-size:32px;line-height:1.1}
 .about-page .portrait-eyes{display:flex;justify-content:space-between;position:relative}
 .about-page .portrait-eye-wink{position:absolute;right:0;visibility:hidden}
-.about-page .portrait-smile{display:block;margin-top:16px;font-size:17px;white-space:pre}
-.about-page .portrait-spark{position:absolute;font-size:12px;line-height:.75;white-space:pre}
+.about-page .portrait-smile{display:block;margin-top:18px;font-size:24px;white-space:pre}
+.about-page .portrait-spark{position:absolute;font-size:20px;line-height:.75;white-space:pre}
 .about-page .spark-one{left:12%;top:25%;--sx:-8px;--sy:-23px;--sr:-18deg}
 .about-page .spark-two{right:10%;top:30%;--sx:9px;--sy:-18px;--sr:22deg}
 .about-page .spark-three{right:22%;top:65%;--sx:10px;--sy:15px;--sr:15deg}
@@ -351,3 +351,12 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 .photo-zoom.about-page .portrait .image{height:auto;aspect-ratio:3 / 4}
 .photo-zoom.about-page .portrait.frame-drawing .image{height:100%}
 .photo-zoom .portrait-wink-trigger{cursor:default;text-align:center;pointer-events:none}
+
+/* Dense purple dots and a black edge keep the overlay legible on photography. */
+.about-page .portrait-wink-art,.about-page .portrait-spark{-webkit-text-stroke:.65px currentColor;filter:drop-shadow(1px 1px #000) drop-shadow(-1px -1px #000)}
+.about-page .spark-4{left:27%;top:15%;--sx:-12px;--sy:-22px;--sr:-12deg}
+.about-page .spark-5{right:28%;top:12%;--sx:10px;--sy:-20px;--sr:18deg}
+.about-page .spark-6{left:8%;top:52%;--sx:-10px;--sy:8px;--sr:-20deg}
+.about-page .spark-7{right:8%;top:52%;--sx:10px;--sy:10px;--sr:20deg}
+.about-page .spark-8{left:23%;top:73%;--sx:-12px;--sy:22px;--sr:-15deg}
+.about-page .spark-9{right:39%;top:80%;--sx:6px;--sy:18px;--sr:15deg}

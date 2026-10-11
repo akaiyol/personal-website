@@ -252,6 +252,14 @@
   trigger.className = 'portrait-wink-trigger';
   trigger.setAttribute('aria-label', 'Enlarge Yolanda’s photo');
   trigger.innerHTML = `<span class="portrait-wink-art" aria-hidden="true"><span class="portrait-eyes"><span>⢰⣿⡆</span><span class="portrait-eye-open">⢰⣿⡆</span><span class="portrait-eye-wink">⠤⠤⠤</span></span><span class="portrait-smile">⠈⠳⣤⣀⣀⣤⠞⠁</span></span><span class="portrait-spark spark-one" aria-hidden="true">⠐⣦⠂<br>⠒⣿⠒<br>⠠⠟⠄</span><span class="portrait-spark spark-two" aria-hidden="true">⠐⣦⠂<br>⠒⣿⠒<br>⠠⠟⠄</span><span class="portrait-spark spark-three" aria-hidden="true">⠐⣦⠂<br>⠒⣿⠒<br>⠠⠟⠄</span>`;
+  const star = '<span aria-hidden="true" class="portrait-spark">⠐⣦⠂<br>⠒⣿⠒<br>⠠⠟⠄</span>';
+  for (let i = 4; i <= 9; i++) {
+    const template = document.createElement('template');
+    template.innerHTML = star;
+    const spark = template.content.firstElementChild;
+    spark.classList.add(`spark-${i}`);
+    trigger.append(spark);
+  }
   image.append(trigger);
   const zoom = document.querySelector('.photo-zoom');
   const content = zoom.querySelector('.photo-zoom-content');
