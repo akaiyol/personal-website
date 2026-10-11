@@ -99,6 +99,8 @@
   function extendVisibleTimeline() {
     const lastVisible = sections.filter(section => !section.hidden).at(-1);
     sections.forEach(section => section.classList.toggle('timeline-end', section === lastVisible));
+    const lastEntry = lastVisible && [...lastVisible.querySelectorAll('.entry')].filter(entry => !entry.hidden).at(-1);
+    if (lastEntry && lastEntry.offsetHeight) lastVisible.style.setProperty('--timeline-tail-height', `${lastEntry.offsetHeight}px`);
   }
   function filter(workType) {
     entries.forEach(entry => {
@@ -169,6 +171,8 @@
   });
   addEventListener('site:route', () => { route(); update(); });
   addEventListener('resize', update);
+  const timelineSizeObserver = new ResizeObserver(extendVisibleTimeline);
+  entries.forEach(entry => timelineSizeObserver.observe(entry));
   extendVisibleTimeline();
   showProfile('overall');
   document.addEventListener('visibilitychange', () => {
