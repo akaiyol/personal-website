@@ -11,6 +11,7 @@
     '#purple',
     '#heytea-guava-green-grape',
     '#tft',
+    '#gamer',
     '#nonchalant',
     '#larp',
     '#cloudy-day',
@@ -70,6 +71,15 @@
         photoTag.setAttribute('aria-label', `Open photo for ${text}`);
         photoTag.addEventListener('click', () => dispatchEvent(new CustomEvent('site:fact-photo', {detail: text.toLowerCase()})));
         p.append(photoTag);
+      } else if (text === '#gamer') {
+        const link = document.createElement('a');
+        link.className = 'fact-photo-tag';
+        link.textContent = text;
+        link.href = 'https://steamcommunity.com/profiles/76561198983188801/';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.setAttribute('aria-label', 'View my Steam profile (opens in a new tab)');
+        p.append(link);
       } else p.textContent = text;
       if (result.jackpot) p.className = 'jackpot';
       return p;

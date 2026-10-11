@@ -56,6 +56,7 @@
   zoom.addEventListener('close', () => {
     photos.forEach(photo => photo.setAttribute('aria-pressed', 'false'));
     zoomContent.replaceChildren();
+    if (document.activeElement?.matches('.fact-photo-tag')) document.activeElement.blur();
   });
   const factPhotos = new Map([
     ['#cloudy-day', document.querySelector('#fact-photo-cloudy').content.querySelector('figure')],
