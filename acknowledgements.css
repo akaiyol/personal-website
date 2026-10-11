@@ -1,5 +1,5 @@
 body.acknowledgements-active main{display:block;padding:58px 36px 40px}
-.acknowledgements-page{max-width:738px;margin:0 auto;line-height:1.7;--ack-muted:#a394c1}
+.acknowledgements-page{max-width:738px;margin:0;line-height:1.7;--ack-muted:#a394c1}
 .acknowledgements-page h1{font-size:28px;line-height:1.3;font-weight:400;margin:0 0 14px}
 .acknowledgements-page .ack-intro{color:var(--ack-muted);max-width:58ch;margin:0;font-size:14px}
 .acknowledgements-page section{margin-top:44px}
