@@ -368,3 +368,18 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 @media(prefers-reduced-motion:reduce){.about-page .is-winking .portrait-smile{animation:none}}
 
 .about-page .fact-roll kbd{display:inline-block;min-width:20px;margin-left:5px;padding:1px 4px;border:1px solid var(--text);border-bottom-width:3px;border-radius:3px;color:var(--text);font:inherit;font-size:11px;line-height:16px;text-align:center;vertical-align:middle}
+
+/* Photo-linked facts retain their text scale and expose a clear affordance. */
+.about-page .fact-photo-tag{display:flex;align-items:flex-start;justify-content:center;width:100%;font:inherit;color:var(--ink);padding:0 2px;min-height:44px;max-width:100%;overflow-wrap:anywhere;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px}
+.about-page .fact-photo-tag:hover{text-decoration-style:solid}
+.about-page .fact-photo-tag:focus-visible{outline:1px dashed var(--ink);outline-offset:3px}
+.photo-counter{display:inline-flex;align-items:center;gap:7px;flex-shrink:0;font-size:12px;line-height:18px;color:var(--text);white-space:nowrap;pointer-events:none}
+.photo-counter svg{width:20px;height:18px;fill:none;stroke:currentColor;stroke-width:1.3}
+.photo-zoom>.photo-counter{position:absolute;top:5px;left:22px;right:auto}
+.photo-counter.is-counting svg{animation:photo-count-pop 320ms cubic-bezier(.2,.8,.3,1) both}
+@keyframes photo-count-pop{0%,100%{transform:translateY(0) scale(1) rotate(0deg)}35%{transform:translateY(-5px) scale(1.15) rotate(-8deg)}70%{transform:translateY(1px) scale(.98) rotate(3deg)}}
+@media(max-width:600px){.terminal>header{gap:8px}.terminal>header .identity{font-size:11px}.photo-counter{font-size:11px;gap:4px}.photo-counter svg{width:17px}}
+@media(prefers-reduced-motion:reduce){.photo-counter.is-counting svg{animation:none}}
+
+.photo-counter-home{display:inline-flex;align-items:center;justify-content:flex-end;min-width:64px;height:18px;flex-shrink:0}
+body.page-hidden .photo-counter svg{animation-play-state:paused}

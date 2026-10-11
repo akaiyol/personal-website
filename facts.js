@@ -13,7 +13,7 @@
     '#tft',
     '#nonchalant',
     '#larp',
-    'cloudy-day',
+    '#cloudy-day',
     '#joji',
     '#BASS',
     '#fuzhounese',
@@ -62,7 +62,15 @@
     const texts = result.jackpot ? [jackpotFact] : result.values.map(i => facts[i]);
     results.replaceChildren(...texts.map(text => {
       const p = document.createElement('p');
-      p.textContent = text;
+      if (['#gundam', '#cloudy-day', '#bass'].includes(text.toLowerCase())) {
+        const photoTag = document.createElement('button');
+        photoTag.type = 'button';
+        photoTag.className = 'fact-photo-tag';
+        photoTag.textContent = text;
+        photoTag.setAttribute('aria-label', `Open photo for ${text}`);
+        photoTag.addEventListener('click', () => dispatchEvent(new CustomEvent('site:fact-photo', {detail: text.toLowerCase()})));
+        p.append(photoTag);
+      } else p.textContent = text;
       if (result.jackpot) p.className = 'jackpot';
       return p;
     }));

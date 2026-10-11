@@ -57,6 +57,63 @@
     photos.forEach(photo => photo.setAttribute('aria-pressed', 'false'));
     zoomContent.replaceChildren();
   });
+  const factPhotos = new Map([
+    ['#cloudy-day', document.querySelector('#fact-photo-cloudy').content.querySelector('figure')],
+    ['#gundam', document.querySelector('#fact-photo-gundam').content.querySelector('figure')],
+    ['#bass', document.querySelector('#fact-photo-bass').content.querySelector('figure')]
+  ]);
+  factPhotos.forEach(photo => {
+    const image = photo.querySelector('img');
+    photo.style.setProperty('--photo-ratio', `${image.getAttribute('width')} / ${image.getAttribute('height')}`);
+    photo.classList.toggle('landscape', Number(image.getAttribute('width')) > Number(image.getAttribute('height')));
+    // Reuse the gallery's animated stamp drawing for fact-only photos.
+    const drawing = photo.querySelector('.paper').cloneNode(true);
+    drawing.classList.add('frame-drawing');
+    drawing.setAttribute('aria-hidden', 'true');
+    drawing.inert = true;
+    drawing.querySelector('img').remove();
+    photo.querySelector('.paper').classList.add('has-line-boil');
+    photo.querySelector('.paper').append(drawing);
+  });
+  addEventListener('site:fact-photo', event => {
+    const photo = factPhotos.get(event.detail);
+    if (photo && !page.hidden && !zoom.open) select(photo);
+  });
+  const header = document.querySelector('.terminal > header');
+  const counterHome = document.createElement('span');
+  counterHome.className = 'photo-counter-home';
+  header.append(counterHome);
+  const counter = document.createElement('span');
+  counter.className = 'photo-counter';
+  counter.setAttribute('role', 'status');
+  counter.setAttribute('aria-live', 'polite');
+  counter.innerHTML = '<svg viewBox="0 0 24 20" aria-hidden="true"><rect x="1" y="1" width="22" height="18" rx="1"/><circle cx="16.5" cy="6.5" r="2"/><path d="m2 17 6-7 5 5 3-3 6 5"/></svg><span class="photo-count"></span>';
+  const imageKey = image => new URL(image.getAttribute('src'), location.href).pathname;
+  const catalog = new Set([...page.querySelectorAll('.portrait:not(.frame-drawing) .image>img, .memory .image>img'), ...[...factPhotos.values()].map(photo => photo.querySelector('img'))].map(imageKey));
+  const seen = new Set();
+  const count = counter.querySelector('.photo-count');
+  function renderCount() {
+    count.textContent = `${seen.size}/${catalog.size}`;
+    counter.setAttribute('aria-label', `${seen.size} of ${catalog.size} photos explored`);
+  }
+  renderCount();
+  counterHome.append(counter);
+  counter.addEventListener('animationend', () => counter.classList.remove('is-counting'));
+  const syncCounter = () => {
+    if (!zoom.open) { counterHome.append(counter); counter.classList.remove('is-counting'); return; }
+    zoom.append(counter);
+    const image = zoomContent.querySelector('img');
+    if (!image) return;
+    const key = imageKey(image);
+    if (!seen.has(key)) {
+      seen.add(key);
+      renderCount();
+      counter.classList.remove('is-counting');
+      void counter.offsetWidth;
+      counter.classList.add('is-counting');
+    }
+  };
+  new MutationObserver(syncCounter).observe(zoom, {attributes:true, attributeFilter:['open']});
   let drag = null, ignoreClick = false, frame = 0, pointer = null;
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   function select(photo) {
