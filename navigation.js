@@ -4,6 +4,7 @@ const destinations = [
   { id: "work", label: "work", aliases: ["2", "work experience", "work history", "experience", "career", "resume", "résumé"], url: "#work", copy: "" },
   { id: "projects", label: "projects", aliases: ["project", "portfolio", "builds"], url: "#projects", copy: "Projects are coming soon." },
   { id: "about", label: "about-me", aliases: ["about", "about me", "bio", "yolanda"], url: "#about", copy: "I'm Yolanda, an Electrical and Computer Engineering student at the University of Waterloo." },
+  { id: "acknowledgements", label: "acknowledgements", aliases: ["acknowledgments", "credits", "thanks"], url: "#acknowledgements" },
   { id: "github", label: "github", aliases: ["git", "code", "repositories"], url: "https://github.com/akaiyol", external: true },
   { id: "linkedin", label: "linkedin", aliases: ["linked in", "professional profile"], url: "https://www.linkedin.com/in/yolanda-chen1/", external: true },
 ];
@@ -89,6 +90,9 @@ function showRoute(focus = false) {
   const connect = id === "connect";
   const about = id === "about";
   const work = id === "work";
+  const acknowledgements = id === "acknowledgements";
+  document.querySelector("#acknowledgements-view").hidden = !acknowledgements;
+  document.body.classList.toggle("acknowledgements-active", acknowledgements);
   document.querySelector("#work-view").hidden = !work;
   document.body.classList.toggle("work-active", work);
   document.querySelector("#about-view").hidden = !about;
@@ -97,7 +101,7 @@ function showRoute(focus = false) {
   document.querySelector(".identity").textContent = `yolanda@web:~/${pageName.replace(/\s+/g, "-")}`;
   const view = document.querySelector("#destination-view");
   document.querySelector(".hero").hidden = Boolean(item || connect);
-  view.hidden = about || work || (!item && !connect);
+  view.hidden = about || work || acknowledgements || (!item && !connect);
   response.textContent = "";
   const title = document.querySelector("#destination-title");
   title.textContent = item?.label || "connect";
@@ -111,7 +115,8 @@ function showRoute(focus = false) {
     links.append(link);
   });
   document.title = `Yolanda | ${pageName}`;
-  if (focus && about) document.querySelector("#about-title").focus();
+  if (focus && acknowledgements) document.querySelector("#acknowledgements-title").focus();
+  else if (focus && about) document.querySelector("#about-title").focus();
   else if (focus && work && !location.hash.includes("/")) document.querySelector("#work-title").focus();
   else if (focus && !view.hidden) title.focus();
   if (!location.hash.includes("/")) window.scrollTo({top: 0, behavior: "instant"});
@@ -160,7 +165,7 @@ document.querySelector("#command-form").addEventListener("submit", event => {
   else if (query === "home") { location.hash = "#home"; input.value = ""; hint.textContent = normalHint; closeSuggestions(); }
   else if (query === "clear") { response.textContent = ""; input.value = ""; renderSuggestions(); }
   else if (query === "help" || query === "connect") { dismissed = false; input.value = ""; renderSuggestions(); }
-  else if (query) { response.textContent = "Choose home, work, projects, about-me, github or linkedin."; }
+  else if (query) { response.textContent = "Choose home, work, projects, about-me, acknowledgements, github or linkedin."; }
   updateCursor();
 });
 // Demonstrate destinations once, then leave an empty terminal prompt.
