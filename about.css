@@ -366,3 +366,5 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 .about-page .is-winking .portrait-smile{animation:portrait-mouth 2s steps(1,end) both}
 @keyframes portrait-mouth{0%,88%,100%{visibility:hidden}34%{visibility:visible}}
 @media(prefers-reduced-motion:reduce){.about-page .is-winking .portrait-smile{animation:none}}
+
+.about-page .fact-roll kbd{display:inline-block;min-width:20px;margin-left:5px;padding:1px 4px;border:1px solid var(--text);border-bottom-width:3px;border-radius:3px;color:var(--text);font:inherit;font-size:11px;line-height:16px;text-align:center;vertical-align:middle}

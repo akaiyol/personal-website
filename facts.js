@@ -104,8 +104,8 @@
   }
   button.addEventListener('click', roll);
   document.addEventListener('keydown', event => {
-    if (event.key !== 'Enter' || event.repeat || event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || page.hidden) return;
-    // Preserve Enter for terminal navigation, links, and photo controls.
+    if (event.key !== '1' || event.repeat || event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || page.hidden || document.querySelector('dialog[open]')) return;
+    // Preserve typing and the native behavior of other interactive controls.
     if (event.target.closest('input, textarea, select, button, a, [role="button"], [role="checkbox"], [contenteditable="true"]')) return;
     event.preventDefault();
     roll();
