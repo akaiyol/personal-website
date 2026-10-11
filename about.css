@@ -332,14 +332,14 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 .about-page .spark-one{left:12%;top:25%;--sx:-8px;--sy:-23px;--sr:-18deg}
 .about-page .spark-two{right:10%;top:30%;--sx:9px;--sy:-18px;--sr:22deg}
 .about-page .spark-three{right:22%;top:65%;--sx:10px;--sy:15px;--sr:15deg}
-.about-page .is-winking .portrait-wink-art{display:block;animation:portrait-reveal 1.9s steps(1,end) both}
-.about-page .is-winking .portrait-eye-open{animation:portrait-open-eye 1.9s steps(1,end) both}
-.about-page .is-winking .portrait-eye-wink{animation:portrait-closed-eye 1.9s steps(1,end) both}
-.about-page .is-winking .portrait-spark{display:block;animation:portrait-stars 1.9s ease-out both}
-@keyframes portrait-reveal{0%,84%,100%{visibility:hidden}18%{visibility:visible}}
-@keyframes portrait-open-eye{0%,62%,100%{visibility:visible}38%{visibility:hidden}}
-@keyframes portrait-closed-eye{0%,62%,100%{visibility:hidden}38%{visibility:visible}}
-@keyframes portrait-stars{0%,44%{visibility:hidden;transform:scale(.4)}45%{visibility:visible;transform:scale(.4)}68%,84%{visibility:visible;transform:translate(var(--sx),var(--sy)) rotate(var(--sr)) scale(1)}85%,100%{visibility:hidden;transform:translate(var(--sx),var(--sy)) scale(1)}}
+.about-page .is-winking .portrait-wink-art{display:block;animation:portrait-reveal 2.6s steps(1,end) both}
+.about-page .is-winking .portrait-eye-open{animation:portrait-open-eye 2.6s steps(1,end) both}
+.about-page .is-winking .portrait-eye-wink{animation:portrait-closed-eye 2.6s steps(1,end) both}
+.about-page .is-winking .portrait-spark{display:block;animation:portrait-stars 2.6s ease-out both}
+@keyframes portrait-reveal{0%,88%,100%{visibility:hidden}14%{visibility:visible}}
+@keyframes portrait-open-eye{0%,55%,88%,100%{visibility:hidden}30%,72%{visibility:visible}}
+@keyframes portrait-closed-eye{0%,72%,100%{visibility:hidden}55%{visibility:visible}}
+@keyframes portrait-stars{0%,59%{visibility:hidden;transform:scale(.4)}60%{visibility:visible;transform:scale(.4)}76%,88%{visibility:visible;transform:translate(var(--sx),var(--sy)) rotate(var(--sr)) scale(1)}89%,100%{visibility:hidden;transform:translate(var(--sx),var(--sy)) scale(1)}}
 @media(prefers-reduced-motion:reduce){
  .about-page .is-winking .portrait-wink-art,.about-page .is-winking .portrait-eye-open,.about-page .is-winking .portrait-eye-wink,.about-page .is-winking .portrait-spark{animation:none}
  .about-page .is-winking .portrait-eye-open{visibility:hidden}
@@ -355,9 +355,14 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 .about-page .portrait-wink-art,.about-page .portrait-spark{-webkit-text-stroke:.65px currentColor;filter:drop-shadow(1px 1px #000) drop-shadow(-1px -1px #000)}
 
 /* Dim only the photograph while the one-shot artwork is visible. */
-.photo-zoom .is-winking:not(.frame-drawing) .image>img{animation:portrait-dim 1.9s ease-in-out both}
-@keyframes portrait-dim{0%,100%{filter:brightness(1)}16%,84%{filter:brightness(.22)}}
+.photo-zoom .is-winking:not(.frame-drawing) .image>img{animation:portrait-dim 2.6s ease-in-out both}
+@keyframes portrait-dim{0%,100%{filter:brightness(1)}14%,88%{filter:brightness(.22)}}
 .about-page .portrait-spark{-webkit-text-stroke:.2px currentColor}
 @media(prefers-reduced-motion:reduce){
  .photo-zoom .is-winking:not(.frame-drawing) .image>img{animation:none;filter:brightness(.22)}
 }
+
+.about-page .portrait-smile{display:block;margin-top:18px;font-size:24px;white-space:pre}
+.about-page .is-winking .portrait-smile{animation:portrait-mouth 2.6s steps(1,end) both}
+@keyframes portrait-mouth{0%,88%,100%{visibility:hidden}44%{visibility:visible}}
+@media(prefers-reduced-motion:reduce){.about-page .is-winking .portrait-smile{animation:none}}
