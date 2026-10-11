@@ -6,12 +6,13 @@
   const results = machine.querySelector('.fact-results');
   // Replace these strings with personal facts when ready.
   const facts = [
-    '#larp-maxxing',
-    '#piano',
+    '#aura-farmer',
+    '#pianist',
     '#purple',
     '#heytea-guava-green-grape',
     '#tft',
     '#nonchalant',
+    'cloudy-day',
     '#joji',
     '#BASS',
     '#fuzhounese',
@@ -20,7 +21,8 @@
     '#ENTP',
     '#capture-every-moment',
     '#nerd',
-    '#real-one',
+    '#fashion',
+    "#gundam"
   ];
   const jackpotFact = 'labubu';
   const symbols = ['⠿⠿','⣀⣿','⣿⣀','⣾⡇','⡇⣷','⢸⣇','⣹⢾','⡯⣽','⣶⣶','⢿⡿','⣤⠛','⠛⣤','⣧⣴','⣰⣆','⢾⡷'];
@@ -42,7 +44,7 @@
   const rowHeight = 48;
   function symbolRow(index, jackpot = false) {
     const row = document.createElement('span');
-    row.textContent = jackpot ? '⠀⠀⢰⡆⠀⠀\n⠈⢻⣿⣿⡟⠁\n⠀⠘⠉⠉⠃⠀' : symbols[index];
+    row.textContent = jackpot ? '⠀⠀⢰⡆⠀⠀\n⠈⢻⣿⣿⡟⠁\n⠀⠘⠉⠉⠃⠀' : symbols[index % symbols.length];
     if (jackpot) row.className = 'braille-star';
     return row;
   }

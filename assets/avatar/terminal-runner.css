@@ -1,0 +1,16 @@
+/* Preview the archived avatar on the home command terminal's upper edge. */
+.terminal{position:relative}
+.terminal-runner{display:none;position:absolute;top:-90px;left:calc(100% - 72px);width:72px;height:100px;z-index:2;animation:terminal-run 14s linear infinite}
+.terminal-runner .snoopy-avatar{width:72px;height:100px;min-height:0}
+.terminal-runner .snoopy-avatar img{display:block;width:100%;height:100%}
+.terminal-runner .snoopy-avatar:not(.is-reacting) .pose{animation-duration:.5s!important}
+.terminal-runner:hover,.terminal-runner:focus-within{animation-play-state:paused}
+body:has(.hero:not([hidden])) .terminal-runner{display:block}
+@keyframes terminal-run{from{left:calc(100% - 72px)}to{left:0}}
+@media(prefers-reduced-motion:reduce){
+ .terminal-runner{animation:none;left:calc(100% - 100px)}
+ .terminal-runner .snoopy-avatar:not(.is-reacting) .pose{animation:none!important;opacity:0}
+ .terminal-runner .snoopy-avatar:not(.is-reacting) .walkingframe0{opacity:1}
+}
+
+.terminal-runner svg text{fill:#e0caff}
