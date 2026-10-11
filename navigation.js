@@ -1,9 +1,9 @@
 // Destinations and aliases are local; navigation does not require an API.
 const destinations = [
-  { id: "home", label: "home", aliases: [], url: "#home" },
-  { id: "work", label: "work history", aliases: ["work", "experience", "career", "resume", "résumé"], url: "#work", copy: "" },
+  { id: "home", label: "home", aliases: ["1"], url: "#home" },
+  { id: "work", label: "work", aliases: ["2", "work experience", "work history", "experience", "career", "resume", "résumé"], url: "#work", copy: "" },
   { id: "projects", label: "projects", aliases: ["project", "portfolio", "builds"], url: "#projects", copy: "Projects are coming soon." },
-  { id: "about", label: "about me", aliases: ["about", "bio", "yolanda"], url: "#about", copy: "I'm Yolanda, an Electrical and Computer Engineering student at the University of Waterloo." },
+  { id: "about", label: "about-me", aliases: ["about", "about me", "bio", "yolanda"], url: "#about", copy: "I'm Yolanda, an Electrical and Computer Engineering student at the University of Waterloo." },
   { id: "github", label: "github", aliases: ["git", "code", "repositories"], url: "https://github.com/akaiyol", external: true },
   { id: "linkedin", label: "linkedin", aliases: ["linked in", "professional profile"], url: "https://www.linkedin.com/in/yolanda-chen1/", external: true },
 ];
@@ -71,8 +71,10 @@ function renderSuggestions(reset = true) {
   updateCompletion();
 }
 function navigate(item) {
+  dismissed = true;
   closeSuggestions();
   input.value = "";
+  input.blur();
   updateCursor();
   hint.textContent = normalHint;
   if (item.external) location.assign(item.url);
@@ -131,7 +133,12 @@ input.addEventListener("keyup", updateCompletion);
 input.addEventListener("scroll", updateCompletion);
 input.addEventListener("keydown", event => {
   if (event.isComposing) return;
-  if (event.key === "Escape") { dismissed = true; closeSuggestions(); }
+  if (event.key === "Enter" && list.hidden && (!normalize(input.value) || matching(input.value).length)) {
+    event.preventDefault();
+    dismissed = false;
+    renderSuggestions();
+  }
+  else if (event.key === "Escape") { dismissed = true; closeSuggestions(); }
   else if (["ArrowDown", "ArrowUp"].includes(event.key)) {
     event.preventDefault();
     if (list.hidden) { dismissed = false; renderSuggestions(); }
@@ -153,7 +160,7 @@ document.querySelector("#command-form").addEventListener("submit", event => {
   else if (query === "home") { location.hash = "#home"; input.value = ""; hint.textContent = normalHint; closeSuggestions(); }
   else if (query === "clear") { response.textContent = ""; input.value = ""; renderSuggestions(); }
   else if (query === "help" || query === "connect") { dismissed = false; input.value = ""; renderSuggestions(); }
-  else if (query) { response.textContent = "Choose home, work history, projects, about me, github or linkedin."; }
+  else if (query) { response.textContent = "Choose home, work, projects, about-me, github or linkedin."; }
   updateCursor();
 });
 // Demonstrate destinations once, then leave an empty terminal prompt.
@@ -212,3 +219,20 @@ document.addEventListener("visibilitychange", () => {
   else startPrompt();
 });
 startPrompt();
+
+// Page shortcuts leave links, buttons, editable fields, and dialogs in control.
+document.addEventListener('keydown', event => {
+  if (event.defaultPrevented || event.isComposing || event.repeat || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+  if (event.target.closest('input, textarea, select, button, a, [role="button"], [contenteditable]:not([contenteditable="false"]), dialog')) return;
+  const onHome = !document.querySelector('.hero').hidden;
+  if (onHome && (event.key === '1' || event.key === '2')) {
+    event.preventDefault();
+    navigate(destinations.find(item => item.id === (event.key === '1' ? 'home' : 'work')));
+  } else if (event.key === 'Enter') {
+    event.preventDefault();
+    dismissed = false;
+    input.focus();
+    renderSuggestions();
+    updateCursor();
+  }
+});

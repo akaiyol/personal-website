@@ -10,3 +10,68 @@ body.work-active main{overflow:visible;display:block;padding:48px 58px 60px}
 @media(max-width:600px){body.work-active main{padding:28px 16px 32px}}
 .work-page h1:focus{outline:none}
 .work-page h1:focus-visible{outline:1px dashed var(--ink);outline-offset:5px}
+
+/* Career history and its character sheet share the work view. */
+.work-page .layout{grid-template-columns:minmax(0,1fr) 52px minmax(280px,390px);gap:28px}
+.work-page .entry{grid-template-columns:1fr;gap:6px}
+.work-page .character-stats{position:sticky;top:32px;min-width:0;text-align:center}
+.work-page .character-stats h2{font-family:inherit;font-size:19px;margin:0 0 8px;line-height:1.5}
+.work-page .character-stats h2:before{content:none}
+.work-page .strengths-graph{display:block;width:100%;height:auto;margin:-12px auto 0}
+@media(max-width:900px){
+ .work-page .layout{grid-template-columns:minmax(0,1fr) 48px;gap:20px}
+ .work-page .character-stats{position:static;grid-column:1/-1;grid-row:1;width:min(100%,420px);justify-self:center;margin-bottom:24px}
+ .work-page .timeline{grid-column:1;grid-row:2}
+ .work-page .years{grid-column:2;grid-row:2}
+}
+@media(max-width:600px){.work-page .layout{gap:12px}}
+
+@media(min-width:901px){
+ .work-page .layout{grid-template-columns:minmax(0,1fr) minmax(280px,390px) 52px}
+ .work-page .timeline{grid-column:1;grid-row:1}
+ .work-page .character-stats{grid-column:2;grid-row:1}
+ .work-page .years{grid-column:3;grid-row:1}
+}
+
+.work-page .stats-description{font-size:13px;line-height:1.8;margin:0 auto;max-width:30ch;text-align:center}
+
+.work-page .work-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.work-page .work-tag{font-size:11px;line-height:1.6;padding:2px 7px;border:1px solid #8a73a9;border-radius:3px;background:var(--ink);color:var(--ground)}
+.work-page .work-tag.technology{background:#21192d;color:var(--ink);border-color:#514365}
+.work-page .work-focus{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px;margin:24px 0;padding:0}
+.work-page .work-focus li{display:flex;align-items:flex-start;gap:10px;min-width:0;font-size:12px;line-height:1.7}
+.work-page .work-focus svg{width:21px;height:21px;flex:none;stroke:var(--ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;fill:none;margin-top:1px}
+.work-page .work-focus a{text-decoration:underline;text-decoration-color:#74658c;text-underline-offset:4px}
+.work-page .work-focus a:hover{text-decoration-color:var(--ink)}
+.work-page .repo-mark{display:inline-block;margin-left:5px}
+.work-page .work-tools{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 10px}
+.work-page .tools-label{font-size:11px;color:#aa99c6}
+.work-page .work-tools .work-tags{margin:0}
+@media(min-width:901px) and (max-width:1100px){.work-page .work-focus{grid-template-columns:1fr}}
+@media(max-width:480px){.work-page .work-focus{grid-template-columns:1fr;gap:14px;margin:20px 0}}
+
+.work-page .entry{padding-bottom:60px}
+.work-page .role{font-style:italic}
+@media(max-width:600px){.work-page .entry{padding-bottom:46px}}
+
+.work-page .work-heading{display:flex;flex-direction:column;align-items:flex-start;gap:16px;margin-bottom:40px}
+.work-page .work-heading h1{margin:0;flex:none;line-height:1.4}
+.work-page .work-filters{display:flex;flex-wrap:wrap;gap:6px;padding-top:2px}
+.work-page button.work-tag{min-height:32px;cursor:pointer;font-family:inherit}
+.work-page button[data-work-type]:hover{border-color:var(--ink)}
+.work-page button[data-work-type][aria-pressed="true"]{background:#61497f;color:#fff;border-color:var(--ink)}
+.work-page button[data-work-type]:focus-visible{outline:2px dashed var(--ink);outline-offset:3px}
+.work-page .entry[hidden],.work-page .timeline section[hidden],.work-page .years a[hidden]{display:none}
+@media(max-width:600px){.work-page .work-heading{gap:16px;margin-bottom:30px}.work-page .work-heading h1{font-size:25px}.work-page .work-filters{gap:5px}.work-page .work-filters button{font-size:10px;min-height:34px}}
+
+/* The graph follows the role crossing the reading position. */
+.work-page .stats-context{font-size:13px;line-height:1.6;min-height:21px;margin:0 0 6px;color:var(--ink)}
+.work-page .timeline section.timeline-end{padding-bottom:max(640px,100svh)}
+.work-page .entry.stats-active:before{background:var(--ink);box-shadow:0 0 0 3px var(--ground),0 0 0 4px #8a73a9}
+
+.work-page .stats-overall{fill:#c5b5ec;fill-opacity:.10;stroke:#c5b5ec;stroke-opacity:.55;stroke-width:1.5;stroke-dasharray:5 4;stroke-linejoin:round}
+
+.work-page .strengths-graph.can-compare{cursor:pointer}
+.work-page .strengths-graph:focus-visible{outline:1px dashed var(--ink);outline-offset:3px}
+
+.work-page .strengths-graph:focus:not(:focus-visible){outline:none}

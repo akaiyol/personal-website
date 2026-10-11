@@ -13,6 +13,7 @@
     '#tft',
     '#nonchalant',
     '#larp',
+    'cloudy-day',
     '#joji',
     '#BASS',
     '#fuzhounese',
@@ -44,7 +45,7 @@
   const rowHeight = 48;
   function symbolRow(index, jackpot = false) {
     const row = document.createElement('span');
-    row.textContent = jackpot ? '⠀⠀⢰⡆⠀⠀\n⠈⢻⣿⣿⡟⠁\n⠀⠘⠉⠉⠃⠀' : symbols[index];
+    row.textContent = jackpot ? '⠀⠀⢰⡆⠀⠀\n⠈⢻⣿⣿⡟⠁\n⠀⠘⠉⠉⠃⠀' : symbols[index % symbols.length];
     if (jackpot) row.className = 'braille-star';
     return row;
   }

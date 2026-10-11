@@ -1,5 +1,47 @@
 (() => {
   const page = document.querySelector('#about-view');
+  const poemWord = page.querySelector('.poem-word');
+  let poemWordTimer;
+  function hidePoemWord() {
+    clearTimeout(poemWordTimer);
+    poemWord.classList.remove('is-reading');
+  }
+  function showPoemWord() {
+    clearTimeout(poemWordTimer);
+    poemWord.classList.add('is-reading');
+    poemWordTimer = setTimeout(hidePoemWord, 1000);
+  }
+  ['pointerenter', 'focus', 'click'].forEach(type => poemWord.addEventListener(type, showPoemWord));
+  ['pointerleave', 'blur'].forEach(type => poemWord.addEventListener(type, hidePoemWord));
+  poemWord.addEventListener('keydown', event => { if (event.key === 'Escape') hidePoemWord(); });
+  const copyEmail = page.querySelector('[data-copy-email]');
+  const emailStatus = page.querySelector('#email-copy-status');
+  let emailStatusTimer;
+  copyEmail.addEventListener('click', async () => {
+    clearTimeout(emailStatusTimer);
+    const email = copyEmail.dataset.copyEmail;
+    try {
+      try {
+        await navigator.clipboard.writeText(email);
+      } catch {
+        const field = document.createElement('textarea');
+        field.value = email;
+        field.setAttribute('readonly', '');
+        field.style.cssText = 'position:fixed;left:-9999px;top:0';
+        document.body.append(field);
+        field.select();
+        let copied;
+        try { copied = document.execCommand('copy'); }
+        finally { field.remove(); copyEmail.focus({preventScroll: true}); }
+        if (!copied) throw new Error('Copy unavailable');
+      }
+      emailStatus.textContent = 'Copied';
+      emailStatusTimer = setTimeout(() => { emailStatus.textContent = ''; }, 900);
+    } catch {
+      emailStatus.textContent = 'Select the email to copy it.';
+    }
+  });
+
   const rail = page.querySelector('.memories');
   const photos = [...page.querySelectorAll('.memory')];
   const terms = [...page.querySelectorAll('.term')];
@@ -30,8 +72,30 @@
     enlarged.removeAttribute('aria-describedby');
     enlarged.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
     const ratio = Number(image.getAttribute('width')) / Number(image.getAttribute('height'));
-    enlarged.style.setProperty('--zoom-width', `min(${ratio > 1 ? 546 : 390}px, calc((100dvh - 200px) * ${ratio}))`);
+    const hasDetails = photo.dataset.songUrl || photo.dataset.photoTag;
+    const zoomWidth = `min(${ratio > 1 ? 546 : 390}px, calc((100dvh - ${hasDetails ? 280 : 200}px) * ${ratio}))`;
+    enlarged.style.setProperty('--zoom-width', zoomWidth);
+    zoomContent.style.setProperty('--zoom-width', zoomWidth);
     zoomContent.replaceChildren(enlarged);
+    if (photo.dataset.songUrl) {
+      const song = document.createElement('a');
+      song.className = 'photo-song';
+      song.href = photo.dataset.songUrl;
+      song.target = '_blank';
+      song.rel = 'noopener noreferrer';
+      song.setAttribute('aria-label', 'Listen to Who Knows by Daniel Caesar on YouTube (opens in a new tab)');
+      song.innerHTML = '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14"/><path d="M13 10L23 16L13 22Z"/></svg><span><strong>Who Knows</strong><span>Daniel Caesar</span></span><small>YouTube ↗</small>';
+      zoomContent.append(song);
+    }
+    if (photo.dataset.photoTag) {
+      const caption = enlarged.querySelector(':scope > .paper > figcaption');
+      const tag = caption.querySelector('.photo-caption');
+      tag.classList.add('photo-zoom-tag');
+      tag.textContent = photo.dataset.photoTag;
+      // Match the decorative layer's height without drawing a second copy of the text.
+      const inkCaption = enlarged.querySelector('.frame-drawing figcaption');
+      inkCaption.replaceChildren(...[...caption.childNodes].map(node => node.cloneNode(true)));
+    }
     if (!zoom.open) zoom.showModal();
   }
   function pin(photo, left) {
