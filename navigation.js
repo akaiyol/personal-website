@@ -1,7 +1,7 @@
 // Destinations and aliases are local; navigation does not require an API.
 const destinations = [
   { id: "home", label: "home", aliases: [], url: "#home" },
-  { id: "work", label: "work", aliases: ["2", "work experience", "work history", "experience", "career", "resume", "résumé"], url: "#work", copy: "" },
+  { id: "work", label: "work-expereince", aliases: ["2", "work", "work-experience", "work experience", "work history", "experience", "career", "resume", "résumé"], url: "#work", copy: "" },
   { id: "projects", label: "projects", aliases: ["project", "portfolio", "builds"], url: "#projects", copy: "Projects are coming soon." },
   { id: "about", label: "about-me", aliases: ["1", "about", "about me", "bio", "yolanda"], url: "#about", copy: "I'm Yolanda, an Electrical and Computer Engineering student at the University of Waterloo." },
   { id: "acknowledgements", label: "acknowledgements", aliases: ["acknowledgments", "credits", "thanks"], url: "#acknowledgements" },
@@ -165,11 +165,11 @@ document.querySelector("#command-form").addEventListener("submit", event => {
   else if (query === "home") { location.hash = "#home"; input.value = ""; hint.textContent = normalHint; closeSuggestions(); }
   else if (query === "clear") { response.textContent = ""; input.value = ""; renderSuggestions(); }
   else if (query === "help" || query === "connect") { dismissed = false; input.value = ""; renderSuggestions(); }
-  else if (query) { response.textContent = "Choose home, work, projects, about-me, acknowledgements, github or linkedin."; }
+  else if (query) { response.textContent = "Choose home, work-expereince, projects, about-me, acknowledgements, github or linkedin."; }
   updateCursor();
 });
 // Demonstrate destinations once, then leave an empty terminal prompt.
-const prompts = ["work", "projects", "about me"];
+const prompts = ["work-expereince", "projects", "about me"];
 let promptTimer, cursorTimer, promptIndex = 0, promptLength = 0, deleting = false, promptFinished = false;
 function stopPrompt() { clearTimeout(promptTimer); }
 function updateCursor() {
