@@ -328,7 +328,6 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 .about-page .portrait-wink-art{position:absolute;left:50%;top:36%;width:174px;margin-left:-87px;font-size:32px;line-height:1.1}
 .about-page .portrait-eyes{display:flex;justify-content:space-between;position:relative}
 .about-page .portrait-eye-wink{position:absolute;right:0;visibility:hidden}
-.about-page .portrait-smile{display:block;margin-top:18px;font-size:24px;white-space:pre}
 .about-page .portrait-spark{position:absolute;font-size:8px;line-height:1;white-space:pre}
 .about-page .spark-one{left:12%;top:25%;--sx:-8px;--sy:-23px;--sr:-18deg}
 .about-page .spark-two{right:10%;top:30%;--sx:9px;--sy:-18px;--sr:22deg}
