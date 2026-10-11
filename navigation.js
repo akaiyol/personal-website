@@ -71,8 +71,10 @@ function renderSuggestions(reset = true) {
   updateCompletion();
 }
 function navigate(item) {
+  dismissed = true;
   closeSuggestions();
   input.value = "";
+  input.blur();
   updateCursor();
   hint.textContent = normalHint;
   if (item.external) location.assign(item.url);

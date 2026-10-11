@@ -3,11 +3,58 @@
   const rail = page.querySelector('.memories');
   const photos = [...page.querySelectorAll('.memory')];
   const terms = [...page.querySelectorAll('.term')];
+  const zoom = document.createElement('dialog');
+  zoom.className = 'about-page photo-zoom';
+  zoom.setAttribute('aria-label', 'Enlarged photo');
+  zoom.innerHTML = '<button type="button" class="photo-zoom-close" aria-label="Close enlarged photo">[ close × ]</button><div class="photo-zoom-content"></div>';
+  document.body.append(zoom);
+  const zoomContent = zoom.querySelector('.photo-zoom-content');
+  zoom.querySelector('button').addEventListener('click', () => zoom.close());
+  zoom.addEventListener('click', event => { if (event.target === zoom) zoom.close(); });
+  zoom.addEventListener('close', () => {
+    photos.forEach(photo => photo.setAttribute('aria-pressed', 'false'));
+    zoomContent.replaceChildren();
+  });
   let drag = null, ignoreClick = false, frame = 0, pointer = null;
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   function select(photo) {
     const wasSelected = photo?.getAttribute('aria-pressed') === 'true';
     photos.forEach(item => item.setAttribute('aria-pressed', String(item === photo && !wasSelected)));
+    if (!photo || wasSelected) { if (zoom.open) zoom.close(); return; }
+    const image = photo.querySelector('.image img');
+    const enlarged = photo.cloneNode(true);
+    enlarged.removeAttribute('id');
+    enlarged.removeAttribute('role');
+    enlarged.removeAttribute('tabindex');
+    enlarged.removeAttribute('aria-pressed');
+    enlarged.removeAttribute('aria-describedby');
+    enlarged.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
+    const ratio = Number(image.getAttribute('width')) / Number(image.getAttribute('height'));
+    const hasDetails = photo.dataset.songUrl || photo.dataset.photoTag;
+    const zoomWidth = `min(${ratio > 1 ? 546 : 390}px, calc((100dvh - ${hasDetails ? 280 : 200}px) * ${ratio}))`;
+    enlarged.style.setProperty('--zoom-width', zoomWidth);
+    zoomContent.style.setProperty('--zoom-width', zoomWidth);
+    zoomContent.replaceChildren(enlarged);
+    if (photo.dataset.songUrl) {
+      const song = document.createElement('a');
+      song.className = 'photo-song';
+      song.href = photo.dataset.songUrl;
+      song.target = '_blank';
+      song.rel = 'noopener noreferrer';
+      song.setAttribute('aria-label', 'Listen to Who Knows by Daniel Caesar on YouTube (opens in a new tab)');
+      song.innerHTML = '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14"/><path d="M13 10L23 16L13 22Z"/></svg><span><strong>Who Knows</strong><span>Daniel Caesar</span></span><small>YouTube ↗</small>';
+      zoomContent.append(song);
+    }
+    if (photo.dataset.photoTag) {
+      const caption = enlarged.querySelector(':scope > .paper > figcaption');
+      const tag = caption.querySelector('.photo-caption');
+      tag.classList.add('photo-zoom-tag');
+      tag.textContent = photo.dataset.photoTag;
+      // Match the decorative layer's height without drawing a second copy of the text.
+      const inkCaption = enlarged.querySelector('.frame-drawing figcaption');
+      inkCaption.replaceChildren(...[...caption.childNodes].map(node => node.cloneNode(true)));
+    }
+    if (!zoom.open) zoom.showModal();
   }
   function pin(photo, left) {
     const width = rail.clientWidth;
@@ -21,6 +68,11 @@
     photo.style.setProperty('--slot', `${position / width * 100}%`);
   }
   photos.forEach(photo => {
+    const image = photo.querySelector('.image img');
+    const width = Number(image.getAttribute('width'));
+    const height = Number(image.getAttribute('height'));
+    photo.style.setProperty('--photo-ratio', `${width} / ${height}`);
+    photo.classList.toggle('landscape', width > height);
     photo.addEventListener('click', () => {
       if (ignoreClick) { ignoreClick = false; return; }
       select(photo);
@@ -123,4 +175,28 @@
   window.addEventListener('site:route', () => { pause(); select(null); });
   window.addEventListener('scroll', () => { pointer = null; clearTerms(); }, {passive: true});
   document.addEventListener('visibilitychange', pause);
+
+  // Distort only a decorative copy of the ink, never the photo or its text.
+  const filters = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  filters.setAttribute('width', '0');
+  filters.setAttribute('height', '0');
+  filters.setAttribute('aria-hidden', 'true');
+  filters.style.position = 'absolute';
+  filters.innerHTML = `<defs>${[2, 7, 12].map((seed, index) => `
+    <filter id="frame-trace-${index + 1}" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency=".035 .065" numOctaves="2" seed="${seed}" result="grain"/>
+      <feDisplacementMap in="SourceGraphic" in2="grain" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>`).join('')}</defs>`;
+  document.body.append(filters);
+  page.querySelectorAll('.portrait, .memory > .paper').forEach(frame => {
+    const drawing = frame.cloneNode(true);
+    drawing.classList.add('frame-drawing');
+    drawing.setAttribute('aria-hidden', 'true');
+    drawing.inert = true;
+    drawing.removeAttribute('aria-label');
+    drawing.querySelectorAll('img, pre').forEach(content => content.remove());
+    drawing.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
+    frame.classList.add('has-line-boil');
+    frame.append(drawing);
+  });
 })();

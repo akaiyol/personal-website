@@ -3,8 +3,9 @@
 .about-page p{margin:0 0 22px}
 .about-page .introduction{display:grid;grid-template-columns:240px minmax(0,1fr);gap:64px;align-items:center}
 .about-page .story{max-width:600px}
-.about-page .greeting{font-size:22px;margin-bottom:20px}
+.about-page .greeting{font-size:22px;margin-bottom:44px}
 .about-page .background{font-size:14px;line-height:1.9;margin-bottom:18px}
+.about-page .bio-quote{font-size:14px;line-height:1.9;margin:0 0 18px}
 .about-page .closing{font-size:14px;line-height:1.9;margin:25px 0 0;padding-left:16px;border-left:1px solid var(--ink)}
 .about-page .term{color:var(--ground);background:var(--ink);padding:2px 4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 .about-page .year{font-size:13px}
@@ -16,7 +17,7 @@
 .about-page pre{margin:0;font-family:inherit;line-height:1.05;font-size:7px;white-space:pre}
 .about-page .portrait pre{font-size:7px;line-height:1.04}
 .about-page .gallery{position:relative;padding:38px 8px 16px;margin:55px -25px 0;min-height:300px}
-.about-page .wire{position:absolute;top:38px;left:-8px;right:-8px;height:37px;border-bottom:1px solid var(--ink);border-radius:0 0 50% 50%;transform:rotate(-1deg)}
+.about-page .wire{position:absolute;top:38px;left:12px;right:12px;height:37px;border-bottom:1px solid var(--ink);border-radius:0 0 50% 50%;transform:rotate(-1deg)}
 .about-page .wire:before,.about-page .wire:after{content:"+";position:absolute;top:10px;font-size:18px}
 .about-page .wire:before{left:-3px}
 .about-page .wire:after{right:-3px}
@@ -57,7 +58,7 @@
 .about-page .portrait pre{font-size:6.5px}
 .about-page .story{width:100%}
 .about-page h1{font-size:25px;margin-bottom:18px}
-.about-page .greeting{font-size:20px;margin-bottom:14px}
+.about-page .greeting{font-size:20px;margin-bottom:38px}
 .about-page .background{font-size:14px}
 .about-page .gallery{margin-top:25px;margin-left:-12px;margin-right:-12px;min-height:305px}
 .about-page .year{font-size:12px}}
@@ -91,7 +92,7 @@
 .about-page .stamp .perforation.bottom{bottom:-6px}
 .about-page .stamp .perforation.left{left:-6px}
 .about-page .stamp .perforation.right{right:-6px}
-.about-page .stamp .image{border:1px dotted var(--ink);border-radius:48% 48% 0 0}
+.about-page .stamp .image{border:1px dotted var(--ink);border-radius:0}
 .about-page .negative .paper{padding:22px 9px 25px;border:1px solid var(--ink)}
 .about-page .negative .paper:before,.about-page .negative .paper:after{content:"▪ ▪ ▪ ▪ ▪ ▪";background:var(--ink);color:var(--ground);left:3px;right:3px;height:14px;line-height:14px;font-size:17px;letter-spacing:5px;text-align:center}
 .about-page .negative .paper:before{top:3px}
@@ -119,7 +120,8 @@
 .about-page { --ink: var(--text); --ground: var(--bg); font-size: 14px; line-height: 1.8; }
 body.about-active main { padding: 48px 58px 18px; overflow: visible; justify-content: flex-start; }
 .about-page #about-title { outline: none; }
-.about-page .gallery { overflow: visible; margin-top: 55px; padding-bottom: 30px; }
+.about-page .gallery { overflow: visible; margin-top: 55px; padding-bottom: 30px; scrollbar-width: none; }
+.about-page .gallery::-webkit-scrollbar { display: none; }
 .about-page .memories { position: relative; display: block; width: 100%; height: 300px; margin-top: 33px; padding: 0; }
 .about-page .memory { position: absolute; left: var(--slot); top: var(--hang); width: 162px; margin: 0; cursor: grab; touch-action: pan-x pan-y; user-select: none; z-index: var(--layer); transform: rotate(var(--tilt)); transform-origin: 50% 0; transition: transform 180ms ease; }
 .about-page .memory.polaroid { width: 190px; }
@@ -139,7 +141,7 @@ body.about-active main { padding: 48px 58px 18px; overflow: visible; justify-con
  body.about-active main { padding: 38px 34px 16px; }
  .about-page .gallery { overflow-x: auto; overflow-y: hidden; padding-top: 50px; }
  .about-page .memories { width: 1160px; height: 300px; }
- .about-page .wire { width: 1160px; }
+ .about-page .wire { width: 1136px; }
 }
 @media (max-width: 600px) { body.about-active main { padding: 30px 22px 12px; } .about-page .gallery { margin-top: 25px; } }
 @media (prefers-reduced-motion: reduce) {
@@ -165,6 +167,14 @@ body.page-hidden .about-page .memory { transition: none; }
 @media(prefers-reduced-motion:reduce){.about-page .signal-name:before,.about-page .signal-name:after{animation:none;clip-path:inset(50% 0 50%)}}
 body.page-hidden .about-page .signal-name:before,body.page-hidden .about-page .signal-name:after{animation-play-state:paused}
 .about-page[hidden] .signal-name:before,.about-page[hidden] .signal-name:after{animation-play-state:paused}
+.about-page .handwritten-name{width:155px;height:79px;vertical-align:middle;transform:translate(-16px,18px);margin:-20px 0 -12px}
+.about-page .name-comma{display:inline-block;margin-left:-17px}
+.about-page .handwritten-name:before,.about-page .handwritten-name:after{display:none}
+.about-page .handwritten-name svg{display:block;width:100%;height:100%;overflow:hidden}
+.about-page .handwritten-name .signal-slice{position:absolute;inset:0;pointer-events:none;animation:signal-breakup 6s steps(1,end) infinite}
+.about-page .handwritten-name .signal-slice:last-child{animation-delay:-2.7s}
+@media(prefers-reduced-motion:reduce){.about-page .handwritten-name .signal-slice{animation:none;display:none}}
+body.page-hidden .handwritten-name .signal-slice,.about-page[hidden] .handwritten-name .signal-slice{animation-play-state:paused}
 
 .about-page .fact-machine{margin:24px 0 0;--roll-width:110px;--reel-gap:24px}
 .about-page .fact-console{display:flex;align-items:center;gap:var(--reel-gap);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:10px 0}
@@ -214,5 +224,72 @@ body.page-hidden .about-page .fact-machine.is-jackpot .star-confetti,.about-page
 @media(max-width:600px){.about-page .fact-track span.braille-star{font-size:10px}}
 
 .about-page .portrait .image img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.about-page .memory.landscape{width:220px}
+.about-page .memory .image{position:relative;height:auto;aspect-ratio:var(--photo-ratio,3 / 4)}
+.about-page .memory .image img{position:absolute;inset:0;display:block;width:100%;height:100%;min-width:0;object-fit:cover;pointer-events:none}
 
 @media(max-width:600px){.about-page .fact-results{min-height:120px}}
+
+/* Three discrete ink impressions create a hand-traced line boil. */
+.about-page .has-line-boil { --ink: transparent; }
+.about-page .has-line-boil::before,
+.about-page .has-line-boil::after { color: transparent; }
+.about-page .frame-drawing {
+ --ink: var(--text);
+ position: absolute;
+ inset: 0;
+ width: auto;
+ height: auto;
+ margin: 0;
+ transform: none;
+ background: transparent;
+ pointer-events: none;
+ z-index: 3;
+ animation: frame-line-boil .72s steps(1,end) infinite;
+}
+.about-page .frame-drawing .image { background: transparent; }
+.about-page .paper.frame-drawing { inset: -1px; }
+.about-page .stamp .paper.frame-drawing { inset: 0; }
+.about-page .frame-drawing figcaption { color: transparent; }
+.about-page .memory .clip { animation: frame-line-boil .72s steps(1,end) infinite; }
+.about-page .memory:nth-child(3n + 1) { --boil-delay: -.24s; }
+.about-page .memory:nth-child(3n + 2) { --boil-delay: -.48s; }
+.about-page .memory :is(.frame-drawing,.clip) { animation-delay: var(--boil-delay,0s); }
+@keyframes frame-line-boil {
+ 0%,100% { filter: url("#frame-trace-1"); }
+ 33.333% { filter: url("#frame-trace-2"); }
+ 66.666% { filter: url("#frame-trace-3"); }
+}
+body.page-hidden .about-page :is(.frame-drawing,.clip),
+.about-page[hidden] :is(.frame-drawing,.clip) { animation-play-state: paused; }
+@media(prefers-reduced-motion:reduce) {
+ .about-page :is(.frame-drawing,.clip) { animation: none; filter: none; }
+}
+
+/* A modest enlargement retains the original paper and animated ink. */
+.photo-zoom{position:fixed;inset:0;margin:auto;padding:48px 22px 22px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);border:0;background:transparent;color:var(--text);overflow:visible}
+.photo-zoom::backdrop{background:rgb(0 0 0 / .7)}
+.photo-zoom.about-page .memory{position:relative;left:auto;top:auto;width:var(--zoom-width);max-width:calc(100vw - 72px);margin:0;transform:none!important;cursor:default;transition:none}
+.photo-zoom .photo-zoom-content{pointer-events:none}
+.photo-zoom-close{position:absolute;top:0;right:16px;min-height:36px;padding:4px 8px;font:inherit;color:inherit;background:var(--bg);border:0;cursor:pointer}
+.photo-zoom-close:focus-visible{outline:1px dashed var(--text);outline-offset:2px}
+.photo-zoom-content{width:var(--zoom-width);max-width:calc(100vw - 72px)}
+.photo-song{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px 0;border-top:1px dotted var(--text);color:var(--text);background:var(--bg);text-decoration:none;pointer-events:auto}
+.photo-song svg{width:34px;height:34px;flex:none;fill:none;stroke:currentColor;stroke-width:1.2}
+.photo-song strong,.photo-song span span{display:block;font-size:13px;line-height:1.6;font-weight:400}
+.photo-song small{margin-left:auto;font-size:11px;white-space:nowrap}
+.photo-song:hover svg{stroke-width:2}
+.photo-song:focus-visible{outline:1px dashed var(--text);outline-offset:5px}
+.photo-zoom .memory figcaption{flex-direction:row;align-items:baseline;justify-content:space-between;gap:14px;text-align:right}
+.photo-zoom .memory .photo-date{flex-shrink:0}
+.photo-zoom .memory.polaroid figcaption{right:14px}
+.photo-zoom .photo-zoom-tag{margin:0;font-size:13px;line-height:1.6;text-align:right;overflow-wrap:anywhere}
+
+/* Keep the original handwriting; extract paper luminance into transparency in SVG. */
+.about-page .handwritten-poem{width:min(840px,100%);margin:-16px auto 48px;pointer-events:none}
+.about-page .handwritten-poem svg{display:block;width:100%;height:auto;overflow:hidden}
+@media(max-width:600px){.about-page .handwritten-poem{margin:-40px auto 28px}}
+
+.about-page .handwritten-poem{position:relative;left:-24px}
+.about-page .handwritten-poem figcaption{text-align:right;font-size:17px;line-height:1.7;margin-top:-64px;position:relative}
+@media(max-width:600px){.about-page .handwritten-poem{left:-8px}.about-page .handwritten-poem figcaption{font-size:14px;margin-top:-24px}}
