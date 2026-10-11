@@ -78,6 +78,7 @@
         link.href = 'https://steamcommunity.com/profiles/76561198983188801/';
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
+        link.addEventListener('click', () => link.blur());
         link.setAttribute('aria-label', 'View my Steam profile (opens in a new tab)');
         p.append(link);
       } else p.textContent = text;
