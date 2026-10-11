@@ -6,12 +6,13 @@
   const results = machine.querySelector('.fact-results');
   // Replace these strings with personal facts when ready.
   const facts = [
-    '#larp-maxxing',
-    '#piano',
+    '#aura-farmer',
+    '#pianist',
     '#purple',
     '#heytea-guava-green-grape',
     '#tft',
     '#nonchalant',
+    '#larp',
     '#joji',
     '#BASS',
     '#fuzhounese',
@@ -20,7 +21,8 @@
     '#ENTP',
     '#capture-every-moment',
     '#nerd',
-    '#real-one',
+    '#fashion',
+    "#gundam"
   ];
   const jackpotFact = 'labubu';
   const symbols = ['⠿⠿','⣀⣿','⣿⣀','⣾⡇','⡇⣷','⢸⣇','⣹⢾','⡯⣽','⣶⣶','⢿⡿','⣤⠛','⠛⣤','⣧⣴','⣰⣆','⢾⡷'];
