@@ -13,3 +13,5 @@ All changed checkouts were committed to `codex/archive-2026-10-11-*` recovery br
 Full worktree archives, including ignored local planning files, are stored in the repository’s common Git directory under `worktree-archives/2026-10-11`. These are local backups, not website assets.
 
 Validation: JavaScript syntax, HTML identifiers, local asset references, and Git whitespace checks. Rendered visual and interaction verification remains pending.
+
+Archival completed: 4325, 5d3a, 8a74, a512, and 9a46 were backed up, each archived file was verified by SHA-256 against its source, and the extra checkouts were removed. Only the canonical main checkout remains. Recovery branches are retained.
