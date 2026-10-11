@@ -277,7 +277,7 @@
     content.replaceChildren(enlarged);
     zoom.showModal();
     enlarged.classList.add('is-winking');
-    timer = setTimeout(stop, 2600);
+    timer = setTimeout(stop, 2000);
   });
   zoom.addEventListener('close', () => { stop(); enlarged = null; });
   document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
