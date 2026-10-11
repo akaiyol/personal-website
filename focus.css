@@ -1,0 +1,9 @@
+/* Shared focus treatment: no selection outlines on any route. */
+*:focus, *:focus-visible, *:focus-within { outline: none !important; }
+:is(a, button, [role="button"]):focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.home-actions .cta { display: inline-flex; align-items: center; gap: .6ch; }
+.home-actions kbd { font: inherit; }
+.shortcut-keyboard { width: 20px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1; flex: none; }
