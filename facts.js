@@ -112,7 +112,16 @@
   }
   button.addEventListener('click', roll);
   document.addEventListener('keydown', event => {
-    if (event.key !== '1' || event.repeat || event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || page.hidden || document.querySelector('dialog[open]')) return;
+    if (event.key !== '1' || event.repeat || event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || page.hidden) return;
+    const dialog = document.querySelector('dialog[open]');
+    if (dialog) {
+      if (!dialog.matches('.photo-zoom') || !dialog.querySelector('.photo-zoom-tag')) return;
+      event.preventDefault();
+      dialog.close();
+      button.focus({preventScroll: true});
+      roll();
+      return;
+    }
     // Preserve typing and the native behavior of other interactive controls.
     if (event.target.closest('input, textarea, select, button, a, [role="button"], [role="checkbox"], [contenteditable="true"]')) return;
     event.preventDefault();
