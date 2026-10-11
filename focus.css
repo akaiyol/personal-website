@@ -6,3 +6,5 @@
 }
 .home-actions .cta { display: inline-flex; align-items: center; gap: .6ch; }
 .home-actions .cta kbd{display:inline-block;min-width:20px;margin-left:5px;padding:1px 4px;border:1px solid var(--text);border-bottom-width:3px;border-radius:3px;color:var(--text);font:inherit;font-size:11px;line-height:16px;text-align:center;vertical-align:middle}
+
+.home-actions .cta:is(:hover, :focus-visible) { text-decoration: none; }
