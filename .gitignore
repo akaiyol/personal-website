@@ -50,3 +50,8 @@ output/
 
 # Keep redistributed font licenses.
 !/assets/fonts/**/OFL.txt
+
+# Shared project workflow and acknowledgements plan
+!/AGENTS.md
+!/ACKNOWLEDGEMENTS.md
+!/WORKFLOW.md
