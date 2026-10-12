@@ -78,6 +78,8 @@ body.work-active main{overflow:visible;display:block;padding:48px 58px 60px}
 
 /* The final stems meet the content edge above the fixed terminal. */
 body.work-active main{padding-bottom:0}
-.work-page .timeline-flowers{margin:0;width:100%;aspect-ratio:1203/356.2;pointer-events:none;overflow:hidden}
+.work-page .timeline-flowers{margin:0;width:100%;aspect-ratio:1200/440;pointer-events:none;overflow:hidden}
 .work-page .timeline-flowers canvas,.work-page .timeline-flowers img{display:block;width:100%;height:100%;object-fit:fill}
-@media(max-width:600px){.work-page .timeline-flowers{aspect-ratio:1203/685}}
+@media(max-width:600px){.work-page .timeline-flowers{aspect-ratio:760/440}}
+
+.work-page .timeline-flowers svg{display:block;width:100%;height:100%;overflow:hidden;isolation:isolate}

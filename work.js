@@ -99,7 +99,7 @@
   const flowers = document.createElement('figure');
   flowers.className = 'timeline-flowers';
   flowers.setAttribute('aria-hidden', 'true');
-  flowers.innerHTML = '<canvas data-flower-sway data-flush-bottom data-flower-field width="1800" height="534"></canvas>';
+
   view.append(flowers);
   function extendVisibleTimeline() {
     const lastVisible = sections.filter(section => !section.hidden).at(-1);
