@@ -27,3 +27,7 @@ Preconditions: launch from the canonical checkout as documented in ../SKILL.md.
 ## Gotchas
 
 Cat follows the final visible year after filtering. Scroll observation selects strength context; do not set graph values directly. Hidden-document lifecycle requires actual visibility transition or source-backed limitation; hidden-route pause alone does not prove hidden-tab pause.
+
+## Current scope correction
+
+The circuit cat was removed at the user’s request. Cat placement and animation recipes above are historical and no longer apply. Verify its absence and retain timeline/filter/layout checks.

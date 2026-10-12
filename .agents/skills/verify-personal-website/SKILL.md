@@ -1,6 +1,6 @@
 ---
 name: verify-personal-website
-description: Verify Yolanda's personal website routes, About interactions, facts, work filters, animated circuit cat and acknowledgements through Chromium. Use after website changes or when auditing its workflow.
+description: Verify Yolanda's personal website routes, About interactions, facts, work filters, timeline and acknowledgements through Chromium. Use after website changes or when auditing its workflow.
 ---
 
 # Verify personal website
@@ -21,11 +21,11 @@ Before driving, the helper requests its owned server's `/__doctor` endpoint and 
 
 ## Drive
 
-Read `features/README.md` and the selected recipe. The helper drives actual buttons, links, keyboard keys, text input and scrolling. DOM reads are observations; do not replace actions with hash setters, internal state mutation or dispatched synthetic application events. Social links are checked for their href/new-tab contract; external websites are not opened. The work test records more than a full tail cycle, desktop and 390/320px layouts, static reduced motion, and hidden-route pause.
+Read `features/README.md` and the selected recipe. The helper drives actual buttons, links, keyboard keys, text input and scrolling. DOM reads are observations; do not replace actions with hash setters, internal state mutation or dispatched synthetic application events. Social links are checked for their href/new-tab contract; external websites are not opened. The work test checks filters, timeline spacing, desktop and 390/320px layouts, and the absence of the removed circuit cat.
 
 ## Evidence
 
-Each run writes action notes, pass/fail results, canonical revision, full-page screenshots, ARIA snapshots, a Playwright trace and video into the supplied directory. Work additionally writes 19 sampled tail frames. Inspect desktop and narrow screenshots and observe the complete animation sequence, including its loop boundary, before claiming visual/motion quality. Passing assertions establish tested behavior only. Copy email verifies the browser clipboard in an isolated context. Screenshots are evidence of rendered appearance, not proof of all interactions. Failed and partial runs retain evidence and report errors. Random facts may return the same result; test completion and result structure, not uniqueness across runs. No remote writes or publishing occur.
+Each run writes action notes, pass/fail results, canonical revision, full-page screenshots, ARIA snapshots, a Playwright trace and video into the supplied directory.  Inspect desktop and narrow screenshots and observe the complete animation sequence, including its loop boundary, before claiming visual/motion quality. Passing assertions establish tested behavior only. Copy email verifies the browser clipboard in an isolated context. Screenshots are evidence of rendered appearance, not proof of all interactions. Failed and partial runs retain evidence and report errors. Random facts may return the same result; test completion and result structure, not uniqueness across runs. No remote writes or publishing occur.
 
 ## Cleanup
 
