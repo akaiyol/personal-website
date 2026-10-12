@@ -2,7 +2,7 @@
   const canvas=document.querySelector('[data-flower-sway]') || document.querySelector('canvas'),gl=canvas.getContext('webgl',{alpha:false,antialias:false,preserveDrawingBuffer:true}),button=document.querySelector('[data-flower-pause]');
   const image=new Image(),reduce=matchMedia('(prefers-reduced-motion: reduce)');
   let raf=null,last=null,time=0,paused=false,visible=true,ready=false;
-  const margin=24,flushBottom=canvas.hasAttribute('data-flush-bottom');
+  const margin=24,flushBottom=canvas.hasAttribute('data-flush-bottom'),field=canvas.hasAttribute('data-flower-field'),narrow=matchMedia('(max-width:600px)');
   const imageURL=new URL('flowers.png',document.currentScript.src).href;
   let program,positionBuffer,indexBuffer,indexCount;
   // Each region follows a petal or leaf from its attachment to its tip.
@@ -24,7 +24,7 @@
     program=gl.createProgram();
     gl.attachShader(program,shader(gl.VERTEX_SHADER,`
       attribute vec2 point; varying vec2 uv;
-      uniform vec2 size; uniform vec2 frameSize; uniform float time; uniform float motion;
+      uniform vec2 size; uniform vec2 frameSize; uniform vec4 placement; uniform float time; uniform float motion;
       uniform vec4 regions[16]; uniform vec4 settings[16];
       void main(){
         uv=point;vec2 source=point*size,p=source;
@@ -41,10 +41,10 @@
         }
         float u=1.0-source.y/size.y,phase=time*6.2831853/8.0;
         p.x+=motion*pow(u,1.65)*(16.0*sin(phase-.45*u)+3.0*sin(2.0*phase-.8*u));
-        vec2 screen=(p+24.0)/frameSize;
+        vec2 screen=((p+24.0)/frameSize)*placement.zw+placement.xy;
         gl_Position=vec4(screen.x*2.0-1.0,1.0-screen.y*2.0,0,1);
       }`));
-    gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`precision mediump float;varying vec2 uv;uniform sampler2D artwork;void main(){gl_FragColor=texture2D(artwork,uv);}`));
+    gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`precision mediump float;varying vec2 uv;uniform sampler2D artwork;void main(){vec4 color=texture2D(artwork,uv);if(max(color.r,max(color.g,color.b))<.04)discard;gl_FragColor=color;}`));
     gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));gl.useProgram(program);
     const vertices=[],indices=[],cols=150,rows=180;
     for(let y=0;y<=rows;y++)for(let x=0;x<=cols;x++)vertices.push(x/cols,y/rows);
@@ -53,13 +53,24 @@
     const loc=gl.getAttribLocation(program,'point');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
     indexBuffer=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices),gl.STATIC_DRAW);indexCount=indices.length;
     gl.uniform2f(gl.getUniformLocation(program,'size'),image.width,image.height);
-    gl.uniform2f(gl.getUniformLocation(program,'frameSize'),canvas.width,canvas.height);
+    gl.uniform2f(gl.getUniformLocation(program,'frameSize'),image.width+48,image.height+(flushBottom?margin-16:margin*2));
     gl.uniform4fv(gl.getUniformLocation(program,'regions[0]'),new Float32Array(regions.flatMap(r=>r.slice(0,4))));
     gl.uniform4fv(gl.getUniformLocation(program,'settings[0]'),new Float32Array(regions.flatMap(r=>r.slice(4))));
     const texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,texture);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,image);
     gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,1);
   }
-  function draw(ms){gl.clear(gl.COLOR_BUFFER_BIT);gl.uniform1f(gl.getUniformLocation(program,'time'),ms/1000);gl.uniform1f(gl.getUniformLocation(program,'motion'),reduce.matches?0:1);gl.drawElements(gl.TRIANGLES,indexCount,gl.UNSIGNED_SHORT,0)}
+  function draw(ms){
+    gl.clear(gl.COLOR_BUFFER_BIT);gl.uniform1f(gl.getUniformLocation(program,'motion'),reduce.matches?0:1);
+    const placements=field?(narrow.matches?[[0,.48],[.25,.5],[.5,.48]]:[[0,.24],[.18,.26],[.37,.23],[.55,.25],[.74,.26]]):[[0,1]];
+    placements.forEach(([left,width],i)=>{
+      const height=field?width/(narrow.matches?.5:.26):1;
+      gl.uniform4f(gl.getUniformLocation(program,'placement'),left,1-height,width,height);
+      gl.uniform1f(gl.getUniformLocation(program,'time'),ms/1000*(1+i*.037)+i*2.19);
+      gl.drawElements(gl.TRIANGLES,indexCount,gl.UNSIGNED_SHORT,0);
+    });
+  }
+  function dimensions(){canvas.width=field?(narrow.matches?900:1800):image.width+margin*2;canvas.height=field?Math.ceil(canvas.width*(image.height+8)/(image.width+48)*(narrow.matches?.5:.26)):image.height+(flushBottom?margin-16:margin*2)}
+  narrow.addEventListener('change',()=>{if(ready&&field){dimensions();gl.viewport(0,0,canvas.width,canvas.height);draw(time)}});
   function stop(){if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null}
   function tick(now){if(last!==null)time+=now-last;last=now;draw(time);raf=requestAnimationFrame(tick)}
   function start(){stop();if(ready&&visible&&!paused&&!document.hidden&&!reduce.matches)raf=requestAnimationFrame(tick)}
@@ -67,6 +78,6 @@
   document.addEventListener('visibilitychange',start);
   reduce.addEventListener('change',()=>{time=0;if(ready)draw(0);start()});
   new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;start()}).observe(canvas);
-  image.onload=()=>{if(!gl){image.alt=canvas.getAttribute('aria-label');image.style.cssText='display:block;width:100%;height:auto';canvas.replaceWith(image);if(button)button.hidden=true;return}canvas.width=image.width+margin*2;canvas.height=image.height+(flushBottom?margin-16:margin*2);setup();ready=true;draw(0);start()};
+  image.onload=()=>{if(!gl){image.alt=canvas.getAttribute('aria-label');image.style.cssText='display:block;width:100%;height:auto';canvas.replaceWith(image);if(button)button.hidden=true;return}dimensions();setup();ready=true;draw(0);start()};
   image.src=imageURL;
 })();

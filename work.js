@@ -99,11 +99,11 @@
   const flowers = document.createElement('figure');
   flowers.className = 'timeline-flowers';
   flowers.setAttribute('aria-hidden', 'true');
-  flowers.innerHTML = '<canvas data-flower-sway data-flush-bottom width="1203" height="1370"></canvas>';
+  flowers.innerHTML = '<canvas data-flower-sway data-flush-bottom data-flower-field width="1800" height="534"></canvas>';
+  view.append(flowers);
   function extendVisibleTimeline() {
     const lastVisible = sections.filter(section => !section.hidden).at(-1);
     sections.forEach(section => section.classList.toggle('timeline-end', section === lastVisible));
-    if (lastVisible && flowers.parentElement !== lastVisible) lastVisible.append(flowers);
   }
   function filter(workType) {
     entries.forEach(entry => {
