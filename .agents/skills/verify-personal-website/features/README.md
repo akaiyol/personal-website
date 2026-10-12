@@ -7,5 +7,5 @@ Read the matching file before driving. Use the canonical checkout, the bundled N
 - [Navigation](./navigation.md)
 - [About Me](./about.md)
 - [Personal facts](./facts.md)
-- [Work experience and circuit cat](./work.md)
+- [Work experience and animated flowers](./work.md)
 - [Acknowledgements](./acknowledgements.md)

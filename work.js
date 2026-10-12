@@ -96,11 +96,14 @@
     button.setAttribute('aria-pressed', String(!workType));
     filterGroup.append(button);
   });
+  const flowers = document.createElement('figure');
+  flowers.className = 'timeline-flowers';
+  flowers.setAttribute('aria-hidden', 'true');
+  flowers.innerHTML = '<canvas data-flower-sway data-flush-bottom width="1203" height="1370"></canvas>';
   function extendVisibleTimeline() {
     const lastVisible = sections.filter(section => !section.hidden).at(-1);
     sections.forEach(section => section.classList.toggle('timeline-end', section === lastVisible));
-    const lastEntry = lastVisible && [...lastVisible.querySelectorAll('.entry')].filter(entry => !entry.hidden).at(-1);
-    if (lastEntry && lastEntry.offsetHeight) lastVisible.style.setProperty('--timeline-tail-height', `${lastEntry.offsetHeight}px`);
+    if (lastVisible && flowers.parentElement !== lastVisible) lastVisible.append(flowers);
   }
   function filter(workType) {
     entries.forEach(entry => {

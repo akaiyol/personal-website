@@ -1,33 +1,17 @@
-# Work experience and circuit cat
-
-Timeline filters, year navigation, strengths display and the animated board at the timeline end.
+# Work experience
 
 ## Sub-features
 
-- Every work type filter updates visible matching roles, year availability and cat placement; role tags provide a second filter entry.
-- All resets filtering; year links scroll to an experience year.
-- Strengths graphic follows scroll context; click, Enter and Space toggle role/overall comparison.
-- Final visible year contains one cat and a tail gap matching one entry height.
-- Tail animation completes a 1.6-second cycle; body/board remain fixed.
-- Reduced motion is static; leaving Work pauses the canvas.
-- Desktop and 390/320px composition has no horizontal overflow.
+Work type filters and per-role filter buttons; year links; role-linked strengths graph with keyboard comparison; animated flowers at the final visible timeline year.
 
 ## How to get to it (user POV)
 
-Home my work action, Home shortcut 2, terminal work-experience; year links within Work.
+Choose work-experience from Home or use the terminal. Select a filter or year. Scroll to the end for the flowers.
 
 ## Driving it with Playwright
 
-Preconditions: launch from the canonical checkout as documented in ../SKILL.md.
-
-- Run: the documented command with feature ID `work` instead of `all`.
-- Actions and proof: Use AI product and All filters, click 2023, scroll to the cat, record a full loop and next-loop transition, toggle reduced motion, leave Work, then repeat at narrow widths.
-- Evidence: inspect the feature screenshots, ARIA snapshots, action log and trace in the selected directory.
+Run `run.cjs EVIDENCE work`. Exercise all six filters and All, per-role tags, year links, graph click/Enter/Space, desktop and 390/320px layouts. Verify the flowers are in the final visible section, that their bottom matches the main content edge, and that the removed cat is absent. Inspect the actual scrolled-to-bottom viewport above the fixed terminal, since a full-page capture can clip an offscreen WebGL canvas. Observe more than eight seconds of layered flower motion. Verify static reduced motion and hidden-route pause.
 
 ## Gotchas
 
-Cat follows the final visible year after filtering. Scroll observation selects strength context; do not set graph values directly. Hidden-document lifecycle requires actual visibility transition or source-backed limitation; hidden-route pause alone does not prove hidden-tab pause.
-
-## Current scope correction
-
-The circuit cat was removed at the user’s request. Cat placement and animation recipes above are historical and no longer apply. Verify its absence and retain timeline/filter/layout checks.
+Flowers move to the last visible year when filtering. The former one-entry blank tail spacer was replaced by the artwork’s natural height. Stem bases finish at the content edge above the fixed terminal. The flower renderer scopes its canvas and resolves image paths from its script URL. WebGL-unavailable environments show the static image. Hidden-tab pausing needs a real visibility test to claim verified; hidden-route checks alone do not prove it.

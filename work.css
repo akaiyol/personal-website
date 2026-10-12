@@ -66,7 +66,7 @@ body.work-active main{overflow:visible;display:block;padding:48px 58px 60px}
 
 /* The graph follows the role crossing the reading position. */
 .work-page .stats-context{font-size:13px;line-height:1.6;min-height:21px;margin:0 0 6px;color:var(--ink)}
-.work-page .timeline section.timeline-end{padding-bottom:var(--timeline-tail-height,300px)}
+.work-page .timeline section.timeline-end{padding-bottom:0}
 .work-page .entry.stats-active:before{background:var(--ink);box-shadow:0 0 0 3px var(--ground),0 0 0 4px #8a73a9}
 
 .work-page .stats-overall{fill:#c5b5ec;fill-opacity:.10;stroke:#c5b5ec;stroke-opacity:.55;stroke-width:1.5;stroke-dasharray:5 4;stroke-linejoin:round}
@@ -75,3 +75,8 @@ body.work-active main{overflow:visible;display:block;padding:48px 58px 60px}
 .work-page .strengths-graph:focus-visible{outline:1px dashed var(--ink);outline-offset:3px}
 
 .work-page .strengths-graph:focus:not(:focus-visible){outline:none}
+
+/* The final stems meet the content edge above the fixed terminal. */
+body.work-active main{padding-bottom:0}
+.work-page .timeline-flowers{margin:0;width:min(100%,340px);pointer-events:none}
+.work-page .timeline-flowers canvas,.work-page .timeline-flowers img{display:block;width:100%;height:auto}

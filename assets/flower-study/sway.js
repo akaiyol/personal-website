@@ -1,8 +1,9 @@
 (() => {
-  const canvas=document.querySelector('canvas'),gl=canvas.getContext('webgl',{alpha:false,antialias:false,preserveDrawingBuffer:true}),button=document.querySelector('button');
+  const canvas=document.querySelector('[data-flower-sway]') || document.querySelector('canvas'),gl=canvas.getContext('webgl',{alpha:false,antialias:false,preserveDrawingBuffer:true}),button=document.querySelector('[data-flower-pause]');
   const image=new Image(),reduce=matchMedia('(prefers-reduced-motion: reduce)');
   let raf=null,last=null,time=0,paused=false,visible=true,ready=false;
-  const margin=24;
+  const margin=24,flushBottom=canvas.hasAttribute('data-flush-bottom');
+  const imageURL=new URL('flowers.png',document.currentScript.src).href;
   let program,positionBuffer,indexBuffer,indexCount;
   // Each region follows a petal or leaf from its attachment to its tip.
   // Periods and phases differ, giving continuous, unsynchronised movement.
@@ -23,7 +24,7 @@
     program=gl.createProgram();
     gl.attachShader(program,shader(gl.VERTEX_SHADER,`
       attribute vec2 point; varying vec2 uv;
-      uniform vec2 size; uniform float time; uniform float motion;
+      uniform vec2 size; uniform vec2 frameSize; uniform float time; uniform float motion;
       uniform vec4 regions[16]; uniform vec4 settings[16];
       void main(){
         uv=point;vec2 source=point*size,p=source;
@@ -40,7 +41,7 @@
         }
         float u=1.0-source.y/size.y,phase=time*6.2831853/8.0;
         p.x+=motion*pow(u,1.65)*(16.0*sin(phase-.45*u)+3.0*sin(2.0*phase-.8*u));
-        vec2 screen=(p+24.0)/(size+48.0);
+        vec2 screen=(p+24.0)/frameSize;
         gl_Position=vec4(screen.x*2.0-1.0,1.0-screen.y*2.0,0,1);
       }`));
     gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`precision mediump float;varying vec2 uv;uniform sampler2D artwork;void main(){gl_FragColor=texture2D(artwork,uv);}`));
@@ -52,6 +53,7 @@
     const loc=gl.getAttribLocation(program,'point');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
     indexBuffer=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices),gl.STATIC_DRAW);indexCount=indices.length;
     gl.uniform2f(gl.getUniformLocation(program,'size'),image.width,image.height);
+    gl.uniform2f(gl.getUniformLocation(program,'frameSize'),canvas.width,canvas.height);
     gl.uniform4fv(gl.getUniformLocation(program,'regions[0]'),new Float32Array(regions.flatMap(r=>r.slice(0,4))));
     gl.uniform4fv(gl.getUniformLocation(program,'settings[0]'),new Float32Array(regions.flatMap(r=>r.slice(4))));
     const texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,texture);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,image);
@@ -61,10 +63,10 @@
   function stop(){if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null}
   function tick(now){if(last!==null)time+=now-last;last=now;draw(time);raf=requestAnimationFrame(tick)}
   function start(){stop();if(ready&&visible&&!paused&&!document.hidden&&!reduce.matches)raf=requestAnimationFrame(tick)}
-  button.addEventListener('click',()=>{paused=!paused;button.textContent=paused?'play':'pause';button.setAttribute('aria-pressed',String(paused));start()});
+  button?.addEventListener('click',()=>{paused=!paused;button.textContent=paused?'play':'pause';button.setAttribute('aria-pressed',String(paused));start()});
   document.addEventListener('visibilitychange',start);
   reduce.addEventListener('change',()=>{time=0;if(ready)draw(0);start()});
   new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;start()}).observe(canvas);
-  image.onload=()=>{if(!gl){image.alt=canvas.getAttribute('aria-label');image.style.cssText='display:block;width:100%;height:auto';canvas.replaceWith(image);button.hidden=true;return}canvas.width=image.width+margin*2;canvas.height=image.height+margin*2;setup();ready=true;draw(0);start()};
-  image.src='flowers.png';
+  image.onload=()=>{if(!gl){image.alt=canvas.getAttribute('aria-label');image.style.cssText='display:block;width:100%;height:auto';canvas.replaceWith(image);if(button)button.hidden=true;return}canvas.width=image.width+margin*2;canvas.height=image.height+(flushBottom?margin-16:margin*2);setup();ready=true;draw(0);start()};
+  image.src=imageURL;
 })();
