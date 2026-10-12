@@ -8,9 +8,9 @@
   // Use only complete, non-overlapping blooms from the first approved study.
   // Preserve its dotwork rather than cropping the interwoven reference cluster.
   const parts=[
-    {name:'open-bloom',root:[260,390],outline:'36,243 107,227 103,195 140,180 201,216 205,183 247,179 268,221 310,187 345,187 334,230 410,204 423,214 383,247 453,254 485,278 498,324 465,333 413,300 363,302 350,343 316,366 290,385 260,395 235,376 215,343 192,302 133,288 89,313 48,316 44,297 65,271'},
-    {name:'upright-bloom',root:[555,305],outline:'356,176 395,158 452,146 432,107 440,86 468,97 489,130 480,88 483,74 505,78 531,122 546,147 550,118 573,99 595,102 598,132 626,123 660,120 645,142 616,164 636,172 668,176 691,195 751,207 753,221 714,229 681,234 661,252 715,260 751,272 748,290 696,294 637,279 615,290 589,300 550,311 526,292 517,261 507,226 477,208 456,194 409,176 366,189'},
-    {name:'side-bloom',root:[547,535],outline:'363,465 390,435 454,407 423,389 425,380 444,376 479,396 483,378 495,369 519,376 537,400 547,377 562,365 580,370 580,400 610,390 654,391 654,408 628,421 684,423 703,436 700,446 665,453 657,468 701,475 749,489 749,504 701,511 651,492 618,509 586,527 547,540 524,523 515,491 495,468 461,454 413,457 375,474'}
+    {name:'open-bloom',root:[260,390],outline:'25,165 350,165 350,200 425,199 432,222 495,250 505,340 360,340 330,402 25,402'},
+    {name:'upright-bloom',root:[531,305],outline:'345,60 880,60 880,358 772,358 724,311 634,302 550,320 510,307 501,261 490,225 430,195 345,190'},
+    {name:'side-bloom',root:[522,535],outline:'350,357 509,357 509,380 534,380 534,357 825,357 825,555 500,555 495,522 410,522 350,495'}
   ];
   // Keep lavender dot cores and black negative space; no shaded petal surfaces.
   const palette=el('filter',{id:'flower-palette','color-interpolation-filters':'sRGB'},defs);
@@ -38,7 +38,7 @@
   layout.forEach(([part,x,length,scale,lean,phase],i)=>{
     const p=parts[part],plant=el('g',{'data-flower':p.name,style:'mix-blend-mode:screen'});
     const stem=el('path',{d:`M0 0 C${-lean*.55} ${-length*.34},${lean*.7} ${-length*.72},0 ${-length}`,fill:'none',stroke:'#C5B5EC','stroke-width':1.2,'stroke-dasharray':'.35 2.2','stroke-linecap':'round'},plant);
-    const head=el('g',{},plant);el('use',{href:'#flower-head-'+part,transform:`scale(${i%4===3?-scale:scale} ${scale})`},head);
+    const head=el('g',{},plant);el('use',{href:'#flower-head-'+part,transform:`scale(${scale})`},head);
     const leafGroup=el('g',{},plant);el('use',{href:'#flower-leaf-'+(i%3),transform:`scale(${.26+(i%3)*.035})`},leafGroup);
     // Upright stem numerals retain the original computational drawing language.
     for(let j=1;j<=5;j++){const label=el('text',{x:5,y:-length*j/6,fill:'#C5B5EC','font-size':7,'font-family':'Menlo,Consolas,monospace'},plant);label.textContent=[.83,.64,.5,.33,.17,.92,.76][(i+j)%7].toFixed(2)}
