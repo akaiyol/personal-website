@@ -75,3 +75,7 @@ body.work-active main{overflow:visible;display:block;padding:48px 58px 60px}
 .work-page .strengths-graph:focus-visible{outline:1px dashed var(--ink);outline-offset:3px}
 
 .work-page .strengths-graph:focus:not(:focus-visible){outline:none}
+
+.work-page .timeline-cat{position:absolute;bottom:10px;left:23px;right:0;height:calc(var(--timeline-tail-height,300px) - 20px);margin:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.work-page .timeline-cat canvas{display:block;height:100%;width:auto;max-width:100%;object-fit:contain}
+@media(max-width:600px){.work-page .timeline-cat{left:15px}}

@@ -96,9 +96,15 @@
     button.setAttribute('aria-pressed', String(!workType));
     filterGroup.append(button);
   });
+  const catFigure = document.createElement('figure');
+  catFigure.className = 'timeline-cat';
+  catFigure.setAttribute('role', 'img');
+  catFigure.setAttribute('aria-label', 'A circuit-board cat with a wagging tail, surrounded by electronic components.');
+  catFigure.innerHTML = '<canvas width="1038" height="1068" aria-hidden="true"></canvas>';
   function extendVisibleTimeline() {
     const lastVisible = sections.filter(section => !section.hidden).at(-1);
     sections.forEach(section => section.classList.toggle('timeline-end', section === lastVisible));
+    if (lastVisible && catFigure.parentElement !== lastVisible) lastVisible.append(catFigure);
     const lastEntry = lastVisible && [...lastVisible.querySelectorAll('.entry')].filter(entry => !entry.hidden).at(-1);
     if (lastEntry && lastEntry.offsetHeight) lastVisible.style.setProperty('--timeline-tail-height', `${lastEntry.offsetHeight}px`);
   }
