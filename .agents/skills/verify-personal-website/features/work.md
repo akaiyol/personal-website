@@ -4,9 +4,9 @@ Timeline filters, year navigation, strengths display and the animated board at t
 
 ## Sub-features
 
-- Work type filters update visible roles and year availability.
+- Every work type filter updates visible matching roles, year availability and cat placement; role tags provide a second filter entry.
 - All resets filtering; year links scroll to an experience year.
-- Strengths graphic accompanies the timeline and uses role context on scroll.
+- Strengths graphic follows scroll context; click, Enter and Space toggle role/overall comparison.
 - Final visible year contains one cat and a tail gap matching one entry height.
 - Tail animation completes a 1.6-second cycle; body/board remain fixed.
 - Reduced motion is static; leaving Work pauses the canvas.
