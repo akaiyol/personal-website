@@ -106,6 +106,9 @@ function showRoute(focus = false) {
   const title = document.querySelector("#destination-title");
   title.textContent = item?.label || "connect";
   document.querySelector("#destination-copy").textContent = item?.copy || "Find me on GitHub and LinkedIn.";
+  const destinationAction = view.querySelector(".back-link");
+  destinationAction.href = id === "projects" ? "https://github.com/akaiyol" : "#home";
+  destinationAction.textContent = id === "projects" ? "[ until then check out my github ]" : "[ back to home ]";
   const links = document.querySelector("#destination-links");
   links.replaceChildren();
   if (connect) destinations.filter(item => item.external).forEach(item => {
