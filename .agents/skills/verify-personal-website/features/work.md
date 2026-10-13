@@ -10,7 +10,7 @@ Choose work-experience from Home or use the terminal. Select a filter or year. S
 
 ## Driving it with Playwright
 
-Run `run.cjs EVIDENCE work`. Exercise all six filters and All, per-role tags, year links, graph click/Enter/Space, desktop and 390/320px layouts. Verify the flower field follows the work layout, that their bottom matches the main content edge, and that the removed cat is absent. Inspect the actual scrolled-to-bottom viewport above the fixed terminal, since a full-page capture can clip an offscreen flower artwork. Observe more than eight seconds of layered flower motion. Verify static reduced motion and hidden-route pause.
+Run `run.cjs EVIDENCE work`. Exercise all six filters and All, per-role tags, year links, graph click/Enter/Space, desktop and 390/320px layouts. Verify the flower field follows the work layout, that their bottom matches the main content edge, and that the removed cat is absent. Inspect the actual scrolled-to-bottom viewport above the fixed terminal, since a full-page capture can clip an offscreen flower artwork. The ruler regression checks visible plant counts, four correct labels per stem, minor ticks, and computed font size after SVG scaling (at least 5 screen pixels, a regression floor calibrated below the approved 320px rendering for this decorative artwork). These checks prevent the observed 2.2px style collision; visual review still decides legibility and appearance. Observe more than eight seconds of layered flower motion. Verify static reduced motion and hidden-route pause.
 
 ## Gotchas
 

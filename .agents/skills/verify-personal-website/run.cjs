@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const fs=require('fs'),path=require('path'),http=require('http'),assert=require('assert'),cp=require('child_process');
+const {checkFlowerRulers}=require('./flower-rulers.cjs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'/Users/yolanda/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root=path.resolve(__dirname,'../../..'),out=path.resolve(process.argv[2]||`/private/tmp/website-verification-${Date.now()}`),only=process.argv[3]||'all';
 fs.mkdirSync(out,{recursive:true});const revision=cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
@@ -45,9 +46,9 @@ async function checkLayout(page){assert(await page.evaluate(()=>document.documen
   const graph=page.locator('.strengths-graph');await graph.waitFor({state:'visible'});await page.waitForFunction(()=>document.querySelector('.strengths-graph').getAttribute('role')==='button');await graph.click();assert.equal(await graph.getAttribute('aria-pressed'),'true');await graph.focus();await page.keyboard.press('Enter');assert.equal(await graph.getAttribute('aria-pressed'),'false');await page.keyboard.press('Space');assert.equal(await graph.getAttribute('aria-pressed'),'true');assert.equal(await graph.evaluate(el=>getComputedStyle(el).outlineStyle),'none');await page.locator('.timeline-end').scrollIntoViewIfNeeded();await checkLayout(page);
   assert.equal(await page.locator('.timeline-cat').count(),0);assert.equal(await page.locator('#work-view > .timeline-flowers').count(),1);await page.waitForFunction(()=>document.querySelectorAll('.timeline-flowers [data-flower]').length===11);
   const edge=await page.locator('.timeline-flowers').evaluate(el=>({flower:el.getBoundingClientRect().bottom,main:el.closest('main').getBoundingClientRect().bottom}));assert(Math.abs(edge.flower-edge.main)<2,'Flowers do not end at content edge');
-  await evidence(page,'work-timeline-desktop');
+  await checkFlowerRulers(page,11);await evidence(page,'work-timeline-desktop');
   await page.locator('.identity').click();
-  for(const width of [390,320]){await page.setViewportSize({width,height:844});await page.locator('[data-command="work"]').click();await page.locator('.timeline-end').scrollIntoViewIfNeeded();await checkLayout(page);await evidence(page,`work-timeline-${width}`);await page.locator('.identity').click()}
+  for(const width of [390,320]){await page.setViewportSize({width,height:844});await page.locator('[data-command="work"]').click();await page.locator('.timeline-end').scrollIntoViewIfNeeded();await checkLayout(page);await checkFlowerRulers(page,6);await evidence(page,`work-timeline-${width}`);await page.locator('.identity').click()}
   await page.setViewportSize({width:1280,height:900});
  },
  acknowledgements:async()=>{
