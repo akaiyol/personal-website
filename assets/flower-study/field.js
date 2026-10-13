@@ -9,8 +9,8 @@
   // Preserve its dotwork rather than cropping the interwoven reference cluster.
   const parts=[
     {name:'open-bloom',root:[260,390],outline:'25,165 350,165 350,200 425,199 432,222 495,250 505,340 360,340 330,402 25,402'},
-    {name:'upright-bloom',root:[531,305],outline:'345,60 880,60 880,358 772,358 724,311 634,302 550,320 510,307 501,261 490,225 430,195 345,190'},
-    {name:'side-bloom',root:[522,535],outline:'350,357 509,357 509,380 534,380 534,357 825,357 825,555 500,555 495,522 410,522 350,495'}
+    {name:'upright-bloom',root:[531,305],outline:'345,60 880,60 880,358 772,358 724,311 634,302 550,320 510,307 501,261 490,225 430,195 345,190',exclude:'630,251 670,251 670,242 900,242 900,370 755,370 755,269 630,269'},
+    {name:'side-bloom',root:[522,535],outline:'350,357 509,357 509,380 534,380 534,357 825,357 825,555 500,555 495,522 410,522 350,495',exclude:'635,468 850,468 850,580 705,580 705,478 635,478'}
   ];
   // Keep lavender dot cores and black negative space; no shaded petal surfaces.
   const palette=el('filter',{id:'flower-palette','color-interpolation-filters':'sRGB'},defs);
@@ -18,8 +18,12 @@
   const transfer=el('feComponentTransfer',{},palette);el('feFuncA',{type:'linear',slope:1.7,intercept:-.15},transfer);
   parts.forEach((p,i)=>{
     const clip=el('clipPath',{id:'flower-part-'+i},defs);el('polygon',{points:p.outline},clip);
+    const contour=points=>'M'+points.trim().replaceAll(' ',' L')+' Z';
+    if(p.exclude){const cut=el('clipPath',{id:'flower-trim-'+i},defs);el('path',{d:'M0 0 H1155 V1362 H0 Z '+contour(p.exclude),'clip-rule':'evenodd'},cut)}
     const symbol=el('g',{id:'flower-head-'+i},defs);
-    el('use',{href:'#original-flower-source','clip-path':`url(#flower-part-${i})`,transform:`translate(${-p.root[0]} ${-p.root[1]})`,filter:'url(#flower-palette)'},symbol);
+    const frame=el('g',{transform:`translate(${-p.root[0]} ${-p.root[1]})`},symbol);
+    const crop=el('g',{'clip-path':`url(#flower-part-${i})`},frame);
+    el('use',{href:'#original-flower-source',...(p.exclude?{'clip-path':`url(#flower-trim-${i})`}:{}),filter:'url(#flower-palette)'},crop);
   });
   const leaves=[
     ['55,489 79,456 111,433 136,435 169,465 186,490 151,496 113,490 79,496',180,490],
