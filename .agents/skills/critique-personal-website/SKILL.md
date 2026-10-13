@@ -1,0 +1,33 @@
+---
+name: critique-personal-website
+description: Review and refine rendered artwork, layout, and motion on Yolanda's personal website against approved references. Use during visual implementation and before delivering visual changes, or when asked for a critique or feedback loop.
+---
+
+# Critique personal website
+
+## When
+
+Apply to the changed visual area and its surrounding composition. An audit-only request permits inspection and findings; it does not authorize implementation. During authorized implementation, fix concrete defects without requiring the user to point them out. Do not invent defects or new design directions to justify another iteration.
+
+## How
+
+1. **Establish the target.** Verify the canonical checkout, branch, status and revision using project instructions. Read the relevant design specification and latest approved reference. Identify what must remain recognizable, the requested changes and constraints. Latest user feedback takes precedence over earlier approvals. Keep the approved baseline available; an unreviewed intermediate render is not a new source of truth.
+2. **Render before judging.** Capture the actual affected route at desktop and 390/320px widths, including the scrolled viewport where the artwork appears. Check the full composition at intended viewing size, then enlarge each distinct reused component. Inspect every variant affected by a shared source change; a clean representative cannot establish that all variants are clean. Use the existing [website verification skill](../verify-personal-website/SKILL.md) for relevant interactions. Its assertion results do not establish aesthetic acceptance.
+3. **Critique against evidence.** Compare mood, silhouette, proportions, spacing and visual language with the approved baseline. Inspect attachments, joins, edge continuity, unintended fragments, awkward angles, repetition, text orientation and lost details where relevant. Assess local corrections in the full composition: a prettier isolated component can still make the page worse. Distinguish visible defects from subjective alternatives and unverified concerns. Do not rationalize an accidental artifact as intentional style.
+4. **Record and repair.** Keep a compact review record in a fresh evidence directory outside the repository, with the revision or diff identity, reference, viewport/state and filenames. For each actual finding record location, visible symptom, impact, proposed correction and status. Prioritize problems that break the intended style or silhouette, then local cleanup. Fix a small coherent set at a time and preserve unrelated approved work. If raster masks repeatedly cut overlapping forms, reconsider the representation rather than continuing to tighten polygons blindly.
+5. **Re-render and challenge the fix.** Inspect fresh matched before/after views at page scale and detail scale. Resolve each finding using evidence, not code intent. Look specifically for new gaps, fragments, distorted dotwork or numbers, overlaps, lost variation and changed spacing. Rerun only checks affected by the change. A later edit invalidates earlier evidence for the area it affects. Reject or revise a correction that trades the original defect for an equal or worse one; preserve a known better checkpoint without overwriting unrelated work.
+6. **Review motion when affected.** Observe a recording or ordered frames covering the slowest meaningful motion cycle and its continuation. For layered nonperiodic motion, sample enough time to see each layer reverse direction and inspect extrema. Check stable roots, continuous joints, independent timing, bounds and reading comfort. Verify static reduced motion and offscreen/hidden-route behavior. Claim hidden-tab pausing only after a real visibility test; source handlers alone are insufficient.
+7. **Repeat while justified.** Continue while an evidenced, in-scope defect remains and the next correction has a concrete rationale. Do not force a minimum number of passes or assign an unsupported quality score. If the same defect survives two attempts, reassess the method against the baseline before editing again. If progress still stalls, preserve the best version and report the unresolved issue or ask one specific question when aesthetic intent is genuinely ambiguous. Do not silently redefine acceptance to fit the current output.
+
+## Output
+
+Deliver a concise account of changes, relevant checks, a current preview or evidence link, and remaining issues. Keep the detailed review record with the evidence. State queued or failed preview opening accurately. Follow the project's local commit policy; this skill grants no permission to push or publish.
+
+## Checks before completion
+
+- The latest rendered result preserves the approved character and satisfies the requested change at page and component scales.
+- Each recorded material defect is fixed and re-inspected, or explicitly unresolved. Do not call the design complete with an unresolved defect that breaks the brief.
+- Relevant responsive, interaction and motion checks have evidence; untested behavior remains labeled unverified.
+- A fresh final review finds no additional material in-scope defect. No forced criticism or further editing is needed merely to prolong the loop.
+
+This is a disciplined review procedure, not a guarantee of taste or a background process. Human approval remains the authority on subjective preference.

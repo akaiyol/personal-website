@@ -23,6 +23,10 @@ Before driving, the helper requests its owned server's `/__doctor` endpoint and 
 
 Read `features/README.md` and the selected recipe. The helper drives actual buttons, links, keyboard keys, text input and scrolling. DOM reads are observations; do not replace actions with hash setters, internal state mutation or dispatched synthetic application events. Social links are checked for their href/new-tab contract; external websites are not opened. The work test checks filters, timeline spacing, desktop and 390/320px layouts, flower placement at the content edge, and the absence of the removed circuit cat.
 
+## Visual review
+
+For visual changes, also apply [critique-personal-website](../critique-personal-website/SKILL.md) before delivery. Functional assertions and screenshot capture do not replace its comparison, detail inspection, and correction loop.
+
 ## Evidence
 
 Each run writes action notes, pass/fail results, canonical revision, full-page screenshots, ARIA snapshots, a Playwright trace and video into the supplied directory.  Inspect desktop and narrow screenshots and observe the complete animation sequence, including its loop boundary, before claiming visual/motion quality. Passing assertions establish tested behavior only. Copy email verifies the browser clipboard in an isolated context. Screenshots are evidence of rendered appearance, not proof of all interactions. Failed and partial runs retain evidence and report errors. Random facts may return the same result; test completion and result structure, not uniqueness across runs. No remote writes or publishing occur.

@@ -11,6 +11,8 @@
 
 Review the finished result before presenting it as complete. Fix concrete issues within the authorized scope, then verify the affected result again.
 
+For visual changes, use `.agents/skills/critique-personal-website/SKILL.md` to run the rendered critique and correction loop before delivery. Use the existing verification skill for functional checks.
+
 ### Design fidelity
 
 - Compare the rendered result with the user's request, approved references, `design.md`, and applicable feature specifications.
