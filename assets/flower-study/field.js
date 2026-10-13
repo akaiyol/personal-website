@@ -59,12 +59,11 @@
     // Ruler labels describe normalized height along each individual stem.
     const ruler=el('g',{'data-stem-ruler':''},plant),marks=[];
     for(let j=2;j<=16;j++){
-      const height=j/20,major=j%4===0;
+      const height=j/20,major=j%2===0;
       let position=height;
       for(let k=0;k<5;k++){const u=1-position,y=3*u*u*position*.34+3*u*position*position*.72+position**3,dy=1.02*u*u+2.28*u*position+.84*position*position;position-=(y-height)/dy}
       const h=position,bend=3*(1-h)*(1-h)*h*(-lean*.55)+3*(1-h)*h*h*(lean*.7);
-      const nearby=leafGroups.find(leaf=>Math.abs(leaf.height-height)<.1);
-      const side=nearby?nearby.direction:1;
+      const side=1;
       const mark=el('g',{transform:`translate(${bend} ${-length*height})`},ruler);
       const tick=el('path',{fill:'none',stroke:'#C5B5EC','stroke-width':.7},mark);
       const label=major?el('text',{fill:'#C5B5EC','font-family':'Menlo,Consolas,monospace','text-anchor':side<0?'end':'start','dominant-baseline':'central'},mark):null;
