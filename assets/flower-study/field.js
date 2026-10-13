@@ -54,11 +54,24 @@
       el('use',{href:'#flower-leaf-'+Math.floor(variation(seed+9)*leaves.length),transform:`scale(${direction*leafScale} ${leafScale})`},group);
       let position=height;
       for(let k=0;k<5;k++){const u=1-position,y=3*u*u*position*.34+3*u*position*position*.72+position**3,dy=1.02*u*u+2.28*u*position+.84*position*position;position-= (y-height)/dy}
-      return {group,height,position,angle:-20+variation(seed+11)*40,phase:variation(seed+13)*Math.PI*2,speed:1.55+variation(seed+15)*.6};
+      return {group,height,position,direction,angle:-20+variation(seed+11)*40,phase:variation(seed+13)*Math.PI*2,speed:1.55+variation(seed+15)*.6};
     });
-    // Upright stem numerals retain the original computational drawing language.
-    for(let j=1;j<=5;j++){const label=el('text',{x:5,y:-length*j/6,fill:'#C5B5EC','font-size':7,'font-family':'Menlo,Consolas,monospace'},plant);label.textContent=[.83,.64,.5,.33,.17,.92,.76][(i+j)%7].toFixed(2)}
-    plants.push({plant,head,leafGroups,x,length,lean,phase,i,headAngle:p.tilt||0});
+    // Ruler labels describe normalized height along each individual stem.
+    const ruler=el('g',{'data-stem-ruler':''},plant),marks=[];
+    for(let j=2;j<=16;j++){
+      const height=j/20,major=j%4===0;
+      let position=height;
+      for(let k=0;k<5;k++){const u=1-position,y=3*u*u*position*.34+3*u*position*position*.72+position**3,dy=1.02*u*u+2.28*u*position+.84*position*position;position-=(y-height)/dy}
+      const h=position,bend=3*(1-h)*(1-h)*h*(-lean*.55)+3*(1-h)*h*h*(lean*.7);
+      const nearby=leafGroups.find(leaf=>Math.abs(leaf.height-height)<.1);
+      const side=nearby?nearby.direction:1;
+      const mark=el('g',{transform:`translate(${bend} ${-length*height})`},ruler);
+      const tick=el('path',{fill:'none',stroke:'#C5B5EC','stroke-width':.7},mark);
+      const label=major?el('text',{fill:'#C5B5EC','font-family':'Menlo,Consolas,monospace','text-anchor':side<0?'end':'start','dominant-baseline':'central'},mark):null;
+      if(label)label.textContent=height.toFixed(2).slice(1);
+      marks.push({tick,label,major,side});
+    }
+    plants.push({plant,head,leafGroups,marks,x,length,lean,phase,i,headAngle:p.tilt||0});
   });
   const reduce=matchMedia('(prefers-reduced-motion: reduce)'),narrow=matchMedia('(max-width:600px)');
   let raf=null,last=null,time=0,visible=false;
@@ -67,6 +80,12 @@
     plants.forEach(p=>{
       const mobileOrder=[0,2,3,5,8,9],slot=mobileOrder.indexOf(p.i);
       p.plant.style.display=narrow.matches&&slot<0?'none':'';
+      // Inline label sizing overrides unscoped text rules in embedded avatar SVGs.
+      p.marks.forEach(({tick,label,major,side})=>{
+        const reach=(major?6:3)*(narrow.matches?1.35:1);
+        tick.setAttribute('d',`M${-side*1.5} 0H${side*reach}`);
+        if(label){label.setAttribute('x',side*(reach+(narrow.matches?5:3)));label.style.fontSize=(narrow.matches?16:10)+'px'}
+      });
       const x=narrow.matches?[150,260,365,455,560,620][slot]||p.x:p.x;
       const sway=reduce.matches?0:1.15*Math.sin(t*.78+p.phase)+.2*Math.sin(t*1.3+p.phase);
       p.plant.setAttribute('transform',`translate(${x} 440) rotate(${p.lean+sway})`);
