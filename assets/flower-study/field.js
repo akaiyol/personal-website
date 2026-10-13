@@ -10,31 +10,27 @@
   const parts=[
     {name:'open-bloom',root:[260,390],outline:'25,165 350,165 350,200 425,199 432,222 495,250 505,340 360,340 330,402 25,402'},
     {name:'upright-bloom',root:[531,305],outline:'345,60 880,60 880,358 772,358 724,311 634,302 550,320 510,307 501,261 490,225 430,195 345,190',exclude:'630,251 670,251 670,242 900,242 900,370 755,370 755,269 630,269'},
-    {name:'side-bloom',root:[522,535],outline:'350,357 509,357 509,380 534,380 534,357 825,357 825,555 500,555 495,522 410,522 350,495',exclude:'635,468 850,468 850,580 705,580 705,478 635,478',warp:true}
+    {name:'side-bloom',root:[519,545],outline:'350,357 509,357 509,380 534,380 534,357 825,357 825,555 500,555 495,522 410,522 350,495',exclude:'635,468 850,468 850,580 705,580 705,478 635,478',tilt:-6}
   ];
   // Keep lavender dot cores and black negative space; no shaded petal surfaces.
   const palette=el('filter',{id:'flower-palette','color-interpolation-filters':'sRGB'},defs);
   el('feColorMatrix',{type:'matrix',values:'0 0 0 0 .77255 0 0 0 0 .70980 0 0 0 0 .92549 .2126 .7152 .0722 0 0'},palette);
   const transfer=el('feComponentTransfer',{},palette);el('feFuncA',{type:'linear',slope:1.7,intercept:-.15},transfer);
-  // A continuous displacement softens petal angles without cutting overlapping dotwork.
-  const warp=el('filter',{id:'side-petal-shape',filterUnits:'userSpaceOnUse',primitiveUnits:'userSpaceOnUse',x:0,y:0,width:1155,height:1362,'color-interpolation-filters':'sRGB'},defs);
-  const map=`<svg xmlns="http://www.w3.org/2000/svg" width="1155" height="1362"><defs><radialGradient id="left"><stop stop-color="rgb(180,38,0)"/><stop offset="1" stop-color="rgb(128,128,0)" stop-opacity="0"/></radialGradient><radialGradient id="right"><stop stop-color="rgb(128,205,0)"/><stop offset="1" stop-color="rgb(128,128,0)" stop-opacity="0"/></radialGradient></defs><path fill="rgb(128,128,0)" d="M0 0H1155V1362H0Z"/><ellipse cx="452" cy="391" rx="80" ry="37" transform="rotate(32 452 391)" fill="url(#left)"/><ellipse cx="685" cy="512" rx="72" ry="27" fill="url(#right)"/></svg>`;
-  el('feImage',{href:'data:image/svg+xml,'+encodeURIComponent(map),x:0,y:0,width:1155,height:1362,result:'petal-map'},warp);
-  el('feDisplacementMap',{in:'SourceGraphic',in2:'petal-map',scale:36,xChannelSelector:'R',yChannelSelector:'G'},warp);
   parts.forEach((p,i)=>{
     const clip=el('clipPath',{id:'flower-part-'+i},defs);el('polygon',{points:p.outline},clip);
     const contour=points=>'M'+points.trim().replaceAll(' ',' L')+' Z';
     if(p.exclude){const cut=el('clipPath',{id:'flower-trim-'+i},defs);el('path',{d:'M0 0 H1155 V1362 H0 Z '+contour(p.exclude),'clip-rule':'evenodd'},cut)}
     const symbol=el('g',{id:'flower-head-'+i},defs);
     const frame=el('g',{transform:`translate(${-p.root[0]} ${-p.root[1]})`},symbol);
-    const shaped=p.warp?el('g',{filter:'url(#side-petal-shape)'},frame):frame;
-    const crop=el('g',{'clip-path':`url(#flower-part-${i})`},shaped);
+    // End the source at its attachment; the vector stem continues from here.
+    const rootClip=el('clipPath',{id:'flower-root-'+i},defs);el('rect',{x:0,y:0,width:1155,height:p.root[1]},rootClip);
+    const rooted=el('g',{'clip-path':`url(#flower-root-${i})`},frame);
+    const crop=el('g',{'clip-path':`url(#flower-part-${i})`},rooted);
     el('use',{href:'#original-flower-source',...(p.exclude?{'clip-path':`url(#flower-trim-${i})`}:{}),filter:'url(#flower-palette)'},crop);
   });
   const leaves=[
-    ['55,489 79,456 111,433 136,435 169,465 186,490 151,496 113,490 79,496',180,490],
-    ['281,1297 284,1263 304,1223 344,1193 379,1185 413,1201 382,1226 350,1250 317,1283',410,1203],
-    ['416,479 437,460 465,463 487,482 488,511 462,519 433,509 412,492',488,500]
+    ['45,425 200,425 200,510 45,510',199,498],
+    ['275,1180 405,1180 420,1198 420,1305 275,1305',419,1207]
   ];
   leaves.forEach(([outline,x,y],i)=>{const clip=el('clipPath',{id:'original-leaf-'+i},defs);el('polygon',{points:outline},clip);const leaf=el('g',{id:'flower-leaf-'+i},defs);el('use',{href:'#original-flower-source','clip-path':`url(#original-leaf-${i})`,transform:`translate(${-x} ${-y})`,filter:'url(#flower-palette)'},leaf)});
   const plants=[];
@@ -44,7 +40,7 @@
   const layout=[
     [0,145,245,.38,-9,0], [2,205,150,.34,10,1.6], [1,304,302,.36,-5,3.2],
     [2,417,222,.39,7,4.8], [0,490,145,.31,-12,2.2], [1,600,278,.38,5,5.6],
-    [0,714,205,.35,10,.9], [2,818,286,.38,-8,3.9], [2,920,158,.32,-10,5.1],
+    [0,714,205,.35,10,.9], [2,838,286,.38,1,3.9], [2,920,158,.32,-10,5.1],
     [1,1014,265,.33,7,2.8], [0,1103,141,.29,-5,6.4]
   ];
   layout.forEach(([part,x,length,scale,lean,phase],i)=>{
@@ -55,12 +51,14 @@
       const seed=i*7+j*31+1,height=j===0?.23+variation(seed)*.15:.49+variation(seed+3)*.15;
       const direction=(i+j)%2?1:-1,leafScale=.24+variation(seed+5)*.13;
       const group=el('g',{'data-stem-leaf':j},plant);
-      el('use',{href:'#flower-leaf-'+Math.floor(variation(seed+9)*3),transform:`scale(${direction*leafScale} ${leafScale})`},group);
-      return {group,height,angle:-20+variation(seed+11)*40,phase:variation(seed+13)*Math.PI*2,speed:1.55+variation(seed+15)*.6};
+      el('use',{href:'#flower-leaf-'+Math.floor(variation(seed+9)*leaves.length),transform:`scale(${direction*leafScale} ${leafScale})`},group);
+      let position=height;
+      for(let k=0;k<5;k++){const u=1-position,y=3*u*u*position*.34+3*u*position*position*.72+position**3,dy=1.02*u*u+2.28*u*position+.84*position*position;position-= (y-height)/dy}
+      return {group,height,position,angle:-20+variation(seed+11)*40,phase:variation(seed+13)*Math.PI*2,speed:1.55+variation(seed+15)*.6};
     });
     // Upright stem numerals retain the original computational drawing language.
     for(let j=1;j<=5;j++){const label=el('text',{x:5,y:-length*j/6,fill:'#C5B5EC','font-size':7,'font-family':'Menlo,Consolas,monospace'},plant);label.textContent=[.83,.64,.5,.33,.17,.92,.76][(i+j)%7].toFixed(2)}
-    plants.push({plant,head,leafGroups,x,length,lean,phase,i});
+    plants.push({plant,head,leafGroups,x,length,lean,phase,i,headAngle:p.tilt||0});
   });
   const reduce=matchMedia('(prefers-reduced-motion: reduce)'),narrow=matchMedia('(max-width:600px)');
   let raf=null,last=null,time=0,visible=false;
@@ -73,11 +71,11 @@
       const sway=reduce.matches?0:1.15*Math.sin(t*.78+p.phase)+.2*Math.sin(t*1.3+p.phase);
       p.plant.setAttribute('transform',`translate(${x} 440) rotate(${p.lean+sway})`);
       const flutter=reduce.matches?0:.65*Math.sin(t*(2.1+p.i*.073)+p.phase);
-      p.head.setAttribute('transform',`translate(0 ${-p.length}) rotate(${flutter})`);
+      p.head.setAttribute('transform',`translate(0 ${-p.length}) rotate(${p.headAngle+flutter})`);
       p.leafGroups.forEach(leaf=>{
-        const h=leaf.height,bend=3*(1-h)*(1-h)*h*(-p.lean*.55)+3*(1-h)*h*h*(p.lean*.7);
+        const h=leaf.position,bend=3*(1-h)*(1-h)*h*(-p.lean*.55)+3*(1-h)*h*h*(p.lean*.7);
         const angle=leaf.angle+(reduce.matches?0:2*Math.sin(t*leaf.speed+leaf.phase));
-        leaf.group.setAttribute('transform',`translate(${bend} ${-p.length*h}) rotate(${angle})`);
+        leaf.group.setAttribute('transform',`translate(${bend} ${-p.length*leaf.height}) rotate(${angle})`);
       });
     });
   }
