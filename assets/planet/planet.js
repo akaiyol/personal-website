@@ -3,7 +3,9 @@
   const canvas=document.querySelector('#home-planet'), hero=document.querySelector('.hero');
   const ctx=canvas.getContext('2d'), surface=document.createElement('canvas'), paint=surface.getContext('2d',{willReadFrequently:true});
   const reduce=matchMedia('(prefers-reduced-motion: reduce)'),TAU=Math.PI*2;
-  let width=0,height=0,phase=0,pitch=.40,roll=.32,yaw=0,raf=null,last=null,lastPaint=0,drag=null,inView=true;
+  let width=0,height=0,phase=0,pitch=reduce.matches?.40:1.10,roll=reduce.matches?.32:-1.30,yaw=0,raf=null,last=null,lastPaint=0,drag=null,inView=true;
+  let introElapsed=0, introRunning=!reduce.matches, introState=reduce.matches?'complete':'running';
+  function finishIntro(reason='complete') {introRunning=false;introState=reason;if(reason==='complete'){roll=.32;pitch=.40;}}
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   function project(x,y,z){
     const X=x*Math.cos(yaw)-z*Math.sin(yaw),Z=x*Math.sin(yaw)+z*Math.cos(yaw);
@@ -58,16 +60,34 @@
       }
     }ctx.fill();
     canvas.dataset.phase=phase.toFixed(5);canvas.dataset.rotation=[yaw,pitch,roll].map(v=>v.toFixed(4)).join(',');
+    canvas.dataset.intro=introState;
     canvas.dataset.frame=String(Number(canvas.dataset.frame||0)+1);
   }
   function active(){return !hero.hidden&&!document.hidden&&inView}
-  function frame(now){raf=null;if(!active()){last=null;return}if(last!==null&&!reduce.matches)phase=(phase+(now-last)/1000*TAU/64)%TAU;last=now;if(now-lastPaint>50){draw();lastPaint=now}if(!reduce.matches)raf=requestAnimationFrame(frame)}
-  function update(){if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null;if(active()){resize();draw();if(!reduce.matches)raf=requestAnimationFrame(frame)}}
+  function frame(now){
+    raf=null;if(!active()){last=null;return}
+    if(last!==null&&!reduce.matches){
+      const dt=now-last;phase=(phase+dt/1000*TAU/64)%TAU;
+      if(introRunning){
+        introElapsed+=dt;
+        const t=clamp((introElapsed-180)/3000,0,1),ease=t*t*t*(t*(t*6-15)+10);
+        roll=-1.30+(.32+1.30)*ease;pitch=1.10+(.40-1.10)*ease;
+        if(t===1)finishIntro();
+      }
+    }
+    last=now;if(now-lastPaint>50){draw();lastPaint=now}
+    if(!reduce.matches)raf=requestAnimationFrame(frame);
+  }
+  function update(){
+    if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null;
+    if(introRunning&&(reduce.matches||hero.hidden))finishIntro();
+    if(active()){resize();draw();if(!reduce.matches)raf=requestAnimationFrame(frame)}
+  }
   function resize(){if(hero.hidden)return;width=Math.round(canvas.clientWidth);height=Math.round(canvas.clientHeight);const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);surface.width=width;surface.height=height}
-  canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);canvas.classList.add('is-dragging')});
+  canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;if(introRunning)finishIntro('interrupted');drag={id:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);canvas.classList.add('is-dragging')});
   canvas.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;yaw+=dx*.006;roll-=dx*.0015;pitch=clamp(pitch+dy*.006,-1.4,1.4);drag.x=e.clientX;drag.y=e.clientY;draw()});
   function end(e){if(drag?.id===e.pointerId){drag=null;canvas.classList.remove('is-dragging')}}canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
-  canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();if(e.key==='ArrowLeft')yaw-=.12;if(e.key==='ArrowRight')yaw+=.12;if(e.key==='ArrowUp')pitch=clamp(pitch-.12,-1.4,1.4);if(e.key==='ArrowDown')pitch=clamp(pitch+.12,-1.4,1.4);draw()});
+  canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();if(introRunning)finishIntro('interrupted');if(e.key==='ArrowLeft')yaw-=.12;if(e.key==='ArrowRight')yaw+=.12;if(e.key==='ArrowUp')pitch=clamp(pitch-.12,-1.4,1.4);if(e.key==='ArrowDown')pitch=clamp(pitch+.12,-1.4,1.4);draw()});
   new ResizeObserver(update).observe(canvas);
   new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;update()}).observe(canvas);
   document.addEventListener('visibilitychange',update);window.addEventListener('site:route',update);reduce.addEventListener('change',update);update();

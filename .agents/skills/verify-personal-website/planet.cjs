@@ -1,7 +1,16 @@
 const assert=require('assert'),path=require('path');
 async function checkHomePlanet(page,base,out){
- await page.goto(base+'/#home');const planet=page.locator('#home-planet');
+ await page.goto(base+'/?planet-intro-check#home');const planet=page.locator('#home-planet');
  await page.waitForFunction(()=>document.querySelector('#home-planet').dataset.frame);
+ if(!await page.evaluate(()=>matchMedia('(prefers-reduced-motion: reduce)').matches)){
+  assert.equal(await planet.getAttribute('data-intro'),'running','First home load should introduce the planet');
+  const before=await page.locator('.hero').boundingBox();
+  await page.screenshot({path:path.join(out,'planet-intro-start.png')});
+  await page.waitForFunction(()=>document.querySelector('#home-planet').dataset.intro==='complete');
+  assert.equal(Number((await planet.getAttribute('data-rotation')).split(',')[2]),.32,'Intro must land at original pose');
+  assert.deepEqual(await page.locator('.hero').boundingBox(),before,'Intro moved home content');
+ }
+
  assert.equal(await page.locator('.terminal-runner,[data-snoopy-avatar]').count(),0,'Home Snoopy should be removed');
  for(const width of [1280,390,320]){
   await page.setViewportSize({width,height:900});await page.waitForTimeout(150);
@@ -18,7 +27,7 @@ async function checkHomePlanet(page,base,out){
  const still=await planet.getAttribute('data-phase');await page.waitForTimeout(250);assert.equal(await planet.getAttribute('data-phase'),still,'Reduced motion still spins');
  await page.emulateMedia({reducedMotion:'no-preference'});await page.waitForTimeout(200);const moving=await planet.getAttribute('data-phase');await page.waitForTimeout(250);assert.notEqual(await planet.getAttribute('data-phase'),moving,'Planet spin did not advance');
  await page.locator('[data-command="about"]').click();await page.locator('#about-view').waitFor({state:'visible'});const stopped=await planet.getAttribute('data-frame');await page.waitForTimeout(250);assert.equal(await planet.getAttribute('data-frame'),stopped,'Hidden route kept rendering planet');
- await page.locator('.identity').click();await planet.waitFor({state:'visible'});await page.waitForTimeout(150);assert.notEqual(await planet.getAttribute('data-frame'),stopped,'Planet did not resume');
+ await page.locator('.identity').click();await planet.waitFor({state:'visible'});assert.equal(await planet.getAttribute('data-intro'),'complete','Intro replayed on route return');await page.waitForTimeout(150);assert.notEqual(await planet.getAttribute('data-frame'),stopped,'Planet did not resume');
  await page.locator('[data-command="work"]').click();await page.locator('#work-view').waitFor({state:'visible'});await page.locator('.identity').click();
 }
 module.exports={checkHomePlanet};
