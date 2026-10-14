@@ -2,7 +2,7 @@
 
 ## Sub-features
 
-Stats show/hide toggle with keyboard operation, readable layout in both states; work type filters and per-role filter buttons; year links; role-linked strengths graph with keyboard comparison; an interactive procedural flower field below the timeline.
+Stats show/hide toggle preserves the chart footprint, removes hidden chart input/accessibility, and supports keyboard operation, unchanged content positions and dimensions in both states; work type filters and per-role filter buttons; year links; role-linked strengths graph with keyboard comparison; an interactive procedural flower field below the timeline.
 
 ## How to get to it
 
@@ -10,7 +10,7 @@ Choose work-experience from Home or use the terminal. Select a filter or year. S
 
 ## Verification
 
-Run `run.cjs EVIDENCE work`. It checks stats toggle visibility and aria state, Enter/Space, focus-item width and desktop hidden-chart column width, filters, year navigation, graph interactions, desktop and 390/320px layouts, field placement at the main content bottom, absence of the removed cat, full-growth counts (11 desktop / 6 mobile), keyboard growth and hint dismissal. Inspect actual scrolled viewport and field screenshots, including stem rulers and canvas bottom alignment. The old SVG ruler helper is retained for historical reference and is not run: canvas text cannot be verified through SVG DOM styles.
+Run `run.cjs EVIDENCE work`. It checks stats toggle visibility and aria state, Enter/Space, unchanged page height, scroll position and element bounds before/after hiding and restoring, filters, year navigation, graph interactions, desktop and 390/320px layouts, field placement at the main content bottom, absence of the removed cat, full-growth counts (11 desktop / 6 mobile), keyboard growth and hint dismissal. Inspect actual scrolled viewport and field screenshots, including stem rulers and canvas bottom alignment. The old SVG ruler helper is retained for historical reference and is not run: canvas text cannot be verified through SVG DOM styles.
 
 Also verify pointer drag/touch-emulated swipe, horizontal wheel, vertical page scrolling, initial hint and partial growth, reduced motion, and at least a complete wind cycle with continuation after renderer changes. Numeric rulers remain .10 through .80 on the right side. Actual physical touch devices and real hidden-tab behavior require separate evidence before claiming verification.
 

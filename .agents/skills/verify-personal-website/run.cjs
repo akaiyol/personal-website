@@ -14,22 +14,25 @@ async function checkStatsToggle(page, name) {
  await toggle.scrollIntoViewIfNeeded();
  assert(await stats.isVisible(), 'Stats should start visible');
  assert.equal(await toggle.getAttribute('aria-controls'),'work-stats');
+ const layoutSnapshot=()=>page.evaluate(()=>({scrollY, pageHeight:document.documentElement.scrollHeight,
+  boxes:[...document.querySelectorAll('#work-title,.stats-toggle,.work-filters,#work-view .timeline,#work-view .years,#work-view .entry:not([hidden]),#work-view .work-focus,.timeline-flowers')].map(el=>{
+   const r=el.getBoundingClientRect();return [r.x,r.y,r.width,r.height].map(n=>Math.round(n*100)/100);
+  })}));
+ const baseline=await layoutSnapshot();
+ await page.screenshot({path:path.join(out,'work-stats-before-'+name+'.png')});
  await toggle.click();
  assert(await stats.isHidden(), 'Stats did not hide');
  assert.equal(await toggle.getAttribute('aria-expanded'),'false');
  assert.equal(await toggle.textContent(),'[ show stats ]');
- const spacing=await page.locator('#work-view .layout').evaluate(layout=>{
-  const entry=layout.querySelector('.entry:not([hidden])'), focus=entry.querySelector('.work-focus');
-  const timeline=layout.querySelector('.timeline').getBoundingClientRect();
-  return {timelineWidth:timeline.width,focusWidth:focus.getBoundingClientRect().width};
- });
- assert(spacing.focusWidth<=761,'Focus items spread too far apart');
- if(page.viewportSize().width>900)assert(spacing.timelineWidth<=781,'Hidden-stats timeline exceeds readable width');
+ assert.equal(await stats.getAttribute('aria-hidden'),'true');
+ assert(await stats.evaluate(el=>el.inert), 'Hidden stats must not receive keyboard input');
+ assert.deepEqual(await layoutSnapshot(), baseline, 'Hiding stats moved or resized page content');
  await checkLayout(page);
  await page.screenshot({path:path.join(out,'work-stats-hidden-'+name+'.png')});
  await toggle.focus();await page.keyboard.press('Enter');
  assert(await stats.isVisible(), 'Enter did not restore stats');
  assert.equal(await toggle.getAttribute('aria-expanded'),'true');
+ assert.deepEqual(await layoutSnapshot(),baseline,'Restoring stats moved or resized page content');
  await page.keyboard.press('Space');assert(await stats.isHidden(), 'Space did not hide stats');
  await toggle.click();assert(await stats.isVisible());
  await page.screenshot({path:path.join(out,'work-stats-visible-'+name+'.png')});

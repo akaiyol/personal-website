@@ -31,10 +31,11 @@
   title.before(titleRow);
   titleRow.append(title, statsToggle);
   statsToggle.addEventListener('click', () => {
-    stats.hidden = !stats.hidden;
-    view.classList.toggle('stats-hidden', stats.hidden);
-    statsToggle.setAttribute('aria-expanded', String(!stats.hidden));
-    statsToggle.textContent = stats.hidden ? '[ show stats ]' : '[ hide stats ]';
+    const hidden = view.classList.toggle('stats-hidden');
+    stats.inert = hidden;
+    stats.setAttribute('aria-hidden', String(hidden));
+    statsToggle.setAttribute('aria-expanded', String(!hidden));
+    statsToggle.textContent = hidden ? '[ show stats ]' : '[ hide stats ]';
   });
   const graph = view.querySelector('.strengths-graph');
   const context = view.querySelector('.stats-context');
