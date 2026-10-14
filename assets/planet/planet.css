@@ -7,3 +7,6 @@ body:has(.hero[hidden]) #home-planet{display:none}
 .hero .title{text-shadow:none}
 .hero h1,.hero .intro,.hero .description{pointer-events:auto}
 .hero h1,.hero .intro,.hero .description{width:fit-content}
+
+#planet-drag-hint{position:absolute;z-index:2;pointer-events:none;padding:3px 5px;background:#000;color:#c5b5ec;font:11px/1.6 Menlo,Consolas,monospace;box-shadow:0 0 0 3px #000;white-space:nowrap}
+#planet-drag-hint[hidden]{display:none}

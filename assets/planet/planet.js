@@ -5,11 +5,28 @@
   const reduce=matchMedia('(prefers-reduced-motion: reduce)'),TAU=Math.PI*2;
   let width=0,height=0,phase=0,pitch=reduce.matches?.40:1.10,roll=reduce.matches?.32:-1.30,yaw=0,raf=null,last=null,lastPaint=0,drag=null,inView=true;
   let introElapsed=0, introRunning=!reduce.matches, introState=reduce.matches?'complete':'running';
-  function finishIntro(reason='complete') {introRunning=false;introState=reason;if(reason==='complete'){roll=.32;pitch=.40;}}
+  function finishIntro(reason='complete') {introRunning=false;introState=reason;if(reason==='complete'){roll=.32;pitch=.40;}hoverAt(pointer);}
+  const hint=document.createElement('span');hint.id='planet-drag-hint';hint.textContent='[ drag ↔ ]';hint.hidden=true;hint.setAttribute('aria-hidden','true');canvas.after(hint);
+  let pointer=null,hoverYaw=0,hoverPitch=0,targetYaw=0,targetPitch=0,hasDragged=false;
+  function hoverAt(point){
+    pointer=point;
+    if(!point||introRunning||drag||hero.hidden){targetYaw=targetPitch=0;hint.hidden=true;return}
+    const r=width>700?Math.max(width*.34,height*.58):width*.78,cx=width-r*.16,cy=height*.55;
+    const dx=(point.x-cx)/r,dy=(point.y-cy)/r;
+    const x=dx*Math.cos(roll)-dy*Math.sin(roll),y=-(dx*Math.sin(roll)+dy*Math.cos(roll));
+    const ring=Math.abs(Math.sin(pitch))>.06?Math.hypot(x,y/Math.sin(pitch)):Infinity;
+    const hit=dx*dx+dy*dy<=1||(ring>=1.15&&ring<=2.12);
+    targetYaw=hit&&!reduce.matches?.018+clamp(dx*.012,-.012,.012):0;
+    targetPitch=hit&&!reduce.matches?-.012+clamp(dy*.012,-.012,.012):0;
+    hint.hidden=!hit||hasDragged;
+    hint.style.left=Math.min(width-106,Math.max(8,point.x+16))+'px';
+    hint.style.top=Math.min(height-30,Math.max(8,point.y+18))+'px';
+  }
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   function project(x,y,z){
-    const X=x*Math.cos(yaw)-z*Math.sin(yaw),Z=x*Math.sin(yaw)+z*Math.cos(yaw);
-    const Y=y*Math.cos(pitch)-Z*Math.sin(pitch),depth=y*Math.sin(pitch)+Z*Math.cos(pitch);
+    const viewYaw=yaw+hoverYaw,viewPitch=pitch+hoverPitch;
+    const X=x*Math.cos(viewYaw)-z*Math.sin(viewYaw),Z=x*Math.sin(viewYaw)+z*Math.cos(viewYaw);
+    const Y=y*Math.cos(viewPitch)-Z*Math.sin(viewPitch),depth=y*Math.sin(viewPitch)+Z*Math.cos(viewPitch);
     return [X*Math.cos(roll)-Y*Math.sin(roll),-(X*Math.sin(roll)+Y*Math.cos(roll)),depth];
   }
   function draw(){
@@ -60,17 +77,17 @@
       }
     }ctx.fill();
     canvas.dataset.phase=phase.toFixed(5);canvas.dataset.rotation=[yaw,pitch,roll].map(v=>v.toFixed(4)).join(',');
-    canvas.dataset.intro=introState;
+    canvas.dataset.intro=introState;canvas.dataset.hover=[hoverYaw,hoverPitch].map(v=>v.toFixed(5)).join(',');
     canvas.dataset.frame=String(Number(canvas.dataset.frame||0)+1);
   }
   function active(){return !hero.hidden&&!document.hidden&&inView}
   function frame(now){
     raf=null;if(!active()){last=null;return}
     if(last!==null&&!reduce.matches){
-      const dt=now-last;phase=(phase+dt/1000*TAU/64)%TAU;
+      const dt=now-last;const easeHover=1-Math.exp(-dt/140);hoverYaw+=(targetYaw-hoverYaw)*easeHover;hoverPitch+=(targetPitch-hoverPitch)*easeHover;phase=(phase+dt/1000*TAU/64)%TAU;
       if(introRunning){
         introElapsed+=dt;
-        const t=clamp((introElapsed-180)/3000,0,1),ease=t*t*t*(t*(t*6-15)+10);
+        const t=clamp((introElapsed-180)/(3000/1.3),0,1),ease=t*t*t*(t*(t*6-15)+10);
         roll=-1.30+(.32+1.30)*ease;pitch=1.10+(.40-1.10)*ease;
         if(t===1)finishIntro();
       }
@@ -81,13 +98,23 @@
   function update(){
     if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null;
     if(introRunning&&(reduce.matches||hero.hidden))finishIntro();
-    if(active()){resize();draw();if(!reduce.matches)raf=requestAnimationFrame(frame)}
+    if(hero.hidden){hoverAt(null);hoverYaw=hoverPitch=0;}
+    if(reduce.matches){hoverYaw=hoverPitch=0;hoverAt(pointer);}
+    if(active()){resize();hoverAt(pointer);draw();if(!reduce.matches)raf=requestAnimationFrame(frame)}
   }
   function resize(){if(hero.hidden)return;width=Math.round(canvas.clientWidth);height=Math.round(canvas.clientHeight);const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);surface.width=width;surface.height=height}
-  canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;if(introRunning)finishIntro('interrupted');drag={id:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);canvas.classList.add('is-dragging')});
-  canvas.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;yaw+=dx*.006;roll-=dx*.0015;pitch=clamp(pitch+dy*.006,-1.4,1.4);drag.x=e.clientX;drag.y=e.clientY;draw()});
-  function end(e){if(drag?.id===e.pointerId){drag=null;canvas.classList.remove('is-dragging')}}canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
-  canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();if(introRunning)finishIntro('interrupted');if(e.key==='ArrowLeft')yaw-=.12;if(e.key==='ArrowRight')yaw+=.12;if(e.key==='ArrowUp')pitch=clamp(pitch-.12,-1.4,1.4);if(e.key==='ArrowDown')pitch=clamp(pitch+.12,-1.4,1.4);draw()});
+  canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;if(introRunning)finishIntro('interrupted');drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY};targetYaw=targetPitch=hoverYaw=hoverPitch=0;canvas.setPointerCapture(e.pointerId);canvas.classList.add('is-dragging')});
+  canvas.addEventListener('pointermove',e=>{
+    const box=canvas.getBoundingClientRect();
+    if(!drag){if(e.pointerType==='mouse')hoverAt({x:e.clientX-box.left,y:e.clientY-box.top});return}
+    if(drag.id!==e.pointerId)return;
+    const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+    if(Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)>6){hasDragged=true;hint.hidden=true;}
+    yaw+=dx*.006;roll-=dx*.0015;pitch=clamp(pitch+dy*.006,-1.4,1.4);drag.x=e.clientX;drag.y=e.clientY;draw();
+  });
+  canvas.addEventListener('pointerleave',()=>hoverAt(null));
+  function end(e){if(drag?.id===e.pointerId){drag=null;canvas.classList.remove('is-dragging');hoverAt(pointer)}}canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
+  canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();if(introRunning)finishIntro('interrupted');hasDragged=true;hint.hidden=true;targetYaw=targetPitch=hoverYaw=hoverPitch=0;if(e.key==='ArrowLeft')yaw-=.12;if(e.key==='ArrowRight')yaw+=.12;if(e.key==='ArrowUp')pitch=clamp(pitch-.12,-1.4,1.4);if(e.key==='ArrowDown')pitch=clamp(pitch+.12,-1.4,1.4);draw()});
   new ResizeObserver(update).observe(canvas);
   new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;update()}).observe(canvas);
   document.addEventListener('visibilitychange',update);window.addEventListener('site:route',update);reduce.addEventListener('change',update);update();
