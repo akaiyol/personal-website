@@ -8,7 +8,7 @@
   function project(x,y,z){
     const X=x*Math.cos(yaw)-z*Math.sin(yaw),Z=x*Math.sin(yaw)+z*Math.cos(yaw);
     const Y=y*Math.cos(pitch)-Z*Math.sin(pitch),depth=y*Math.sin(pitch)+Z*Math.cos(pitch);
-    return [(X*Math.cos(roll)-Y*Math.sin(roll))*1.04,-(X*Math.sin(roll)+Y*Math.cos(roll))*.84,depth];
+    return [X*Math.cos(roll)-Y*Math.sin(roll),-(X*Math.sin(roll)+Y*Math.cos(roll)),depth];
   }
   function draw(){
     if(!width||!height)return;
@@ -17,21 +17,21 @@
     paint.clearRect(0,0,width,height);paint.strokeStyle='#c5b5ec';paint.lineWidth=1.65;
     function curve(points){paint.beginPath();let started=false;for(const q of points){if(!q){started=false;continue}const x=cx+q[0]*radius,y=cy+q[1]*radius;started?paint.lineTo(x,y):paint.moveTo(x,y);started=true}paint.stroke()}
     function rings(front){
+      paint.lineWidth=1.4;
       for(let band=0;band<34;band++){
         const base=1.22+band*.022+(band>14?.075:0)+(band>25?.035:0),points=[];
         for(let k=0;k<=540;k++){
           const a=k/540*TAU,turn=a-phase;
-          const r=base+.009*Math.sin(turn*3+band*.31)+.004*Math.sin(turn*7);
-          const tip=Math.sin(a);
-          const q=project(r*1.10*Math.cos(a),0,r*.90*Math.sign(tip)*Math.abs(tip)**1.30);
+          const r=base; // Concentric circles project to clean ellipses; spin changes texture only.
+          const q=project(r*Math.cos(a),0,r*Math.sin(a));
           // Rotating seams and unequal strand widths make axial spin visible.
-          const seam=Math.sin(turn*2+band*.065)>.988;
+          const seam=Math.sin(turn*2+band*.065)>.997;
           points.push((q[2]>=0)===front&&!seam?q:null);
         }curve(points);
       }
     }
     rings(false);
-    paint.fillStyle='#000';paint.beginPath();paint.ellipse(cx,cy,radius*1.04,radius*.84,0,0,TAU);paint.fill();
+    paint.fillStyle='#000';paint.beginPath();paint.arc(cx,cy,radius,0,TAU);paint.fill();
     // Reflected ring bands follow the spherical surface and the ring phase.
     for(let band=0;band<29;band++){
       const points=[];
@@ -43,7 +43,7 @@
       }curve(points);
     }
     // Fine spherical rim, leaving the lower hemisphere mostly negative space.
-    paint.lineWidth=1;paint.beginPath();paint.ellipse(cx,cy,radius*1.04,radius*.84,0,0,TAU);paint.stroke();
+    paint.lineWidth=1;paint.beginPath();paint.arc(cx,cy,radius,0,TAU);paint.stroke();
     rings(true);
     const pixels=paint.getImageData(0,0,width,height).data;
     const dpr=Math.min(devicePixelRatio||1,2);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);ctx.fillStyle='#c5b5ec';
@@ -53,13 +53,7 @@
     for(let row=0,y=1;y<height-1;row++,y+=step+(row%4===3?.9:0)){
       for(let col=0,x=1;x<width-1;col++,x+=step+(col%2===1?.75:0)){
         const ix=Math.round(x),iy=Math.round(y),i=(iy*width+ix)*4;
-        const line=Math.max(pixels[i],pixels[i-4],pixels[i+4],pixels[i-width*4],pixels[i+width*4])>=70;
-        const nx=(x-cx)/(radius*1.04),ny=(y-cy)/(radius*.84),inside=nx*nx+ny*ny<1;
-        const light=inside?clamp(-nx*.5-ny*.7+Math.sqrt(1-nx*nx-ny*ny)*.45,0,1):0;
-        // Fixed dot-density lighting adds volume without extra palette colours.
-        const density=line?(inside?.50+.50*light:.72+.28*Math.max(0,-ny)):inside?.012+.15*light**3:0;
-        const hash=Math.sin(col*127.1+row*311.7)*43758.5453;
-        if(hash-Math.floor(hash)>density)continue;
+        if(Math.max(pixels[i],pixels[i-4],pixels[i+4],pixels[i-width*4],pixels[i+width*4])<70)continue;
         ctx.moveTo(x+1,y);ctx.arc(x,y,width<=600?.82:.95,0,TAU);
       }
     }ctx.fill();
