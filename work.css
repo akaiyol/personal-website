@@ -87,3 +87,11 @@ body.work-active main{padding-bottom:0}
 .work-page .flower-growth-hint{position:absolute;left:50%;top:12px;transform:translateX(-50%);margin:0;color:var(--ink);font:11px/1.6 Menlo,Consolas,monospace;opacity:.65;white-space:nowrap;pointer-events:none}
 .work-page .flower-growth-hint[hidden]{display:none}
 .work-page .flower-growth-hint span{display:inline-block;margin-left:8px}
+
+.work-page .work-title-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px 20px}
+.work-page .stats-toggle{font:12px/1.6 Menlo,Consolas,monospace;padding:8px 0;min-height:44px;color:var(--ink)}
+.work-page .character-stats[hidden]{display:none}
+@media(min-width:901px){
+ .work-page.stats-hidden .layout{grid-template-columns:minmax(0,1fr) 52px}
+ .work-page.stats-hidden .years{grid-column:2}
+}

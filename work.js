@@ -17,6 +17,25 @@
     'wsp-2024': {label: 'WSP · 2024', values: [.42, .94, .80, .68, .74, .90, .52]},
     'wsp-2023': {label: 'WSP · 2023', values: [.35, .88, .72, .60, .84, .82, .48]}
   };
+  const stats = view.querySelector('.character-stats');
+  stats.id = 'work-stats';
+  const statsToggle = document.createElement('button');
+  statsToggle.type = 'button';
+  statsToggle.className = 'stats-toggle';
+  statsToggle.setAttribute('aria-controls', stats.id);
+  statsToggle.setAttribute('aria-expanded', 'true');
+  statsToggle.textContent = '[ hide stats ]';
+  const titleRow = document.createElement('div');
+  titleRow.className = 'work-title-row';
+  const title = view.querySelector('#work-title');
+  title.before(titleRow);
+  titleRow.append(title, statsToggle);
+  statsToggle.addEventListener('click', () => {
+    stats.hidden = !stats.hidden;
+    view.classList.toggle('stats-hidden', stats.hidden);
+    statsToggle.setAttribute('aria-expanded', String(!stats.hidden));
+    statsToggle.textContent = stats.hidden ? '[ show stats ]' : '[ hide stats ]';
+  });
   const graph = view.querySelector('.strengths-graph');
   const context = view.querySelector('.stats-context');
   const overallOverlay = graph.querySelector('.stats-shape').cloneNode();
