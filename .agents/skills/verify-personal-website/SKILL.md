@@ -13,7 +13,7 @@ Run from the canonical `/Users/yolanda/Documents/ChatGPT/personal website` check
 /Users/yolanda/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node .agents/skills/verify-personal-website/run.cjs /private/tmp/website-verification-RUN all
 ```
 
-Choose a fresh evidence directory for each run. Replace `all` with `navigation`, `about`, `facts`, `work`, or `acknowledgements` for a targeted run. No build, credentials or seed data are needed. The helper starts a private HTTP server bound to 127.0.0.1 on an OS-assigned port and its own Chromium context, then tears both down. It serves public website files only, excluding repository metadata, skills and mockups. Concurrent runs use separate ports, browser contexts and evidence directories. Browser runtime: bundled Playwright; `PLAYWRIGHT_MODULE` can override its module location. Install its matching Chromium with Playwright's `install chromium` command if absent.
+Choose a fresh evidence directory for each run. Replace `all` with `planet`, `navigation`, `about`, `facts`, `work`, or `acknowledgements` for a targeted run. No build, credentials or seed data are needed. The helper starts a private HTTP server bound to 127.0.0.1 on an OS-assigned port and its own Chromium context, then tears both down. It serves public website files only, excluding repository metadata, skills and mockups. Concurrent runs use separate ports, browser contexts and evidence directories. Browser runtime: bundled Playwright; `PLAYWRIGHT_MODULE` can override its module location. Install its matching Chromium with Playwright's `install chromium` command if absent.
 
 ## Doctor
 
@@ -21,7 +21,7 @@ Before driving, the helper requests its owned server's `/__doctor` endpoint and 
 
 ## Drive
 
-Read `features/README.md` and the selected recipe. The helper drives actual buttons, links, keyboard keys, text input and scrolling. DOM reads are observations; do not replace actions with hash setters, internal state mutation or dispatched synthetic application events. Social links are checked for their href/new-tab contract; external websites are not opened. The work test checks stats show/hide by pointer and Enter/Space, expanded state, unchanged page geometry across both stats states, filters, timeline spacing, desktop and 390/320px layouts, flower placement at the content edge, and the absence of the removed circuit cat.
+Read `features/README.md` and the selected recipe. The helper drives actual buttons, links, keyboard keys, text input and scrolling. DOM reads are observations; do not replace actions with hash setters, internal state mutation or dispatched synthetic application events. Social links are checked for their href/new-tab contract; external websites are not opened. The planet test checks pointer and keyboard rotation, foreground layers, reduced motion and route pause. The work test checks stats show/hide by pointer and Enter/Space, expanded state, unchanged page geometry across both stats states, filters, timeline spacing, desktop and 390/320px layouts, flower placement at the content edge, and the absence of the removed circuit cat.
 
 ## Visual review
 

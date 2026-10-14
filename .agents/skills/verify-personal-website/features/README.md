@@ -4,6 +4,8 @@ Read the matching file before driving. Use the canonical checkout, the bundled N
 
 ## Features
 
+- [Home planet](./planet.md)
+
 - [Navigation](./navigation.md)
 - [About Me](./about.md)
 - [Personal facts](./facts.md)

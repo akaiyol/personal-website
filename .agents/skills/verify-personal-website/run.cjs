@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs=require('fs'),path=require('path'),http=require('http'),assert=require('assert'),cp=require('child_process');
 const {checkFlowerField}=require('./flower-field.cjs');
+const {checkHomePlanet}=require('./planet.cjs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'/Users/yolanda/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root=path.resolve(__dirname,'../../..'),out=path.resolve(process.argv[2]||`/private/tmp/website-verification-${Date.now()}`),only=process.argv[3]||'all';
 fs.mkdirSync(out,{recursive:true});const revision=cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
@@ -50,6 +51,7 @@ async function checkStatsToggle(page, name) {
  await context.tracing.start({screenshots:true,snapshots:true,sources:true});const page=await context.newPage();page.on('pageerror',e=>errors.push(String(e)));page.on('response',r=>{if(r.status()>=400&&r.url().startsWith(base))errors.push(`${r.status()} ${r.url()}`)});
  await page.goto(base);await page.waitForLoadState('networkidle');
  const cases={
+ planet:async()=>{log('planet','Home planet: responsive crop, foreground, drag, keys, reduced motion, route pause/resume and buttons');await checkHomePlanet(page,base,out)},
  navigation:async()=>{
   log('navigation','Home button → About; identity → Home; number shortcuts 1 and 2');
   await evidence(page,'home-desktop');await page.locator('[data-command="work"]').click();await page.locator('#work-view').waitFor({state:'visible'});assert.equal(await page.title(),'Yolanda | work-experience');await page.locator('.identity').click();await page.locator('[data-command="about"]').click();await page.locator('#about-view').waitFor({state:'visible'});await page.locator('.identity').click();await page.locator('.intro').click();await page.keyboard.press('1');await page.locator('#about-view').waitFor({state:'visible'});await page.locator('.identity').click();await page.locator('.intro').click();await page.keyboard.press('2');await page.locator('#work-view').waitFor({state:'visible'});
