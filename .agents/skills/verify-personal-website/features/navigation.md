@@ -6,6 +6,7 @@ Home actions, number shortcuts, identity return and terminal routing.
 
 - Home → about me button; Home → my work button.
 - From Home, 1 opens About and 2 opens Work unless an editable/control target owns the key.
+- Projects placeholder links to GitHub with “[ until then check out my github ]”; verify the URL without leaving the website.
 - Terminal text, Tab completion, arrows, Enter, Escape and no-match guidance.
 
 ## How to get to it (user POV)

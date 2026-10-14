@@ -21,7 +21,7 @@ Before driving, the helper requests its owned server's `/__doctor` endpoint and 
 
 ## Drive
 
-Read `features/README.md` and the selected recipe. The helper drives actual buttons, links, keyboard keys, text input and scrolling. DOM reads are observations; do not replace actions with hash setters, internal state mutation or dispatched synthetic application events. Social links are checked for their href/new-tab contract; external websites are not opened. The work test checks filters, timeline spacing, desktop and 390/320px layouts, flower placement at the content edge, and the absence of the removed circuit cat.
+Read `features/README.md` and the selected recipe. The helper drives actual buttons, links, keyboard keys, text input and scrolling. DOM reads are observations; do not replace actions with hash setters, internal state mutation or dispatched synthetic application events. Social links are checked for their href/new-tab contract; external websites are not opened. The work test checks stats show/hide by pointer and Enter/Space, expanded state, readable focus-item widths, filters, timeline spacing, desktop and 390/320px layouts, flower placement at the content edge, and the absence of the removed circuit cat.
 
 ## Visual review
 
@@ -38,3 +38,7 @@ A `finally` block closes the isolated browser context, browser and exact HTTP se
 ## Helpers
 
 `run.cjs` is executable. Invoke it with the bundled Node command above; it accepts evidence directory then feature ID. The feature map is the maintained source of coverage. During maintenance, edit only this skill directory; report product regressions separately.
+
+## Maintenance
+
+Use [maintain-personal-website-verification](../maintain-personal-website-verification/SKILL.md) when auditing coverage or refreshing this skill after feature changes. It preserves local-only delivery and distinguishes product bugs from test or documentation drift.
