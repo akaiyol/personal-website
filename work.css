@@ -78,8 +78,12 @@ body.work-active main{overflow:visible;display:block;padding:48px 58px 60px}
 
 /* The final stems meet the content edge above the fixed terminal. */
 body.work-active main{padding-bottom:0}
-.work-page .timeline-flowers{margin:0;width:100%;aspect-ratio:1200/440;pointer-events:none;overflow:hidden}
+.work-page .timeline-flowers{margin:0;width:100%;aspect-ratio:1200/440;position:relative;touch-action:pan-y;cursor:ew-resize;overflow:hidden;scroll-margin-bottom:110px}
 .work-page .timeline-flowers canvas,.work-page .timeline-flowers img{display:block;width:100%;height:100%;object-fit:fill}
 @media(max-width:600px){.work-page .timeline-flowers{aspect-ratio:760/440}}
 
 .work-page .timeline-flowers svg{display:block;width:100%;height:100%;overflow:hidden;isolation:isolate}
+
+.work-page .flower-growth-hint{position:absolute;left:50%;top:12px;transform:translateX(-50%);margin:0;color:var(--ink);font:11px/1.6 Menlo,Consolas,monospace;opacity:.65;white-space:nowrap;pointer-events:none}
+.work-page .flower-growth-hint[hidden]{display:none}
+.work-page .flower-growth-hint span{display:inline-block;margin-left:8px}

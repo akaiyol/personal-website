@@ -98,7 +98,11 @@
   });
   const flowers = document.createElement('figure');
   flowers.className = 'timeline-flowers';
-  flowers.setAttribute('aria-hidden', 'true');
+  flowers.id = 'flower-field';
+  flowers.tabIndex = 0;
+  flowers.setAttribute('role', 'group');
+  flowers.setAttribute('aria-label', 'Interactive flower field. Swipe or drag right to grow, left to rewind. Use arrow keys, Home or End with the field focused.');
+  flowers.innerHTML = '<canvas id="flower-art" role="img" aria-label="Procedural lavender flowers with numbered stems"></canvas><figcaption class="flower-growth-hint">swipe right to grow <span aria-hidden="true">→</span></figcaption>';
 
   view.append(flowers);
   function extendVisibleTimeline() {

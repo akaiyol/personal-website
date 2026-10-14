@@ -1,105 +1,207 @@
 (() => {
-  const host=document.querySelector('.timeline-flowers');if(!host)return;
-  const ns='http://www.w3.org/2000/svg';
-  const source=new URL('flowers.png',document.currentScript.src).href;
-  const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 1200 440');svg.setAttribute('aria-hidden','true');host.replaceChildren(svg);
-  function el(tag,attrs={},parent=svg){const n=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);parent.append(n);return n}
-  const defs=el('defs');el('image',{id:'original-flower-source',href:source,width:1155,height:1362},defs);
-  // Use only complete, non-overlapping blooms from the first approved study.
-  // Preserve its dotwork rather than cropping the interwoven reference cluster.
-  const parts=[
-    {name:'open-bloom',root:[260,390],outline:'25,165 350,165 350,200 425,199 432,222 495,250 505,340 360,340 330,402 25,402'},
-    {name:'upright-bloom',root:[531,305],outline:'345,60 880,60 880,358 772,358 724,311 634,302 550,320 510,307 501,261 490,225 430,195 345,190',exclude:'630,251 670,251 670,242 900,242 900,370 755,370 755,269 630,269'},
-    {name:'side-bloom',root:[519,545],outline:'350,357 509,357 509,380 534,380 534,357 825,357 825,555 500,555 495,522 410,522 350,495',exclude:'635,468 850,468 850,580 705,580 705,478 635,478',tilt:-6}
+  'use strict';
+  // Adapted from akaiyol/flower-field 099a90e: website integration without study UI.
+  const canvas = document.querySelector('#flower-art'), ctx = canvas.getContext('2d');
+  const field = document.querySelector('#flower-field');
+  const hint = field.querySelector('.flower-growth-hint');
+  const dismissHint = () => { hint.hidden = true; };
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const baseline = Object.freeze({seed:317, petalCount:11, openness:.83, petalCurl:.28, petalLength:1, centerDepth:.38, yaw:0, pitch:0, windStrength:.4, windRate:.12});
+  let params = {...baseline}, progress = .25, plants = [], width = 0, height = 0, scale = 1;
+  let time = 0, last = null, raf = null, inView = true, dirty = true;
+  const ink = '#c5b5ec', TAU = Math.PI * 2;
+  const clamp = x => Math.max(0, Math.min(1, x));
+  const smooth = x => {x=clamp(x); return x*x*(3-2*x)};
+  const rand = (a,b=0) => {let x = Math.imul((a+params.seed*101)|0, 1597334677)^Math.imul(b|0,3812015801);x=Math.imul(x^(x>>>16),2246822507);return ((x^(x>>>13))>>>0)/4294967296};
+  const fieldLayout = [
+    [0,145,245,.94,-9], [2,205,150,.86,10], [1,304,302,.90,-5],
+    [2,417,222,.98,7], [0,490,145,.79,-12], [1,600,278,.95,5],
+    [0,714,205,.88,10], [2,838,286,.95,1], [2,920,158,.81,-10],
+    [1,1014,265,.83,7], [0,1103,141,.75,-5]
   ];
-  // Keep lavender dot cores and black negative space; no shaded petal surfaces.
-  const palette=el('filter',{id:'flower-palette','color-interpolation-filters':'sRGB'},defs);
-  el('feColorMatrix',{type:'matrix',values:'0 0 0 0 .77255 0 0 0 0 .70980 0 0 0 0 .92549 .2126 .7152 .0722 0 0'},palette);
-  const transfer=el('feComponentTransfer',{},palette);el('feFuncA',{type:'linear',slope:1.7,intercept:-.15},transfer);
-  parts.forEach((p,i)=>{
-    const clip=el('clipPath',{id:'flower-part-'+i},defs);el('polygon',{points:p.outline},clip);
-    const contour=points=>'M'+points.trim().replaceAll(' ',' L')+' Z';
-    if(p.exclude){const cut=el('clipPath',{id:'flower-trim-'+i},defs);el('path',{d:'M0 0 H1155 V1362 H0 Z '+contour(p.exclude),'clip-rule':'evenodd'},cut)}
-    const symbol=el('g',{id:'flower-head-'+i},defs);
-    const frame=el('g',{transform:`translate(${-p.root[0]} ${-p.root[1]})`},symbol);
-    // End the source at its attachment; the vector stem continues from here.
-    const rootClip=el('clipPath',{id:'flower-root-'+i},defs);el('rect',{x:0,y:0,width:1155,height:p.root[1]},rootClip);
-    const rooted=el('g',{'clip-path':`url(#flower-root-${i})`},frame);
-    const crop=el('g',{'clip-path':`url(#flower-part-${i})`},rooted);
-    el('use',{href:'#original-flower-source',...(p.exclude?{'clip-path':`url(#flower-trim-${i})`}:{}),filter:'url(#flower-palette)'},crop);
-  });
-  const leaves=[
-    ['45,425 200,425 200,510 45,510',199,498],
-    ['275,1180 405,1180 420,1198 420,1305 275,1305',419,1207]
-  ];
-  leaves.forEach(([outline,x,y],i)=>{const clip=el('clipPath',{id:'original-leaf-'+i},defs);el('polygon',{points:outline},clip);const leaf=el('g',{id:'flower-leaf-'+i},defs);el('use',{href:'#original-flower-source','clip-path':`url(#original-leaf-${i})`,transform:`translate(${-x} ${-y})`,filter:'url(#flower-palette)'},leaf)});
-  const plants=[];
-  // Stable pseudo-random variation keeps the composition still between frames.
-  const variation=seed=>{const v=Math.sin(seed*127.1+311.7)*43758.5453;return v-Math.floor(v)};
-  // Deliberately irregular, stable layout; height, lean and spacing differ per plant.
-  const layout=[
-    [0,145,245,.38,-9,0], [2,205,150,.34,10,1.6], [1,304,302,.36,-5,3.2],
-    [2,417,222,.39,7,4.8], [0,490,145,.31,-12,2.2], [1,600,278,.38,5,5.6],
-    [0,714,205,.35,10,.9], [2,838,286,.38,1,3.9], [2,920,158,.32,-10,5.1],
-    [1,1014,265,.33,7,2.8], [0,1103,141,.29,-5,6.4]
-  ];
-  layout.forEach(([part,x,length,scale,lean,phase],i)=>{
-    const p=parts[part],plant=el('g',{'data-flower':p.name,style:'mix-blend-mode:screen'});
-    const stem=el('path',{d:`M0 0 C${-lean*.55} ${-length*.34},${lean*.7} ${-length*.72},0 ${-length}`,fill:'none',stroke:'#C5B5EC','stroke-width':1.2,'stroke-dasharray':'.35 2.2','stroke-linecap':'round'},plant);
-    const head=el('g',{},plant);el('use',{href:'#flower-head-'+part,transform:`scale(${scale})`},head);
-    const leafGroups=[0,1].map(j=>{
-      const seed=i*7+j*31+1,height=j===0?.23+variation(seed)*.15:.49+variation(seed+3)*.15;
-      const direction=(i+j)%2?1:-1,leafScale=.24+variation(seed+5)*.13;
-      const group=el('g',{'data-stem-leaf':j},plant);
-      el('use',{href:'#flower-leaf-'+Math.floor(variation(seed+9)*leaves.length),transform:`scale(${direction*leafScale} ${leafScale})`},group);
-      let position=height;
-      for(let k=0;k<5;k++){const u=1-position,y=3*u*u*position*.34+3*u*position*position*.72+position**3,dy=1.02*u*u+2.28*u*position+.84*position*position;position-= (y-height)/dy}
-      return {group,height,position,direction,angle:-20+variation(seed+11)*40,phase:variation(seed+13)*Math.PI*2,speed:1.55+variation(seed+15)*.6};
+  function build() {
+    const mobile=width<=600, indices=mobile?[0,2,3,5,8,9]:fieldLayout.map((_,i)=>i);
+    plants=indices.map((index,i)=>{
+      const [variant,x,h,size,lean]=fieldLayout[index];
+      return {id:i, variant, x:mobile?[150,260,365,455,560,620][i]/760:x/1200,
+        h:h*Math.cos(lean*Math.PI/180), lean:h*Math.sin(lean*Math.PI/180),
+        headScale:size, angle:(rand(index,4)-.5)*.13,
+        elevation:(variant===1?12:8)*Math.PI/180, phase:rand(index,6)*TAU, sprite:null, stage:-1};
     });
-    // Ruler labels describe normalized height along each individual stem.
-    const ruler=el('g',{'data-stem-ruler':''},plant),marks=[];
-    for(let j=2;j<=16;j++){
-      const height=j/20,major=j%2===0;
-      let position=height;
-      for(let k=0;k<5;k++){const u=1-position,y=3*u*u*position*.34+3*u*position*position*.72+position**3,dy=1.02*u*u+2.28*u*position+.84*position*position;position-=(y-height)/dy}
-      const h=position,bend=3*(1-h)*(1-h)*h*(-lean*.55)+3*(1-h)*h*h*(lean*.7);
-      const side=1;
-      const mark=el('g',{transform:`translate(${bend} ${-length*height})`},ruler);
-      const tick=el('path',{fill:'none',stroke:'#C5B5EC','stroke-width':.7},mark);
-      const label=major?el('text',{fill:'#C5B5EC','font-family':'Menlo,Consolas,monospace','text-anchor':side<0?'end':'start','dominant-baseline':'central'},mark):null;
-      if(label)label.textContent=height.toFixed(2).slice(1);
-      marks.push({tick,label,major,side});
-    }
-    plants.push({plant,head,leafGroups,marks,x,length,lean,phase,i,headAngle:p.tilt||0});
-  });
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)'),narrow=matchMedia('(max-width:600px)');
-  let raf=null,last=null,time=0,visible=false;
-  function draw(ms){const t=ms/1000;
-    svg.setAttribute('viewBox',narrow.matches?'0 0 760 440':'0 0 1200 440');
-    plants.forEach(p=>{
-      const mobileOrder=[0,2,3,5,8,9],slot=mobileOrder.indexOf(p.i);
-      p.plant.style.display=narrow.matches&&slot<0?'none':'';
-      // Inline label sizing overrides unscoped text rules in embedded avatar SVGs.
-      p.marks.forEach(({tick,label,major,side})=>{
-        const reach=(major?6:3)*(narrow.matches?1.35:1);
-        tick.setAttribute('d',`M${-side*1.5} 0H${side*reach}`);
-        if(label){label.setAttribute('x',side*(reach+(narrow.matches?5:3)));label.style.fontSize=(narrow.matches?16:10)+'px'}
-      });
-      const x=narrow.matches?[150,260,365,455,560,620][slot]||p.x:p.x;
-      const sway=reduce.matches?0:1.15*Math.sin(t*.78+p.phase)+.2*Math.sin(t*1.3+p.phase);
-      p.plant.setAttribute('transform',`translate(${x} 440) rotate(${p.lean+sway})`);
-      const flutter=reduce.matches?0:.65*Math.sin(t*(2.1+p.i*.073)+p.phase);
-      p.head.setAttribute('transform',`translate(0 ${-p.length}) rotate(${p.headAngle+flutter})`);
-      p.leafGroups.forEach(leaf=>{
-        const h=leaf.position,bend=3*(1-h)*(1-h)*h*(-p.lean*.55)+3*(1-h)*h*h*(p.lean*.7);
-        const angle=leaf.angle+(reduce.matches?0:2*Math.sin(t*leaf.speed+leaf.phase));
-        leaf.group.setAttribute('transform',`translate(${bend} ${-p.length*leaf.height}) rotate(${angle})`);
-      });
-    });
+    dirty=true;
   }
-  function stop(){if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null}
-  function tick(now){if(last!==null)time+=now-last;last=now;draw(time);raf=requestAnimationFrame(tick)}
-  function start(){stop();if(visible&&!document.hidden&&!reduce.matches)raf=requestAnimationFrame(tick)}
-  new IntersectionObserver(([e])=>{visible=e.isIntersecting;start()}).observe(svg);
-  document.addEventListener('visibilitychange',start);reduce.addEventListener('change',()=>{draw(time);start()});narrow.addEventListener('change',()=>draw(time));draw(0);
+  // Authored ribbon centerlines establish the reference silhouette. Every petal
+  // remains a generated curved surface rooted on the same numeric cup.
+  const petalProfiles = [
+    {a:[-17,0,-10],b:[-28,17,-15],c:[-49,33,-18],d:[-57,34,-16],w:3.5},
+    {a:[-12,0,-17],b:[-16,22,-22],c:[-34,46,-25],d:[-29,46,-22],w:5.5},
+    {a:[-5,0,-22],b:[-10,25,-26],c:[-10,51,-25],d:[-3,49,-22],w:7},
+    {a:[4,0,-22],b:[8,23,-25],c:[23,48,-24],d:[27,45,-20],w:6},
+    {a:[13,0,-17],b:[23,20,-21],c:[48,38,-20],d:[51,33,-16],w:3.2},
+    {a:[20,0,-8],b:[36,14,-10],c:[65,23,-10],d:[74,18,-5],w:4.2},
+    {a:[-22,0,-3],b:[-41,12,-2],c:[-71,11,2],d:[-83,-9,6],w:6.3},
+    {a:[22,0,-2],b:[43,13,2],c:[71,9,7],d:[83,-11,10],w:7.1},
+    {a:[-17,0,15],b:[-32,6,20],c:[-57,1,24],d:[-65,-14,25],w:7},
+    {a:[-6,0,22],b:[-18,7,30],c:[-28,9,42],d:[-34,2,48],w:11},
+    {a:[13,0,19],b:[26,10,26],c:[47,11,35],d:[56,0,39],w:7.5}
+  ];
+  function bloom(p,g) {
+    const sprite=document.createElement('canvas');sprite.width=520;sprite.height=600;sprite.anchor=[0,0];
+    const c=sprite.getContext('2d');c.translate(260,350);c.scale(2,2);
+    const yaw=params.yaw*Math.PI/180+p.angle, elevation=p.elevation+params.pitch*Math.PI/180;
+    const tilt=p.variant===1?-.25:p.variant===2?.10:-.06;
+    const project=([x,y,z])=>{
+      const X=x*Math.cos(yaw)-z*Math.sin(yaw),Z=x*Math.sin(yaw)+z*Math.cos(yaw);
+      const Y=-y*Math.cos(elevation)+Z*Math.sin(elevation);
+      return [X*Math.cos(tilt)-Y*Math.sin(tilt),X*Math.sin(tilt)+Y*Math.cos(tilt),Z*Math.cos(elevation)+y*Math.sin(elevation)];
+    };
+    const open=smooth((g-.53)/.47), bowl=smooth((g-.4)/.32), radius=24*bowl, depth=params.centerDepth*122*bowl*(p.variant===2?.8:1);
+    if(!bowl)return sprite;
+    sprite.anchor=project([0,-depth,0]);
+    const cubic=(profile,t)=>profile.a.map((a,k)=>(1-t)**3*a+3*(1-t)**2*t*profile.b[k]+3*(1-t)*t*t*profile.c[k]+t**3*profile.d[k]);
+    const petals=[];
+    for(let j=0;j<params.petalCount;j++){
+      const profile=petalProfiles[j%petalProfiles.length];
+      const extra=j>=petalProfiles.length?(j-petalProfiles.length+1)*.15:0;
+      const variation=.94+rand(p.id*43+j,12)*.12;
+      const center=t=>{
+        const q=cubic(profile,t),reach=params.petalLength*variation;
+        let x=profile.a[0]+(q[0]-profile.a[0])*reach;
+        let y=q[1]*reach*(p.variant===2?.48:p.variant===0?.62:1.12),z=q[2];
+        const opening=open*params.openness/.83;
+        x=profile.a[0]*(1-t*.7)+(x-profile.a[0]*(1-t*.7))*opening;
+        y=(1-opening)*t*55*reach+opening*y;
+        y+=params.petalCurl*9*Math.sin(Math.PI*t)-params.petalCurl*8*t*t;
+        if(p.variant===1)x-=y*.12;
+        z=z*bowl+extra*x;
+        return [x*bowl,y*bowl,z];
+      };
+      const point=(t,v)=>{
+        const q=center(t),before=center(Math.max(0,t-.002)),after=center(Math.min(1,t+.002));
+        const dx=after[0]-before[0],dy=after[1]-before[1],len=Math.hypot(dx,dy)||1;
+        const w=profile.w*Math.sin(Math.PI*t)**.65*(.15+.85*open)*v;
+        return [q[0]-dy/len*w,q[1]+dx/len*w+Math.abs(v)**1.8*Math.sin(Math.PI*t)*profile.w*.16,q[2]+w*.18];
+      };
+      const boundary=[];for(let k=0;k<=44;k++)boundary.push(project(point(k/44,-1)));
+      for(let k=44;k>=0;k--)boundary.push(project(point(k/44,1)));
+      petals.push({j,point,boundary,z:project(center(.5))[2]});
+    }
+    const paintPetal=petal=>{
+      const path=new Path2D();petal.boundary.forEach((q,i)=>i?path.lineTo(q[0],q[1]):path.moveTo(q[0],q[1]));path.closePath();
+      c.fillStyle='#000';c.fill(path);c.save();c.clip(path);c.fillStyle=ink;
+      // Sample along the ribbon without painting individual opaque mesh tiles.
+      // Its continuous silhouette is more important than random fold noise.
+      const samples=2300;
+      for(let k=0;k<samples;k++){
+        const seed=p.id*700001+petal.j*5003+k;
+        const t=rand(seed,41),v=rand(seed,42)*2-1;
+        if(rand(seed,43)>(v<0?.82:.98))continue;
+        const q=project(petal.point(t,v));c.globalAlpha=.78+rand(seed,44)*.22;
+        c.fillRect(q[0],q[1],.48+rand(seed,45)*.22,.58);
+      }
+      c.restore();c.globalAlpha=1;
+    };
+    petals.sort((a,b)=>a.z-b.z);
+    petals.filter(q=>q.z<9).forEach(paintPetal);
+    const cupPoint=(u,a)=>{const r=radius*(.08+.92*u**.85);return project([r*Math.cos(a),-depth*(1-u),r*Math.sin(a)])};
+    const cup=new Path2D();
+    for(let k=0;k<=30;k++){const q=cupPoint(1,k*TAU/30);k?cup.lineTo(q[0],q[1]):cup.moveTo(q[0],q[1])}
+    for(let k=30;k>=0;k--){const q=cupPoint(0,k*TAU/30);cup.lineTo(q[0],q[1])}cup.closePath();c.fillStyle='#000';c.fill(cup);
+    // Individual glyphs follow the visible half of the bowl; each row encodes u.
+    c.fillStyle=ink;c.textAlign='center';c.textBaseline='middle';
+    for(let row=0;row<7;row++){
+      const u=.12+row*.13, count=Math.max(3,Math.round(14*(.1+.9*u)));
+      const digits=(u.toFixed(2).slice(1)).repeat(4).slice(0,count);
+      for(let k=0;k<digits.length;k++){
+        const a=.12+(Math.PI-.24)*k/(digits.length-1),q=cupPoint(u,a);
+        c.save();c.translate(q[0],q[1]);c.scale(.45+.55*Math.sin(a),1);c.font=`${5.5+u*2.5}px Menlo,monospace`;c.fillText(digits[k],0,0);c.restore();
+      }
+    }
+    petals.filter(q=>q.z>=9).forEach(paintPetal);
+    return sprite;
+  }
+  function stem(p,t,g) {
+    const sway=reduced.matches?0:params.windStrength*(Math.sin(time*TAU*params.windRate+p.phase)*7+Math.sin(time*.93+p.phase)*1.2);
+    return {x:p.lean*t*t+sway*t*t,y:-p.h*g*t};
+  }
+  function leaf(p,j,g) {
+    const amount=smooth((g-(j===0?.18:.34))/.3);if(!amount)return;
+    const at=j===0?.29:.57, pos=stem(p,at,g),side=(p.id+j)%2?1:-1;
+    ctx.save();ctx.translate(pos.x,pos.y);ctx.scale(side*amount,amount);
+    const len=27+rand(p.id,j+31)*17, breadth=7+rand(p.id,j+32)*5;
+    const lift=3+rand(p.id,j+33)*6, droop=(rand(p.id,j+34)-.35)*12;
+    const petiole=4+rand(p.id,j+35)*4;
+    const mid=t=>({x:petiole+t*len,y:-petiole*.55-Math.sin(Math.PI*t)*lift-t*len*.38+t*t*t*droop});
+    const point=(t,v)=>{
+      const center=mid(t);
+      // A narrower tip, broad shoulder and asymmetric halves form a leaf blade.
+      const half=breadth*Math.sin(Math.PI*t)**.85*(1-.38*t);
+      return {x:center.x+v*half*.16,y:center.y+v*half*(v<0?.7:1)};
+    };
+    const outline=new Path2D();outline.moveTo(petiole,-petiole*.55);
+    for(let k=1;k<=32;k++){const q=point(k/32,-1);outline.lineTo(q.x,q.y)}
+    for(let k=31;k>=0;k--){const q=point(k/32,1);outline.lineTo(q.x,q.y)}outline.closePath();
+    ctx.fillStyle='#000';ctx.fill(outline);
+    ctx.fillStyle=ink;
+    for(let k=0;k<2500;k++){
+      const t=rand(p.id*1301+j*733+k,61),v=rand(p.id*1301+j*733+k,62)*2-1;
+      // Thin the shaded half and center crease; retain a luminous curved edge.
+      if(rand(k,p.id*31+j+65)>(v<0?.65:.95))continue;
+      const q=point(t,v);ctx.globalAlpha=.65+Math.abs(v)*.35;ctx.fillRect(q.x,q.y,.6,.6);
+    }
+    ctx.globalAlpha=.75;ctx.strokeStyle=ink;ctx.lineWidth=.45;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(petiole,-petiole*.55);
+    for(let k=1;k<=28;k++){const q=mid(k/28);ctx.lineTo(q.x,q.y)}ctx.stroke();
+    // Short branching veins follow the blade instead of floating over it.
+    ctx.globalAlpha=.38;ctx.setLineDash([.45,1.1]);
+    for(let k=2;k<=6;k++)for(const sign of [-1,1]){
+      const t=k/8,a=mid(t),b=point(Math.min(.97,t+.13),sign*.83);
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(a.x+len*.07,a.y+(b.y-a.y)*.2,b.x,b.y);ctx.stroke();
+    }
+    ctx.setLineDash([]);ctx.globalAlpha=1;ctx.restore();
+  }
+  function draw() {
+    const dpr=Math.min(devicePixelRatio||1,2);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+    const world=width<=600?760:1200;scale=width/world;
+    // Preserve useful bloom size on desktop; mobile uses six complete plants.
+    const unit=width<=600?scale:Math.min(scale,1.2), bottom=height;
+    let visible=0;const stages=[];
+    for(const p of plants){
+      const local=clamp((progress*1.6-p.id/(plants.length-1)*.65)/.95),stage=Math.round(local*1000)/1000;
+      const stemGrowth=smooth(local/.65);stages.push(stage);if(local<=0)continue;visible++;
+      ctx.save();ctx.translate(p.x*width,bottom);ctx.scale(unit,unit);
+      ctx.strokeStyle=ink;ctx.lineWidth=.8;ctx.setLineDash([.5,2]);ctx.beginPath();ctx.moveTo(0,0);
+      for(let j=1;j<=40;j++){const s=stem(p,j/40,stemGrowth);ctx.lineTo(s.x,s.y)}ctx.stroke();ctx.setLineDash([]);
+      leaf(p,0,local);leaf(p,1,local);
+      // Ruler values measure normalized full stem height, not curve parameter.
+      const labelSize=width<=600?Math.max(9,9/unit):9;
+      for(let k=2;k<=16;k++){
+        const h=k/20;if(h>stemGrowth)continue;const pt=stem(p,h/stemGrowth,stemGrowth),major=k%2===0;
+        ctx.globalAlpha=smooth((stemGrowth-h)*15);ctx.beginPath();ctx.moveTo(pt.x+1,pt.y);ctx.lineTo(pt.x+(major?5:3),pt.y);ctx.lineWidth=.5;ctx.stroke();
+        if(major){ctx.font=`${labelSize}px Menlo,monospace`;ctx.fillStyle=ink;ctx.fillText(h.toFixed(2).slice(1),pt.x+8,pt.y+3)}
+      }ctx.globalAlpha=1;
+      if(stage!==p.stage||!p.sprite){p.sprite=bloom(p,stage);p.stage=stage}
+      const top=stem(p,1,stemGrowth);ctx.translate(top.x,top.y);
+      const flutter=reduced.matches?0:params.windStrength*.018*Math.sin(time*1.4+p.phase);
+      ctx.rotate(flutter);ctx.scale(p.headScale,p.headScale);ctx.translate(-p.sprite.anchor[0],-p.sprite.anchor[1]);ctx.drawImage(p.sprite,-130,-175,260,300);ctx.restore();
+    }
+    // Read-only observations for verification; input still uses the production UI.
+    canvas.dataset.progress=progress.toFixed(6);canvas.dataset.plants=visible;canvas.dataset.stages=JSON.stringify(stages);canvas.dataset.seed=params.seed;
+    canvas.dataset.time=time.toFixed(4);canvas.dataset.frame=String(Number(canvas.dataset.frame||0)+1);
+    dirty=false;
+  }
+  function frame(now){raf=null;if(last!==null)time+=(now-last)/1000;last=now;if(dirty||!reduced.matches&&params.windStrength>0)draw();schedule()}
+  function schedule(){if(raf===null&&inView&&!document.hidden&&(dirty||!reduced.matches&&params.windStrength>0))raf=requestAnimationFrame(frame);else if(raf===null)last=null}
+  function invalidate(){dirty=true;schedule()}
+  function visibility(){if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null;schedule()}
+  function setGrowth(value){progress=clamp(value);invalidate()}
+  field.addEventListener('wheel',e=>{const delta=e.deltaX||(e.shiftKey?e.deltaY:0);if(!delta)return;dismissHint();e.preventDefault();const factor=e.deltaMode===1?16:e.deltaMode===2?width:1;setGrowth(progress+delta*factor/1400)},{passive:false});
+  let drag=null;
+  field.addEventListener('pointerdown',e=>{if(e.button!==0)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,progress};field.setPointerCapture(e.pointerId)});
+  field.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id||Math.abs(e.clientX-drag.x)<6)return;dismissHint();setGrowth(drag.progress+(e.clientX-drag.x)/Math.max(width*.8,240))});
+  const end=e=>{if(drag?.id===e.pointerId)drag=null};field.addEventListener('pointerup',end);field.addEventListener('pointercancel',end);
+  field.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();dismissHint();setGrowth(e.key==='Home'?0:e.key==='End'?1:progress+(e.key==='ArrowRight'?.04:-.04))});
+  new ResizeObserver(()=>{width=field.clientWidth;height=field.clientHeight;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);build();invalidate()}).observe(field);
+  new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;visibility()}).observe(field);
+  reduced.addEventListener('change',()=>{invalidate();visibility()});document.addEventListener('visibilitychange',visibility);
 })();

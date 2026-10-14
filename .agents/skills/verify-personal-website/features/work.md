@@ -2,16 +2,18 @@
 
 ## Sub-features
 
-Work type filters and per-role filter buttons; year links; role-linked strengths graph with keyboard comparison; a full-width animated flower field below the timeline.
+Work type filters and per-role filter buttons; year links; role-linked strengths graph with keyboard comparison; an interactive procedural flower field below the timeline.
 
-## How to get to it (user POV)
+## How to get to it
 
-Choose work-experience from Home or use the terminal. Select a filter or year. Scroll to the end for the flowers.
+Choose work-experience from Home or use the terminal. Select a filter or year. Scroll to the end for flowers. Swipe/drag right or use horizontal wheel input to grow; reverse to rewind. Focus the field and use Left/Right, Home or End. The initial quiet hint disappears after growth input, not ordinary vertical scrolling.
 
-## Driving it with Playwright
+## Verification
 
-Run `run.cjs EVIDENCE work`. Exercise all six filters and All, per-role tags, year links, graph click/Enter/Space, desktop and 390/320px layouts. Verify the flower field follows the work layout, that their bottom matches the main content edge, and that the removed cat is absent. Inspect the actual scrolled-to-bottom viewport above the fixed terminal, since a full-page capture can clip an offscreen flower artwork. The ruler regression checks visible plant counts, four correct labels per stem, minor ticks, and computed font size after SVG scaling (at least 5 screen pixels, a regression floor calibrated below the approved 320px rendering for this decorative artwork). These checks prevent the observed 2.2px style collision; visual review still decides legibility and appearance. Observe more than eight seconds of layered flower motion. Verify static reduced motion and hidden-route pause.
+Run `run.cjs EVIDENCE work`. It checks filters, year navigation, graph interactions, desktop and 390/320px layouts, field placement at the main content bottom, absence of the removed cat, full-growth counts (11 desktop / 6 mobile), keyboard growth and hint dismissal. Inspect actual scrolled viewport and field screenshots, including stem rulers and canvas bottom alignment. The old SVG ruler helper is retained for historical reference and is not run: canvas text cannot be verified through SVG DOM styles.
 
-## Gotchas
+Also verify pointer drag/touch-emulated swipe, horizontal wheel, vertical page scrolling, initial hint and partial growth, reduced motion, and at least a complete wind cycle with continuation after renderer changes. Numeric rulers remain .10 through .80 on the right side. Actual physical touch devices and real hidden-tab behavior require separate evidence before claiming verification.
 
-The field remains below the filtered work layout. Desktop uses eleven independently arranged plants drawn from three complete head cutouts from the first approved dotwork study; narrow layouts show six. Two complete source leaf silhouettes provide the varied leaf shapes. Each plant carries two independently swaying leaves with stable varied heights, sides and sizes (22 stem leaves on desktop, 12 visible on narrow layouts). The SVG field retains the first study’s dotwork silhouettes and numeric centers. Each stem has minor ruler ticks and four readable normalized-height labels (.20, .40, .60, .80), sized independently of the avatar SVG styles. The former one-entry blank tail spacer was replaced by the artwork’s natural height. Stem bases finish at the content edge above the fixed terminal. The SVG field resolves its reference image from the script URL. Hidden-tab pausing needs a real visibility test to claim verified; hidden-route checks alone do not prove it.
+## Model and constraints
+
+Canvas 2D projects generated petal surfaces and numeric bowls; no flower bitmap is loaded by the live renderer. The website adapts flower-field revision 099a90e without its study controls. It starts at 25% growth. Both the content edge and stem roots end at the field bottom, above the fixed terminal. Reduced motion stops wind but allows explicit growth changes. Existing source images and older standalone studies remain historical assets.
