@@ -2,7 +2,7 @@
 
 ## User behavior
 
-A cropped lavender Braille-style ringed planet replaces the home Snoopy. Approximately 60% of the globe is visible at the right edge. Slow ring patterns and spherical reflection share a 64-second rotation phase. Drag outside the foreground text/buttons to rotate horizontally and vertically; focus the canvas and use arrows for keyboard rotation. Home title and buttons sit above the rings with black rims. No planet appears on other routes.
+A cropped lavender Braille-style ringed planet replaces the home Snoopy. The globe is slightly oblate; the ring profile narrows at its outer tips. Fixed dot-density lighting adds upper-left highlights and a darker lower hemisphere without introducing extra colours. Approximately 60% of the globe is visible at the right edge. Slow ring patterns and spherical reflection share a 64-second rotation phase. Drag outside the foreground text/buttons to rotate horizontally and vertically; focus the canvas and use arrows for keyboard rotation. Home title and buttons sit above the rings with black rims. No planet appears on other routes.
 
 ## Verification
 
