@@ -16,10 +16,11 @@ async function checkStatsToggle(page, name) {
  if(name==='desktop'){
   assert(await stats.isHidden(),'Stats should default to hidden');
   assert.equal(await toggle.getAttribute('aria-expanded'),'false');
-  assert.equal(await toggle.evaluate(el=>getComputedStyle(el).animationName),'stats-discovery');
+  assert.equal(await toggle.locator('.stats-rays g').first().evaluate(el=>getComputedStyle(el).animationName),'stats-ray-boil');
+  assert.equal(await toggle.evaluate(el=>getComputedStyle(el).opacity),'1','Button text should stay steady');
   await page.screenshot({path:path.join(out,'work-stats-default-hidden.png')});
   await toggle.click();
-  assert.equal(await toggle.evaluate(el=>getComputedStyle(el).animationName),'none','Discovery pulse did not stop on click');
+  assert.equal(await toggle.locator('.stats-rays').count(),0,'Discovery rays did not disappear on click');
  }
  assert(await stats.isVisible(), 'Stats should be visible after opening');
  assert.equal(await toggle.getAttribute('aria-controls'),'work-stats');

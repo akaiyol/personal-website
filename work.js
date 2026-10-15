@@ -28,6 +28,28 @@
   statsToggle.setAttribute('aria-controls', stats.id);
   statsToggle.setAttribute('aria-expanded', 'false');
   statsToggle.textContent = '[ show stats ]';
+  const rayNS = 'http://www.w3.org/2000/svg';
+  const rays = document.createElementNS(rayNS, 'svg');
+  rays.classList.add('stats-rays');
+  rays.setAttribute('viewBox', '0 0 132 62');
+  rays.setAttribute('aria-hidden', 'true');
+  rays.setAttribute('focusable', 'false');
+  // Three small ink variations echo the photo frames' .72s line boil.
+  for (let frame = 0; frame < 3; frame++) {
+    const drawing = document.createElementNS(rayNS, 'g');
+    drawing.style.animationDelay = (-frame * .24) + 's';
+    for (let ray = 0; ray < 12; ray++) {
+      const angle = ray * Math.PI / 6;
+      const jitter = Math.sin(ray * 7 + frame * 4) * .55;
+      const line = document.createElementNS(rayNS, 'path');
+      line.setAttribute('d', `M${66 + Math.cos(angle) * 53 + jitter} ${31 + Math.sin(angle) * 23}L${66 + Math.cos(angle) * 60 + jitter} ${31 + Math.sin(angle) * (28 + frame * .3)}`);
+      line.setAttribute('stroke-width', String(1 + frame * .12));
+      drawing.append(line);
+    }
+    rays.append(drawing);
+  }
+  statsToggle.append(rays);
+
   const titleRow = document.createElement('div');
   titleRow.className = 'work-title-row';
   const title = view.querySelector('#work-title');

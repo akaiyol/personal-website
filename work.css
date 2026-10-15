@@ -94,7 +94,13 @@ body.work-active main{padding-bottom:0}
 .work-page.stats-hidden .character-stats{visibility:hidden;pointer-events:none}
 .work-page .work-focus{max-width:760px}
 
-.work-page .stats-toggle.is-undiscovered{animation:stats-discovery 2.8s ease-in-out infinite}
-#work-view[hidden] .stats-toggle{animation-play-state:paused}
-@keyframes stats-discovery{0%,100%{opacity:1}50%{opacity:.60}}
-@media(prefers-reduced-motion:reduce){.work-page .stats-toggle.is-undiscovered{animation:none}}
+.work-page .stats-toggle{position:relative}
+.work-page .stats-rays{display:none;position:absolute;inset:-9px -16px;width:calc(100% + 32px);height:calc(100% + 18px);pointer-events:none;overflow:visible;fill:none;stroke:var(--ink);stroke-linecap:round}
+.work-page .stats-toggle.is-undiscovered .stats-rays{display:block}
+.work-page .stats-rays g{visibility:hidden;animation:stats-ray-boil .72s steps(1,end) infinite}
+@keyframes stats-ray-boil{0%,33.332%{visibility:visible}33.333%,100%{visibility:hidden}}
+#work-view[hidden] .stats-rays g,body.page-hidden .stats-rays g{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){
+ .work-page .stats-rays g{animation:none;visibility:hidden}
+ .work-page .stats-rays g:first-child{visibility:visible}
+}
