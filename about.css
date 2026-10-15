@@ -393,3 +393,28 @@ body.page-hidden .photo-counter svg{animation-play-state:paused}
 .about-page .player-details dl>div+div{margin-top:11px}
 .about-page .player-details dt{font-size:11px;line-height:1.5;margin-bottom:3px}
 .about-page .player-details dd{margin:0;overflow-wrap:break-word}
+
+/* The original portrait opens a horizontal character card. */
+.photo-zoom.player-card-open{padding:48px 16px 16px;max-width:calc(100vw - 16px)}
+.photo-zoom.player-card-open .photo-zoom-content{max-width:calc(100vw - 48px)}
+.photo-zoom.about-page .player-card:not(.frame-drawing){background:var(--ground)}
+.photo-zoom.about-page .player-card{display:grid;grid-template-columns:40% minmax(0,1fr);gap:24px;align-items:center}
+.photo-zoom.about-page .player-card .image,.photo-zoom.about-page .player-card.frame-drawing .image{height:auto;aspect-ratio:3 / 4;width:100%}
+.photo-zoom .player-details{padding-top:0}
+.photo-zoom .player-name{font-size:20px}
+.photo-zoom .player-name [lang="zh"]{display:inline;font-size:16px}
+@media(max-width:600px){
+ .photo-zoom.about-page .player-card{grid-template-columns:32% minmax(0,1fr);gap:12px;padding:14px;align-items:start}
+ .photo-zoom.about-page .player-card:before{inset:7px}
+ .photo-zoom .player-details{font-size:12px;line-height:1.5}
+ .photo-zoom .player-name{font-size:14px}
+ .photo-zoom .player-name [lang="zh"]{display:block;font-size:12px}
+ .photo-zoom .player-study{margin-top:4px}
+ .photo-zoom .player-details dl{margin-top:10px}
+ .photo-zoom .player-details dl>div+div{margin-top:7px}
+ .photo-zoom .player-details dt{font-size:10px;margin-bottom:2px}
+}
+.photo-zoom .player-card .image{container-type:inline-size}
+.photo-zoom .player-card .portrait-wink-art{width:68%;margin-left:-34%;font-size:clamp(10px,12.5cqw,32px)}
+.photo-zoom .player-card .portrait-smile{font-size:clamp(8px,9.5cqw,24px);margin-top:7cqw}
+.photo-zoom .player-card .portrait-spark{font-size:clamp(3px,3cqw,8px)}
