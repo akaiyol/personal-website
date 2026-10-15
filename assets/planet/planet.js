@@ -3,9 +3,10 @@
   const canvas=document.querySelector('#home-planet'), hero=document.querySelector('.hero');
   const ctx=canvas.getContext('2d'), surface=document.createElement('canvas'), paint=surface.getContext('2d',{willReadFrequently:true});
   const reduce=matchMedia('(prefers-reduced-motion: reduce)'),TAU=Math.PI*2;
-  let width=0,height=0,phase=0,pitch=reduce.matches?.40:1.10,roll=reduce.matches?.32:-1.30,yaw=0,raf=null,last=null,lastPaint=0,drag=null,inView=true;
+  const startPose=Object.freeze({pitch:-1.40,roll:.32}),restPose=Object.freeze({pitch:.40,roll:.32});
+  let width=0,height=0,phase=0,pitch=reduce.matches?restPose.pitch:startPose.pitch,roll=restPose.roll,yaw=0,raf=null,last=null,lastPaint=0,drag=null,inView=true;
   let introElapsed=0, introRunning=!reduce.matches, introState=reduce.matches?'complete':'running';
-  function finishIntro(reason='complete') {introRunning=false;introState=reason;if(reason==='complete'){roll=.32;pitch=.40;}hoverAt(pointer);}
+  function finishIntro(reason='complete') {introRunning=false;introState=reason;if(reason==='complete'){roll=restPose.roll;pitch=restPose.pitch;}hoverAt(pointer);}
   const hint=document.createElement('span');hint.id='planet-drag-hint';hint.textContent='[ drag ↔ ]';hint.hidden=true;hint.setAttribute('aria-hidden','true');canvas.after(hint);
   let pointer=null,hoverYaw=0,hoverPitch=0,targetYaw=0,targetPitch=0,hasDragged=false;
   function hoverAt(point){
@@ -16,8 +17,8 @@
     const x=dx*Math.cos(roll)-dy*Math.sin(roll),y=-(dx*Math.sin(roll)+dy*Math.cos(roll));
     const ring=Math.abs(Math.sin(pitch))>.06?Math.hypot(x,y/Math.sin(pitch)):Infinity;
     const hit=dx*dx+dy*dy<=1||(ring>=1.15&&ring<=2.12);
-    targetYaw=hit&&!reduce.matches?.018+clamp(dx*.012,-.012,.012):0;
-    targetPitch=hit&&!reduce.matches?-.012+clamp(dy*.012,-.012,.012):0;
+    targetYaw=hit&&!reduce.matches?.025+clamp(dx*.016,-.016,.016):0;
+    targetPitch=hit&&!reduce.matches?-.017+clamp(dy*.016,-.016,.016):0;
     hint.hidden=!hit||hasDragged;
     hint.style.left=Math.min(width-106,Math.max(8,point.x+16))+'px';
     hint.style.top=Math.min(height-30,Math.max(8,point.y+18))+'px';
@@ -88,7 +89,7 @@
       if(introRunning){
         introElapsed+=dt;
         const t=clamp((introElapsed-180)/(3000/1.3),0,1),ease=t*t*t*(t*(t*6-15)+10);
-        roll=-1.30+(.32+1.30)*ease;pitch=1.10+(.40-1.10)*ease;
+        roll=startPose.roll+(restPose.roll-startPose.roll)*ease;pitch=startPose.pitch+(restPose.pitch-startPose.pitch)*ease;
         if(t===1)finishIntro();
       }
     }

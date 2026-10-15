@@ -14,7 +14,7 @@ Reduced motion disables automatic rotation but preserves explicit drag/key chang
 
 ## First-load intro
 
-The first home load starts at the supplied steep-ring pose (roll -1.30 and pitch 1.10 radians), holds for 180ms, then eases over 3000/1.3 ms (about 2.31 seconds, 30% faster than the original turn) into the original roll 0.32. Home content stays fixed. Drag or arrow input cancels the intro at its current pose. Leaving Home finishes the intro so returning does not replay it. Reduced motion skips immediately to the original pose. Observe the full intro and continuation at desktop and narrow widths; its short sequence is separate from the unchanged 64-second ring texture cycle. The helper checks initial running state, final angle, unchanged hero bounds and no replay; input interruption should also be exercised after intro changes.
+The first home load starts at the supplied steep-ring pose (roll 0.32 and pitch -1.40 radians), holds for 180ms, then eases over 3000/1.3 ms (about 2.31 seconds, 30% faster than the original turn) into the original roll 0.32. Home content stays fixed. Drag or arrow input cancels the intro at its current pose. Leaving Home finishes the intro so returning does not replay it. Reduced motion skips immediately to the original pose. Observe the full intro and continuation at desktop and narrow widths; its short sequence is separate from the unchanged 64-second ring texture cycle. The helper checks initial running state, reference-facing negative pitch and roll, black globe interior from actual canvas pixels, final angle, unchanged hero bounds and no replay; input interruption should also be exercised after intro changes.
 
 ## Hover discovery
 

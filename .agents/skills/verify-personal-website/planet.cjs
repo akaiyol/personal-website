@@ -4,6 +4,18 @@ async function checkHomePlanet(page,base,out){
  await page.waitForFunction(()=>document.querySelector('#home-planet').dataset.frame);
  if(!await page.evaluate(()=>matchMedia('(prefers-reduced-motion: reduce)').matches)){
   assert.equal(await planet.getAttribute('data-intro'),'running','First home load should introduce the planet');
+  const startAngles=(await planet.getAttribute('data-rotation')).split(',').map(Number);
+  assert(startAngles[1]<-1.35&&Math.abs(startAngles[2]-.32)<.01,'Intro does not start at the reference-facing pose');
+  const globeInk=await planet.evaluate(el=>{
+   const w=el.width,h=el.height,dpr=w/el.clientWidth,r=el.clientWidth>700?Math.max(el.clientWidth*.34,el.clientHeight*.58):el.clientWidth*.78;
+   const cx=el.clientWidth-r*.16,cy=el.clientHeight*.55;
+   const x=Math.round((cx-r*.40)*dpr),y=Math.round((cy-r*.35)*dpr),sw=Math.round(r*.50*dpr),sh=Math.round(r*.70*dpr);
+   const pixels=el.getContext('2d').getImageData(x,y,sw,sh).data;let ink=0;
+   for(let i=0;i<pixels.length;i+=4)if(pixels[i+3]>0)ink++;
+   return ink/(sw*sh);
+  });
+  assert(globeInk<.002,'Opening globe should be black, not filled with the reflected ring band');
+
   const before=await page.locator('.hero').boundingBox();
   await page.screenshot({path:path.join(out,'planet-intro-start.png')});
   await page.waitForFunction(()=>document.querySelector('#home-planet').dataset.intro==='complete',null,{timeout:3000});
