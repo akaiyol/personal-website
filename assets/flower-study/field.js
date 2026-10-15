@@ -195,12 +195,12 @@
   function invalidate(){dirty=true;schedule()}
   function visibility(){if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null;schedule()}
   function setGrowth(value){progress=clamp(value);invalidate()}
-  field.addEventListener('wheel',e=>{const delta=e.deltaX||(e.shiftKey?e.deltaY:0);if(!delta)return;dismissHint();e.preventDefault();const factor=e.deltaMode===1?16:e.deltaMode===2?width:1;setGrowth(progress+delta*factor/1400)},{passive:false});
+  field.addEventListener('wheel',e=>{const delta=e.deltaX||e.deltaY;if(!delta)return;dismissHint();e.preventDefault();const factor=e.deltaMode===1?16:e.deltaMode===2?width:1;setGrowth(progress+delta*factor/1400)},{passive:false});
   let drag=null;
   field.addEventListener('pointerdown',e=>{if(e.button!==0)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,progress};field.setPointerCapture(e.pointerId)});
   field.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id||Math.abs(e.clientX-drag.x)<6)return;dismissHint();setGrowth(drag.progress+(e.clientX-drag.x)/Math.max(width*.8,240))});
   const end=e=>{if(drag?.id===e.pointerId)drag=null};field.addEventListener('pointerup',end);field.addEventListener('pointercancel',end);
-  field.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();dismissHint();setGrowth(e.key==='Home'?0:e.key==='End'?1:progress+(e.key==='ArrowRight'?.04:-.04))});
+  field.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key))return;e.preventDefault();dismissHint();setGrowth(e.key==='Home'?0:e.key==='End'?1:progress+(['ArrowRight','ArrowDown'].includes(e.key)?.04:-.04))});
   new ResizeObserver(()=>{width=field.clientWidth;height=field.clientHeight;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);build();invalidate()}).observe(field);
   new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;visibility()}).observe(field);
   reduced.addEventListener('change',()=>{invalidate();visibility()});document.addEventListener('visibilitychange',visibility);

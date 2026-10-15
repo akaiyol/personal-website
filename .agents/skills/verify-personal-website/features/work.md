@@ -6,11 +6,11 @@ Stats show/hide toggle preserves the chart footprint, removes hidden chart input
 
 ## How to get to it
 
-Choose work-experience from Home or use the terminal. Select a filter or year. Scroll to the end for flowers. Swipe/drag right or use horizontal wheel input to grow; reverse to rewind. Focus the field and use Left/Right, Home or End. The initial quiet hint disappears after growth input, not ordinary vertical scrolling.
+Choose work-experience from Home or use the terminal. Select a filter or year. Scroll to the end for flowers. Swipe/drag right or scroll down/right over the field to grow; reverse to rewind. Vertical and horizontal wheel input over the field is captured without moving the website, including at growth limits. Focus the field and use Down/Right to grow, Up/Left to rewind, Home or End. The initial quiet hint disappears after growth input. Scrolling outside the field continues to scroll the page.
 
 ## Verification
 
-Run `run.cjs EVIDENCE work`. It checks stats toggle visibility and aria state, Enter/Space, unchanged page height, scroll position and element bounds before/after hiding and restoring, filters, year navigation, graph interactions, desktop and 390/320px layouts, field placement at the main content bottom, absence of the removed cat, full-growth counts (11 desktop / 6 mobile), keyboard growth and hint dismissal. Inspect actual scrolled viewport and field screenshots, including stem rulers and canvas bottom alignment. The old SVG ruler helper is retained for historical reference and is not run: canvas text cannot be verified through SVG DOM styles.
+Run `run.cjs EVIDENCE work`. It checks stats toggle visibility and aria state, Enter/Space, unchanged page height, scroll position and element bounds before/after hiding and restoring, filters, year navigation, graph interactions, desktop and 390/320px layouts, field placement at the main content bottom, absence of the removed cat, full-growth counts (11 desktop / 6 mobile), keyboard growth, vertical/horizontal wheel growth without page scrolling, and hint dismissal. Inspect actual scrolled viewport and field screenshots, including stem rulers and canvas bottom alignment. The old SVG ruler helper is retained for historical reference and is not run: canvas text cannot be verified through SVG DOM styles.
 
 Also verify pointer drag/touch-emulated swipe, horizontal wheel, vertical page scrolling, initial hint and partial growth, reduced motion, and at least a complete wind cycle with continuation after renderer changes. Numeric rulers remain .10 through .80 on the right side. Actual physical touch devices and real hidden-tab behavior require separate evidence before claiming verification.
 
