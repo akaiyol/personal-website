@@ -19,18 +19,22 @@
   };
   const stats = view.querySelector('.character-stats');
   stats.id = 'work-stats';
+  view.classList.add('stats-hidden');
+  stats.inert = true;
+  stats.setAttribute('aria-hidden', 'true');
   const statsToggle = document.createElement('button');
   statsToggle.type = 'button';
-  statsToggle.className = 'stats-toggle';
+  statsToggle.className = 'stats-toggle is-undiscovered';
   statsToggle.setAttribute('aria-controls', stats.id);
-  statsToggle.setAttribute('aria-expanded', 'true');
-  statsToggle.textContent = '[ hide stats ]';
+  statsToggle.setAttribute('aria-expanded', 'false');
+  statsToggle.textContent = '[ show stats ]';
   const titleRow = document.createElement('div');
   titleRow.className = 'work-title-row';
   const title = view.querySelector('#work-title');
   title.before(titleRow);
   titleRow.append(title, statsToggle);
   statsToggle.addEventListener('click', () => {
+    statsToggle.classList.remove('is-undiscovered');
     const hidden = view.classList.toggle('stats-hidden');
     stats.inert = hidden;
     stats.setAttribute('aria-hidden', String(hidden));

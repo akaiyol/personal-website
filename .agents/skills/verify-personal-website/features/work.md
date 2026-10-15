@@ -17,3 +17,5 @@ Also verify pointer drag/touch-emulated swipe, horizontal wheel, vertical page s
 ## Model and constraints
 
 Canvas 2D projects generated petal surfaces and numeric bowls; no flower bitmap is loaded by the live renderer. The website adapts flower-field revision 099a90e without its study controls. It starts at 25% growth. Both the content edge and stem roots end at the field bottom, above the fixed terminal. Reduced motion stops wind but allows explicit growth changes. Existing source images and older standalone studies remain historical assets.
+
+Stats start hidden while preserving their layout space. The [ show stats ] button gently pulses until its first click (including keyboard activation), then stops permanently for that document. Reduced motion disables the pulse. The desktop workflow checks this default and pulse dismissal before exercising both visibility states. Narrow checks reuse the same session after opening stats.

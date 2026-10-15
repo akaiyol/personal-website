@@ -93,3 +93,8 @@ body.work-active main{padding-bottom:0}
 /* Hide the chart without changing its grid footprint or moving content. */
 .work-page.stats-hidden .character-stats{visibility:hidden;pointer-events:none}
 .work-page .work-focus{max-width:760px}
+
+.work-page .stats-toggle.is-undiscovered{animation:stats-discovery 2.8s ease-in-out infinite}
+#work-view[hidden] .stats-toggle{animation-play-state:paused}
+@keyframes stats-discovery{0%,100%{opacity:1}50%{opacity:.60}}
+@media(prefers-reduced-motion:reduce){.work-page .stats-toggle.is-undiscovered{animation:none}}

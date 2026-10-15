@@ -13,7 +13,15 @@ async function checkLayout(page){assert(await page.evaluate(()=>document.documen
 async function checkStatsToggle(page, name) {
  const toggle=page.locator('.stats-toggle'), stats=page.locator('#work-stats');
  await toggle.scrollIntoViewIfNeeded();
- assert(await stats.isVisible(), 'Stats should start visible');
+ if(name==='desktop'){
+  assert(await stats.isHidden(),'Stats should default to hidden');
+  assert.equal(await toggle.getAttribute('aria-expanded'),'false');
+  assert.equal(await toggle.evaluate(el=>getComputedStyle(el).animationName),'stats-discovery');
+  await page.screenshot({path:path.join(out,'work-stats-default-hidden.png')});
+  await toggle.click();
+  assert.equal(await toggle.evaluate(el=>getComputedStyle(el).animationName),'none','Discovery pulse did not stop on click');
+ }
+ assert(await stats.isVisible(), 'Stats should be visible after opening');
  assert.equal(await toggle.getAttribute('aria-controls'),'work-stats');
  const layoutSnapshot=()=>page.evaluate(()=>({scrollY, pageHeight:document.documentElement.scrollHeight,
   boxes:[...document.querySelectorAll('#work-title,.stats-toggle,.work-filters,#work-view .timeline,#work-view .years,#work-view .entry:not([hidden]),#work-view .work-focus,.timeline-flowers')].map(el=>{
@@ -59,7 +67,7 @@ async function checkStatsToggle(page, name) {
   await command.fill('zzzz');await page.locator('#navigation-hint').filter({hasText:'No matching destination.'}).waitFor({state:'attached'});await command.fill('');await page.keyboard.press('ArrowDown');const down=await command.getAttribute('aria-activedescendant');await page.keyboard.press('ArrowUp');assert.notEqual(await command.getAttribute('aria-activedescendant'),down);await page.keyboard.press('Escape');assert.equal(await command.getAttribute('aria-expanded'),'false');await command.fill('home');await page.keyboard.press('Enter');await page.locator('.hero').waitFor({state:'visible'});assert.equal(await page.title(),'Yolanda | home');await command.fill('1');assert(await page.locator('.hero').isVisible());await command.fill('');await page.keyboard.press('Escape');await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>getComputedStyle(document.activeElement).outlineStyle),'none');await command.fill('projects');await page.keyboard.press('Enter');await page.locator('#destination-view').waitFor({state:'visible'});assert.equal(await page.locator('#destination-view .back-link').getAttribute('href'),'https://github.com/akaiyol');assert.equal(await page.locator('#destination-view .back-link').textContent(),'[ until then check out my github ]');await evidence(page,'projects');await command.fill('home');await page.keyboard.press('Enter');await evidence(page,'navigation');await checkLayout(page);
  },
  about:async()=>{
-  log('about','About from home → copy email, social links, photo open/close, poem word');await page.goto(base+'/#home');await page.locator('[data-command="about"]').click();await page.locator('#about-view').waitFor({state:'visible'});
+  log('about','About from home → copy email, social links, photo open/close, poem word');await page.goto(base+'/#home');await page.locator('[data-command="about"]').click();await page.locator('#about-view').waitFor({state:'visible'});assert.equal(await page.locator('.bio-quote').count(),0);
   for(const href of ['https://github.com/akaiyol','https://www.linkedin.com/in/yolanda-chen1/','https://x.com/akaiyol'])assert.equal(await page.locator(`.portrait-socials a[href="${href}"]`).count(),1);
   await page.locator('[data-copy-email]').click();await page.getByText('Copied',{exact:true}).waitFor();assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),'yolanda.chen@uwaterloo.ca');
   await page.getByRole('button',{name:'Enlarge Yolanda’s photo',exact:true}).click();await page.getByRole('dialog',{name:'Enlarged photo'}).waitFor();await page.keyboard.press('Escape');await page.getByRole('dialog',{name:'Enlarged photo'}).waitFor({state:'hidden'});
