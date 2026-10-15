@@ -16,7 +16,7 @@ const response = document.querySelector("#response");
 const hint = document.querySelector("#navigation-hint");
 const normalHint = hint.textContent;
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-const normalize = value => value.trim().toLowerCase().replace(/\s+/g, " ");
+const normalize = value => value.trim().toLowerCase().replace(/^\//, "").replace(/\s+/g, " ");
 let matches = [], selected = 0, dismissed = false;
 function matching(value) {
   const query = normalize(value);
@@ -34,13 +34,14 @@ function updateCompletion() {
   if (list.hidden) return;
   const item = matches[selected];
   const typed = input.value;
-  if (!item || !typed || !item.label.startsWith(typed.toLowerCase()) || input.selectionStart !== typed.length || input.selectionEnd !== typed.length || input.scrollLeft > 0) return;
+  const label = (typed.startsWith("/") ? "/" : "") + (item?.label || "");
+  if (!item || !typed || !label.startsWith(typed.toLowerCase()) || input.selectionStart !== typed.length || input.selectionEnd !== typed.length || input.scrollLeft > 0) return;
   const prefix = document.createElement("span");
   prefix.className = "completion-prefix";
   prefix.textContent = typed;
   const suffix = document.createElement("span");
   suffix.className = "completion-suffix";
-  suffix.textContent = item.label.slice(typed.length);
+  suffix.textContent = label.slice(typed.length);
   completion.append(prefix, suffix);
 }
 function renderSuggestions(reset = true) {
@@ -56,7 +57,7 @@ function renderSuggestions(reset = true) {
     option.setAttribute("role", "option");
     option.setAttribute("aria-selected", String(index === selected));
     const label = document.createElement("span");
-    label.textContent = item.label;
+    label.textContent = `/${item.label}`;
     const kind = document.createElement("span");
     kind.className = "suggestion-kind";
     kind.textContent = item.external ? "external ↗" : "";
@@ -104,7 +105,7 @@ function showRoute(focus = false) {
   view.hidden = about || work || acknowledgements || (!item && !connect);
   response.textContent = "";
   const title = document.querySelector("#destination-title");
-  title.textContent = item?.label || "connect";
+  title.textContent = `/${item?.label || "connect"}`;
   document.querySelector("#destination-copy").textContent = item?.copy || "Find me on GitHub and LinkedIn.";
   const destinationAction = view.querySelector(".back-link");
   destinationAction.href = id === "projects" ? "https://github.com/akaiyol" : "#home";
@@ -114,10 +115,10 @@ function showRoute(focus = false) {
   if (connect) destinations.filter(item => item.external).forEach(item => {
     const link = document.createElement("a");
     link.href = item.url;
-    link.textContent = `[ ${item.label} ↗ ]`;
+    link.textContent = `[ /${item.label} ↗ ]`;
     links.append(link);
   });
-  document.title = `Yolanda | ${pageName}`;
+  document.title = `Yolanda | /${pageName}`;
   if (focus && acknowledgements) document.querySelector("#acknowledgements-title").focus();
   else if (focus && about) document.querySelector("#about-title").focus();
   else if (focus && work && !location.hash.includes("/")) document.querySelector("#work-title").focus();
@@ -154,7 +155,7 @@ input.addEventListener("keydown", event => {
     document.getElementById(`suggestion-${matches[selected]?.id}`)?.scrollIntoView({block: "nearest"});
   } else if (event.key === "Tab" && !event.shiftKey && !list.hidden && input.value && matches[selected] && normalize(input.value) !== matches[selected].label) {
     event.preventDefault();
-    input.value = matches[selected].label;
+    input.value = `/${matches[selected].label}`;
     renderSuggestions();
     updateCursor();
   }
@@ -168,11 +169,11 @@ document.querySelector("#command-form").addEventListener("submit", event => {
   else if (query === "home") { location.hash = "#home"; input.value = ""; hint.textContent = normalHint; closeSuggestions(); }
   else if (query === "clear") { response.textContent = ""; input.value = ""; renderSuggestions(); }
   else if (query === "help" || query === "connect") { dismissed = false; input.value = ""; renderSuggestions(); }
-  else if (query) { response.textContent = "Choose home, work-experience, projects, about-me, acknowledgements, github or linkedin."; }
+  else if (query) { response.textContent = "Choose /home, /about-me, /work-experience, /projects, /linkedin, /github or /acknowledgements."; }
   updateCursor();
 });
 // Demonstrate destinations once, then leave an empty terminal prompt.
-const prompts = ["work-experience", "projects", "about me"];
+const prompts = ["/work-experience", "/projects", "/about-me"];
 let promptTimer, cursorTimer, promptIndex = 0, promptLength = 0, deleting = false, promptFinished = false;
 function stopPrompt() { clearTimeout(promptTimer); }
 function updateCursor() {
@@ -180,7 +181,8 @@ function updateCursor() {
   const text = input.value || input.placeholder;
   const position = input.value ? (focused ? input.selectionStart : input.value.length) : text.length;
   cursor.style.left = `calc(${position}ch - ${input.scrollLeft}px)`;
-  const candidate = !list.hidden && matches[selected]?.label.startsWith(input.value.toLowerCase()) ? matches[selected].label : "";
+  const proposed = (input.value.startsWith("/") ? "/" : "") + (matches[selected]?.label || "");
+  const candidate = !list.hidden && proposed.startsWith(input.value.toLowerCase()) ? proposed : "";
   cursor.textContent = input.value && focused ? input.value[position] || candidate[position] || "" : "";
   cursor.hidden = focused && input.selectionStart !== input.selectionEnd;
   cursor.classList.add("cursor-moving");
