@@ -383,3 +383,13 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 
 .photo-counter-home{display:inline-flex;align-items:center;justify-content:flex-end;min-width:64px;height:18px;flex-shrink:0}
 body.page-hidden .photo-counter svg{animation-play-state:paused}
+
+/* Extend the animated postage frame into a portrait player card. */
+.about-page .player-details{position:relative;color:var(--text);padding-top:16px;font-size:13px;line-height:1.6;text-align:left}
+.about-page .player-name{display:block;font-size:16px;line-height:1.5}
+.about-page .player-name [lang="zh"]{display:block;font-size:14px}
+.about-page .player-study{display:block;margin-top:5px}
+.about-page .player-details dl{margin:15px 0 0}
+.about-page .player-details dl>div+div{margin-top:11px}
+.about-page .player-details dt{font-size:11px;line-height:1.5;margin-bottom:3px}
+.about-page .player-details dd{margin:0;overflow-wrap:break-word}

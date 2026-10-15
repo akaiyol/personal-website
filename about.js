@@ -294,7 +294,7 @@
     drawing.setAttribute('aria-hidden', 'true');
     drawing.inert = true;
     drawing.removeAttribute('aria-label');
-    drawing.querySelectorAll('img, pre').forEach(content => content.remove());
+    drawing.querySelectorAll('img, pre, .player-details').forEach(content => content.remove());
     drawing.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
     frame.classList.add('has-line-boil');
     frame.append(drawing);
@@ -322,6 +322,7 @@
     stop();
     enlarged = portrait.cloneNode(true);
     enlarged.querySelector('.portrait-wink-trigger').remove();
+    enlarged.querySelector('.player-details')?.remove();
     enlarged.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
     const art = document.createElement('div');
     art.className = 'portrait-wink-trigger';
