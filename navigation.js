@@ -1,12 +1,12 @@
 // Destinations and aliases are local; navigation does not require an API.
 const destinations = [
   { id: "home", label: "home", aliases: [], url: "#home" },
+  { id: "about", label: "about-me", aliases: ["1", "about", "about me", "bio", "yolanda"], url: "#about", copy: "I'm Yolanda, an Electrical and Computer Engineering student at the University of Waterloo." },
   { id: "work", label: "work-experience", aliases: ["2", "work", "work experience", "work history", "experience", "career", "resume", "résumé"], url: "#work", copy: "" },
   { id: "projects", label: "projects", aliases: ["project", "portfolio", "builds"], url: "#projects", copy: "Projects are coming soon." },
-  { id: "about", label: "about-me", aliases: ["1", "about", "about me", "bio", "yolanda"], url: "#about", copy: "I'm Yolanda, an Electrical and Computer Engineering student at the University of Waterloo." },
-  { id: "acknowledgements", label: "acknowledgements", aliases: ["acknowledgments", "credits", "thanks"], url: "#acknowledgements" },
-  { id: "github", label: "github", aliases: ["git", "code", "repositories"], url: "https://github.com/akaiyol", external: true },
   { id: "linkedin", label: "linkedin", aliases: ["linked in", "professional profile"], url: "https://www.linkedin.com/in/yolanda-chen1/", external: true },
+  { id: "github", label: "github", aliases: ["git", "code", "repositories"], url: "https://github.com/akaiyol", external: true },
+  { id: "acknowledgements", label: "acknowledgements", aliases: ["acknowledgments", "credits", "thanks"], url: "#acknowledgements" },
 ];
 const input = document.querySelector("#command");
 const list = document.querySelector("#suggestions");
