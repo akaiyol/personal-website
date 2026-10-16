@@ -1,6 +1,6 @@
 # Acknowledgements page outline
 
-Status: content plan only. No page implementation.
+Status: page implemented; current technology credits updated2026-10-16. Cloudflare setup is pending.
 
 Purpose: credit the tools, creative influences, and published work that contributed to this website.
 
@@ -13,7 +13,8 @@ Use short entries naming each technology and its role.
 - **HTML:** page content and structure.
 - **CSS:** layout, typography, visual styling, and animations.
 - **JavaScript:** navigation and interactive features.
-- **SVG:** visual elements, including the presentation of the handwritten poem excerpt.
+- **Canvas 2D:** procedural planet, stars, flowers and caterpillar rendering.
+- **SVG:** icons, stats chart, frame filters and handwritten art presentation.
 - **Unicode Braille characters:** the site's character-based visual details. Credit a specific source separately if a pattern or technique was adapted from one.
 
 These items are present in the current source. No framework or third-party runtime library was identified in the inspected page.
@@ -22,7 +23,8 @@ These items are present in the current source. No framework or third-party runti
 
 - **Git:** version control.
 - **OpenAI Codex:** coding assistance during development. Describe its contribution to implementation, debugging, and iteration; retain Yolanda's authorship and creative direction.
-- **Hosting provider:** add the provider once the deployed setup is confirmed.
+- **Playwright:** browser interaction checks and responsive verification.
+- **Cloudflare:** selected for hosting, DNS, analytics and security; display “setup pending” until deployment and domain configuration are confirmed.
 - **Other tools or libraries:** include only those actually used in the final site. Identify any copied or adapted code and its source where applicable.
 
 Keep the coding-agent credit within this section, under its own entry. An exact model name is unnecessary unless it is verified and relevant.

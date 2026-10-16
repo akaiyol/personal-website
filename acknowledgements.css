@@ -4,10 +4,12 @@ body.acknowledgements-active main{display:block;padding:58px 36px 40px}
 .acknowledgements-page .ack-intro{color:var(--ack-muted);max-width:58ch;margin:0;font-size:14px}
 .acknowledgements-page section{margin-top:44px}
 .acknowledgements-page h2{font-size:16px;font-weight:400;margin:0 0 23px}
-.acknowledgements-page .tools{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:25px 15px}
+.acknowledgements-page .tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:25px 15px}
 .acknowledgements-page .tool{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0}
 .acknowledgements-page .tool svg{width:36px;height:36px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .acknowledgements-page .tool span{font-size:12px;text-align:center}
 .acknowledgements-page .entry{display:grid;grid-template-columns:180px minmax(0,1fr);gap:22px;margin:0 0 19px;font-size:12px}
 .acknowledgements-page .entry dd{margin:0;color:var(--ack-muted)}
 @media(max-width:600px){body.acknowledgements-active main{padding:36px 22px 28px}.acknowledgements-page h1{font-size:23px}.acknowledgements-page .tools{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.acknowledgements-page .entry{grid-template-columns:1fr;gap:5px}.acknowledgements-page section{margin-top:33px}}
+
+.acknowledgements-page .tool small{display:block;font:inherit;font-size:10px;margin-top:3px}

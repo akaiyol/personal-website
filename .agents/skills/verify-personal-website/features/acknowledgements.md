@@ -23,3 +23,5 @@ Preconditions: launch from the canonical checkout as documented in ../SKILL.md.
 ## Gotchas
 
 The content has a readable maximum width; tool icons remain centred in their own grid cells, while the whole page is left aligned.
+
+Technology credits: HTML, CSS, JavaScript, Canvas2D, SVG, Git, Playwright, OpenAI Codex and Cloudflare. Cloudflare must remain marked “setup pending” until configured and verified; it is not yet the confirmed live host. Inspect the three-column desktop / two-column phone icon grid.
