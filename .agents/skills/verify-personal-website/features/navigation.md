@@ -6,7 +6,7 @@ Home actions, number shortcuts, identity return and terminal routing.
 
 - Home → about me button; Home → my work button.
 - From Home, 1 opens About and 2 opens Work unless an editable/control target owns the key.
-- Projects placeholder links to GitHub with “[ until then check out my github ]”; verify the URL without leaving the website.
+- Projects is temporarily unavailable; its former placeholder is preserved in source for restoration.
 - Terminal text, Tab completion, arrows, Enter, Escape and no-match guidance.
 
 ## How to get to it (user POV)
@@ -24,3 +24,5 @@ Preconditions: launch from the canonical checkout as documented in ../SKILL.md.
 ## Gotchas
 
 Number keys do not override focused controls. External profile destinations leave the website; verify hrefs without navigating away.
+
+Projects is temporarily archived: it must not appear in suggestions, help or the prompt demonstration. Submitting Projects does not open its view; a direct #projects bookmark shows Home. Its source definition remains available for restoration.
