@@ -25,3 +25,5 @@ Run `run.cjs EVIDENCE flowerIntro` for the entrance, post-growth mouse/trackpad/
 Wide-screen layout: keep the timeline and heading anchored to the original content left edge. The experience column, summaries and feature lists expand with available width; no1100px group cap or fixed summary/list width. The chart retains its own width and hidden footprint. Responsive checks verify left alignment and that experience content fills its column.
 
 RBC uses AI product, GTM, Data and Engineering tags. GTM is filterable from the filter bar and the RBC tag. RBC must not match Strategy or Growth; its focus reads “Internal adoption & GTM strategy”. Other roles retain their existing tags.
+
+Stats have six corners: Strategy, Engineering, Design, Curiosity, Execution and Taste. Communication is omitted from every role and the overall chart; grids, labels and comparison polygons share the six-axis geometry.

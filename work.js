@@ -6,16 +6,16 @@
   let selectedJump = null;
   const entries = [...view.querySelectorAll('.entry')];
   // Role profiles show relative work emphasis, not proficiency grades.
-  // Axis order: Strategy, Engineering, Design, Communication, Curiosity, Execution, Taste.
+  // Axis order: Strategy, Engineering, Design, Curiosity, Execution, Taste.
   const profiles = {
-    overall: {label: 'Overall', values: [.70, .94, .50, .825, .94, .825, 1]},
-    'rbc-2026': {label: 'RBC · 2026', values: [.94, .82, .48, .90, .86, .90, .64]},
-    'university-of-waterloo-2026': {label: 'URA · 2026', values: [.55, .80, .60, .68, 1, .82, .62]},
-    'sap-2026': {label: 'SAP · 2026', values: [.86, .90, .42, .78, .92, .90, .55]},
-    'sap-2025': {label: 'SAP · 2025', values: [.78, .70, .48, .82, .82, .84, .55]},
-    'visfuture-2024': {label: 'Visfuture · 2024', values: [.70, .94, .84, .80, .80, .94, .72]},
-    'wsp-2024': {label: 'WSP · 2024', values: [.42, .94, .80, .68, .74, .90, .52]},
-    'wsp-2023': {label: 'WSP · 2023', values: [.35, .88, .72, .60, .84, .82, .48]}
+    overall: {label: 'Overall', values: [.70, .94, .50, .94, .825, 1]},
+    'rbc-2026': {label: 'RBC · 2026', values: [.94, .82, .48, .86, .90, .64]},
+    'university-of-waterloo-2026': {label: 'URA · 2026', values: [.55, .80, .60, 1, .82, .62]},
+    'sap-2026': {label: 'SAP · 2026', values: [.86, .90, .42, .92, .90, .55]},
+    'sap-2025': {label: 'SAP · 2025', values: [.78, .70, .48, .82, .84, .55]},
+    'visfuture-2024': {label: 'Visfuture · 2024', values: [.70, .94, .84, .80, .94, .72]},
+    'wsp-2024': {label: 'WSP · 2024', values: [.42, .94, .80, .74, .90, .52]},
+    'wsp-2023': {label: 'WSP · 2023', values: [.35, .88, .72, .84, .82, .48]}
   };
   const stats = view.querySelector('.character-stats');
   stats.id = 'work-stats';
@@ -74,7 +74,7 @@
   let overallForeground = false;
   function profilePoints(profile) {
     return profile.values.map((value, index) => {
-      const angle = -Math.PI / 2 + index * 2 * Math.PI / 7;
+      const angle = -Math.PI / 2 + index * 2 * Math.PI / profile.values.length;
       return [300 + 165 * value * Math.cos(angle), 255 + 165 * value * Math.sin(angle)];
     });
   }
@@ -101,7 +101,7 @@
       graph.removeAttribute('aria-label');
     }
     graph.querySelector('title').textContent = profile.label + ' stats';
-    const traits = ['Strategy', 'Engineering', 'Design', 'Communication', 'Curiosity', 'Execution', 'Taste'];
+    const traits = ['Strategy', 'Engineering', 'Design', 'Curiosity', 'Execution', 'Taste'];
     const leading = [...traits.keys()].sort((a, b) => profile.values[b] - profile.values[a]).slice(0, 3).map(index => traits[index]);
     graph.querySelector('desc').textContent = (key === 'overall' ? 'Overall strengths' : 'Relative work focus') + ': ' + leading.join(', ') + ' lead.' + (canCompare ? ' The lighter overlay shows ' + backgroundProfile.label + ' for comparison.' : '');
     entries.forEach(entry => entry.classList.toggle('stats-active', entry.dataset.statsProfile === currentRole));
