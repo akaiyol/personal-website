@@ -351,7 +351,7 @@
 
     zoom.classList.add('player-card-open');
     enlarged.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
-    enlarged.append(star);
+    enlarged.querySelector('.player-details').append(star);
     const art = document.createElement('div');
     art.className = 'portrait-wink-trigger';
     art.setAttribute('aria-hidden', 'true');
