@@ -147,8 +147,8 @@
   flowers.id = 'flower-field';
   flowers.tabIndex = 0;
   flowers.setAttribute('role', 'group');
-  flowers.setAttribute('aria-label', 'Interactive flower field. Scroll down or swipe or drag right to grow; scroll up or move left to rewind. With the field focused, Down or Right grows, Up or Left rewinds, and Home or End resets or completes growth.');
-  flowers.innerHTML = '<canvas id="flower-art" role="img" aria-label="Procedural lavender flowers with numbered stems"></canvas><figcaption class="flower-growth-hint">swipe to grow <span aria-hidden="true">→</span></figcaption>';
+  flowers.setAttribute('aria-label', 'Interactive flower field. Flowers grow automatically on first view. Scroll down or swipe or drag right to grow; scroll up or move left to rewind. With the field focused, Down or Right grows, Up or Left rewinds, and Home or End resets or completes growth.');
+  flowers.innerHTML = '<canvas id="flower-art" role="img" aria-label="Procedural lavender flowers with numbered stems"></canvas><figcaption class="flower-growth-hint" hidden>drag <span aria-hidden="true">↔</span></figcaption>';
 
   view.append(flowers);
   function extendVisibleTimeline() {

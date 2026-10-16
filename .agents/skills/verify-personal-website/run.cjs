@@ -3,6 +3,7 @@ const fs=require('fs'),path=require('path'),http=require('http'),assert=require(
 const {checkFlowerField}=require('./flower-field.cjs');
 const {checkHomePlanet}=require('./planet.cjs');
 const {checkResponsive}=require('./responsive.cjs');
+const {checkFlowerIntro}=require('./flower-intro.cjs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'/Users/yolanda/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root=path.resolve(__dirname,'../../..'),out=path.resolve(process.argv[2]||`/private/tmp/website-verification-${Date.now()}`),only=process.argv[3]||'all';
 fs.mkdirSync(out,{recursive:true});const revision=cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
@@ -91,6 +92,7 @@ async function checkStatsToggle(page, name) {
   for(const width of [390,320]){await page.setViewportSize({width,height:844});await page.locator('[data-command="work"]').click();await checkStatsToggle(page,String(width));await page.locator('.timeline-end').scrollIntoViewIfNeeded();await checkLayout(page);await checkFlowerField(page,6);await evidence(page,`work-timeline-${width}`);await page.locator('.identity').click()}
   await page.setViewportSize({width:1280,height:900});
  },
+ flowerIntro:async()=>{log('flowerIntro','Automatic growth, offscreen pause, post-growth hints, shared-scale rulers, narrow and reduced-motion views');await checkFlowerIntro(page,base,out)},
  responsive:async()=>{log('responsive','Five routes at twelve sizes; shell/caterpillar alignment, centred gallery, character card and live gacha resizing');await checkResponsive(page,base,out)},
  acknowledgements:async()=>{
   log('acknowledgements','Terminal → acknowledgements; left alignment and narrow layouts');await page.locator('#command').fill('acknowledgements');await page.keyboard.press('Enter');await page.locator('#acknowledgements-view').waitFor({state:'visible'});assert.equal(await page.title(),'Yolanda | /acknowledgements');const positions=await page.locator('#acknowledgements-view').evaluate(el=>({left:el.getBoundingClientRect().left,parent:el.parentElement.getBoundingClientRect().left,padding:parseFloat(getComputedStyle(el.parentElement).paddingLeft)}));assert(Math.abs(positions.left-positions.parent-positions.padding)<2);await evidence(page,'acknowledgements-desktop');await page.goto(base+'/#acknowledgements');await page.locator('#acknowledgements-view').waitFor({state:'visible'});
