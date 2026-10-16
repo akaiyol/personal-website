@@ -43,7 +43,6 @@
     return {jackpot, values: jackpot ? Array(4).fill(values[0]) : values};
   }
   let played = false, animation = null, pending = null;
-  const rowHeight = 48;
   function symbolRow(index, jackpot = false) {
     const row = document.createElement('span');
     row.textContent = jackpot ? '⠀⠀⢰⡆⠀⠀\n⠈⢻⣿⣿⡟⠁\n⠀⠘⠉⠉⠃⠀' : symbols[index % symbols.length];
@@ -106,6 +105,7 @@
     const start = performance.now();
     function tick(now) {
       const elapsed = now - start;
+      const rowHeight = tracks[0].firstElementChild.getBoundingClientRect().height;
       tracks.forEach((track, i) => {
         const progress = Math.min(1, elapsed / stops[i]);
         // Decelerate each physical strip into its selected symbol.

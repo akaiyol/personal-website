@@ -165,7 +165,7 @@
     const candidates = [preferred, 6, max, ...others.flatMap(x => [x - 40, x + 40])];
     const available = candidates.filter(x => x >= 6 && x <= max && others.every(y => Math.abs(x - y) >= 39));
     const position = available.sort((a, b) => Math.abs(a - preferred) - Math.abs(b - preferred))[0] ?? photo.offsetLeft;
-    photo.style.setProperty('--slot', `${position / width * 100}%`);
+    photo.style.setProperty('--slot', `${(position - (parseFloat(rail.style.getPropertyValue('--rail-offset')) || 0)) / width * 100}%`);
   }
   photos.forEach(photo => {
     const image = photo.querySelector('.image img');
@@ -223,6 +223,25 @@
     photo.addEventListener('pointerup', finishDrag);
     photo.addEventListener('pointercancel', finishDrag);
   });
+  function centreRail() {
+    if (page.hidden || !rail.clientWidth || drag?.active) return;
+    // Use the resting tilt, independent of hover/selection transforms.
+    const edges = photos.map(photo => {
+      const style = getComputedStyle(photo);
+      const x = parseFloat(style.getPropertyValue('--slot')) / 100 * rail.clientWidth;
+      const w = photo.offsetWidth, h = photo.offsetHeight;
+      const angle = parseFloat(style.getPropertyValue('--tilt')) * Math.PI / 180;
+      const corners = [[-w/2,0],[w/2,0],[-w/2,h],[w/2,h]].map(([a,b]) => x + w/2 + a*Math.cos(angle) - b*Math.sin(angle));
+      return [Math.min(...corners),Math.max(...corners)];
+    });
+    const left = Math.min(...edges.map(e => e[0])), right = Math.max(...edges.map(e => e[1]));
+    rail.style.setProperty('--rail-offset', `${(rail.clientWidth - left - right) / 2}px`);
+  }
+  const railObserver = new ResizeObserver(centreRail);
+  railObserver.observe(rail);
+  photos.forEach(photo => railObserver.observe(photo));
+  addEventListener('site:route', () => requestAnimationFrame(centreRail));
+  requestAnimationFrame(centreRail);
   function clearTerms() { terms.forEach(term => term.classList.remove('emphasized')); }
   function highlightNearest() {
     frame = 0;

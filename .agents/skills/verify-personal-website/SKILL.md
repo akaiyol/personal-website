@@ -13,7 +13,7 @@ Run from the canonical `/Users/yolanda/Documents/ChatGPT/personal website` check
 /Users/yolanda/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node .agents/skills/verify-personal-website/run.cjs /private/tmp/website-verification-RUN all
 ```
 
-Choose a fresh evidence directory for each run. Replace `all` with `planet`, `navigation`, `about`, `facts`, `work`, or `acknowledgements` for a targeted run. No build, credentials or seed data are needed. The helper starts a private HTTP server bound to 127.0.0.1 on an OS-assigned port and its own Chromium context, then tears both down. It serves public website files only, excluding repository metadata, skills and mockups. Concurrent runs use separate ports, browser contexts and evidence directories. Browser runtime: bundled Playwright; `PLAYWRIGHT_MODULE` can override its module location. Install its matching Chromium with Playwright's `install chromium` command if absent.
+Choose a fresh evidence directory for each run. Replace `all` with `planet`, `navigation`, `about`, `facts`, `work`, `responsive`, or `acknowledgements` for a targeted run. No build, credentials or seed data are needed. The helper starts a private HTTP server bound to 127.0.0.1 on an OS-assigned port and its own Chromium context, then tears both down. It serves public website files only, excluding repository metadata, skills and mockups. Concurrent runs use separate ports, browser contexts and evidence directories. Browser runtime: bundled Playwright; `PLAYWRIGHT_MODULE` can override its module location. Install its matching Chromium with Playwright's `install chromium` command if absent.
 
 ## Doctor
 

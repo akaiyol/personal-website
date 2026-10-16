@@ -418,3 +418,33 @@ body.page-hidden .photo-counter svg{animation-play-state:paused}
 .photo-zoom .player-card .portrait-wink-art{width:68%;margin-left:-34%;font-size:clamp(10px,12.5cqw,32px)}
 .photo-zoom .player-card .portrait-smile{font-size:clamp(8px,9.5cqw,24px);margin-top:7cqw}
 .photo-zoom .player-card .portrait-spark{font-size:clamp(3px,3cqw,8px)}
+
+/* Size the introduction from the available shell width, preserving readable text. */
+#about-view .introduction{grid-template-columns:clamp(220px,26%,350px) minmax(0,1fr);gap:clamp(28px,4vw,64px)}
+#about-view .story{max-width:none;min-width:0}
+#about-view .greeting{font-size:clamp(22px,1.65vw,28px)}
+#about-view .background{font-size:clamp(14px,1.1vw,17px);max-width:70ch}
+#about-view .portrait .image{height:auto;aspect-ratio:3/4}
+#about-view .fact-machine{--roll-width:clamp(90px,8vw,130px);--reel-gap:clamp(12px,1.6vw,28px);--reel-height:clamp(48px,5vw,72px)}
+#about-view .fact-reel,#about-view .fact-track span{height:var(--reel-height)}
+#about-view .fact-track span:not(.braille-star){font-size:clamp(26px,2.4vw,36px)}
+#about-view .fact-results p{font-size:clamp(13px,1vw,15px)}
+#about-view .memories > .memory{left:calc(var(--slot) + var(--rail-offset,0px))}
+@media(max-width:800px){
+ #about-view .introduction{display:flex;flex-direction:column;align-items:stretch;gap:28px}
+ #about-view .portrait-column{width:min(280px,calc(100% - 12px));align-self:center}
+ #about-view .portrait{width:100%;margin:8px 0 22px}
+ #about-view .story{width:100%}
+}
+@media(max-width:600px){
+ #about-view .fact-machine{--roll-width:76px;--reel-gap:8px;--reel-height:48px}
+ #about-view .fact-track span:not(.braille-star){font-size:23px}
+ #about-view .fact-results p{font-size:12px}
+}
+
+@media(max-width:600px){
+ #about-view .fact-console{flex-wrap:wrap}
+ #about-view .fact-reels{flex:1 0 100%}
+ #about-view .fact-roll{flex:1 0 100%;min-height:44px}
+ #about-view .fact-results{grid-template-columns:repeat(2,minmax(0,1fr));padding-right:0;gap:12px;min-height:100px}
+}

@@ -6,6 +6,13 @@
   function draw() {
     frame = null;
     if (document.hidden) return;
+    const shell = document.querySelector('.terminal');
+    const header = shell.querySelector('header');
+    const footer = shell.querySelector('footer');
+    const top = parseFloat(getComputedStyle(document.body).paddingTop) + header.offsetHeight + 2;
+    canvas.style.right = `${innerWidth - shell.getBoundingClientRect().right + 3}px`;
+    canvas.style.top = `${top}px`;
+    canvas.style.height = `${Math.max(0, footer.getBoundingClientRect().top - top - 7)}px`;
     const {width: canvasWidth, height: canvasHeight} = canvas.getBoundingClientRect();
     const width = canvasHeight, height = canvasWidth;
     const scale = Math.min(devicePixelRatio || 1, 2);
@@ -75,5 +82,7 @@
     if (document.hidden) { cancelAnimationFrame(frame); frame = null; }
     else schedule();
   });
+  const layoutObserver = new ResizeObserver(schedule);
+  document.querySelectorAll('.terminal > header, .terminal > footer').forEach(node => layoutObserver.observe(node));
   schedule();
 })();
