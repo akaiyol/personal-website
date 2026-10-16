@@ -29,3 +29,5 @@ Clipboard permissions apply only to the disposable test context. Photos are loca
 Coverage limits: mouse/touch photo drag, clipboard failure/fallback and external profile activation are not automated. The harness checks social hrefs and tests normal clipboard success.
 
 The current About markup has no `.term` controls; dormant source handlers do not constitute a user-facing feature.
+
+Social profiles now include GitHub and LinkedIn only; Twitter/X is removed. The character card has a decorative soft striped star inside its upper-right rim, with reserved text clearance. The responsive workflow checks visible lavender colour, inert input behavior and separation above the name at all twelve sizes. Inspect the actual desktop and narrow card screenshots; inherited frame ink can otherwise make decorations transparent.

@@ -71,7 +71,8 @@ async function checkStatsToggle(page, name) {
  },
  about:async()=>{
   log('about','About from home → copy email, social links, photo open/close, poem word');await page.goto(base+'/#home');await page.locator('[data-command="about"]').click();await page.locator('#about-view').waitFor({state:'visible'});assert.equal(await page.locator('.bio-quote').count(),0);
-  for(const href of ['https://github.com/akaiyol','https://www.linkedin.com/in/yolanda-chen1/','https://x.com/akaiyol'])assert.equal(await page.locator(`.portrait-socials a[href="${href}"]`).count(),1);
+  for(const href of ['https://github.com/akaiyol','https://www.linkedin.com/in/yolanda-chen1/'])assert.equal(await page.locator(`.portrait-socials a[href="${href}"]`).count(),1);
+  assert.equal(await page.locator('.portrait-socials a[href*="x.com"]').count(),0);
   await page.locator('[data-copy-email]').click();await page.getByText('Copied',{exact:true}).waitFor();assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),'yolanda.chen@uwaterloo.ca');
   await page.getByRole('button',{name:'Enlarge Yolanda’s photo',exact:true}).click();await page.getByRole('dialog',{name:'Enlarged photo'}).waitFor();await page.keyboard.press('Escape');await page.getByRole('dialog',{name:'Enlarged photo'}).waitFor({state:'hidden'});
   await page.locator('.poem-word').focus();assert(await page.locator('.poem-word').evaluate(el=>el.classList.contains('is-reading')));await page.keyboard.press('Escape');assert(!await page.locator('.poem-word').evaluate(el=>el.classList.contains('is-reading')));

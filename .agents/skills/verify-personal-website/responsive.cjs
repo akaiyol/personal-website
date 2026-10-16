@@ -19,6 +19,11 @@ async function checkResponsive(page,base,out){
     assert(state.cat.bottom<=state.footer.y-6,`${route} ${width}: caterpillar overlaps footer`);
    }
    if([1920,1470,820,390,320].includes(width))await page.screenshot({path:path.join(out,`responsive-${route}-${width}.png`),fullPage:true});
+   if(route==='work'&&width>900){
+    const grouping=await page.locator('#work-view .layout').evaluate(el=>{const r=el.getBoundingClientRect(),heading=document.querySelector('.work-heading').getBoundingClientRect();return {width:r.width,centre:r.x+r.width/2,left:r.x,titleLeft:heading.x}});
+    assert(grouping.width<=1101,`${width}: work/stats group stretches too wide`);
+    assert(Math.abs(grouping.centre-width/2)<1&&Math.abs(grouping.left-grouping.titleLeft)<1,`${width}: work group/header alignment`);
+   }
    if(route==='about'){
     assert(Math.abs(state.console.width-state.blurb.width)<1,`${width}: gacha does not match sentence width`);
     if(width>=1280)assert(await page.locator('.background').evaluate(el=>{const r=document.createRange();r.selectNodeContents(el);return r.getClientRects().length===1}),`${width}: desktop blurb should fit one line`);
@@ -31,6 +36,9 @@ async function checkResponsive(page,base,out){
     assert(Math.abs(rail.centre-rail.group)<2,`${width}: gallery is not centred`);
     await page.getByRole('button',{name:'Enlarge Yolanda’s photo',exact:true}).click();
     const dialog=page.getByRole('dialog',{name:'Enlarged photo'});await dialog.waitFor();
+    const star=dialog.locator('.player-card-star');
+    assert.equal(await star.count(),1,'Striped star is missing');
+    assert(await star.evaluate(el=>{const style=getComputedStyle(el),r=el.getBoundingClientRect(),name=el.closest('.player-card').querySelector('.player-name').getBoundingClientRect();return style.color==='rgb(197, 181, 236)'&&style.pointerEvents==='none'&&r.width>20&&r.bottom<name.top}),'Star is invisible or overlaps card text');
     assert(await dialog.evaluate(el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth}),`${width}: character card outside viewport`);
     if([1470,390,320].includes(width))await page.screenshot({path:path.join(out,`responsive-card-${width}.png`)});
     await page.keyboard.press('Escape');
