@@ -27,4 +27,4 @@ Number keys do not override focused controls. External profile destinations leav
 
 Projects is temporarily archived: it must not appear in suggestions, help or the prompt demonstration. Submitting Projects does not open its view; a direct #projects bookmark shows Home. Its source definition remains available for restoration.
 
-Cursor: body uses the standard lavender arrow, links and buttons use the matching hand. Verify cursor assets load and preserve native text-entry and planet grab cursors. Browser screenshots omit the OS cursor; cursor-artwork.png renders the actual SVG assets separately for visual inspection.
+Cursor: body uses the standard lavender arrow, links and buttons use the matching hand. Verify cursor assets load and verify themed I-beam text entry and open/closed grab cursors, including the held pointer state. Browser screenshots omit the OS cursor; cursor-artwork.png renders the actual SVG assets separately for visual inspection.
