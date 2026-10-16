@@ -1,4 +1,3 @@
-:root{--site-cursor:url("assets/cursors/arrow.svg") 2 2,auto;--site-pointer:url("assets/cursors/pointer.svg") 12 4,pointer;--site-text:url("assets/cursors/text.svg") 8 14,text;--site-grab:url("assets/cursors/grab.svg") 16 16,grab;--site-grabbing:url("assets/cursors/grabbing.svg") 16 16,grabbing}
+:root{--site-cursor:url("assets/cursors/arrow.svg") 2 2,auto;--site-pointer:url("assets/cursors/pointer.svg") 12 4,pointer}
 body{cursor:var(--site-cursor)}
 a:any-link{cursor:var(--site-pointer)}
-input,textarea,[contenteditable="true"],p,h1,h2,h3,dt,dd,time{cursor:var(--site-text)}
