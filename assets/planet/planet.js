@@ -42,7 +42,7 @@
       if(q[2]<=.12)continue;
       const x=width*.5+q[0]/q[2]*focal,y=height*.5+q[1]/q[2]*focal;
       if(x<2||x>width-2||y<2||y>height-2||Math.hypot(x-cx,y-cy)<radius+3)continue;
-      ctx.beginPath();ctx.arc(x,y,star.size,0,TAU);ctx.fill();
+      ctx.beginPath();ctx.arc(x,y,star.size*1.4,0,TAU);ctx.fill();
       visible.push({id:star.id,x:+x.toFixed(3),y:+y.toFixed(3)});
     }
     canvas.dataset.stars=JSON.stringify(visible);
