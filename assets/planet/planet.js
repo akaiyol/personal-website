@@ -30,6 +30,23 @@
     const Y=y*Math.cos(viewPitch)-Z*Math.sin(viewPitch),depth=y*Math.sin(viewPitch)+Z*Math.cos(viewPitch);
     return [X*Math.cos(roll)-Y*Math.sin(roll),-(X*Math.sin(roll)+Y*Math.cos(roll)),depth];
   }
+  // Fixed distant directions: rotation moves the sky without regenerating stars.
+  const stars=Array.from({length:960},(_,id)=>{
+    const y=1-2*(id+.5)/960,a=id*Math.PI*(3-Math.sqrt(5)),r=Math.sqrt(1-y*y);
+    return {id,x:r*Math.cos(a),y,z:r*Math.sin(a),size:id%19===0?.8:id%5===0?.65:.48};
+  });
+  function drawStars(cx,cy,radius){
+    const visible=[],focal=Math.max(width,height)*.65,turn=Math.cos(phase),spin=Math.sin(phase);
+    for(const star of stars){
+      const q=project(star.x*turn-star.z*spin,star.y,star.x*spin+star.z*turn);
+      if(q[2]<=.12)continue;
+      const x=width*.5+q[0]/q[2]*focal,y=height*.5+q[1]/q[2]*focal;
+      if(x<2||x>width-2||y<2||y>height-2||Math.hypot(x-cx,y-cy)<radius+3)continue;
+      ctx.beginPath();ctx.arc(x,y,star.size,0,TAU);ctx.fill();
+      visible.push({id:star.id,x:+x.toFixed(3),y:+y.toFixed(3)});
+    }
+    canvas.dataset.stars=JSON.stringify(visible);
+  }
   function draw(){
     if(!width||!height)return;
     const radius=width>700?Math.max(width*.34,height*.58):width*.78;
@@ -67,6 +84,7 @@
     rings(true);
     const pixels=paint.getImageData(0,0,width,height).data;
     const dpr=Math.min(devicePixelRatio||1,2);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);ctx.fillStyle='#c5b5ec';
+    drawStars(cx,cy,radius);
     // A regular 2×4 dot-cell lattice echoes Braille without a shaded bitmap.
     const step=width<=600?3:3.2;
     ctx.beginPath();

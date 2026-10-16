@@ -19,3 +19,6 @@ The first home load starts at the supplied steep-ring pose (roll 0.32 and pitch 
 ## Hover discovery
 
 After intro, hovering the globe or ring footprint gives a slight eased tilt and a pointer-following [ drag ↔ ] hint. Empty canvas and foreground controls do not trigger the hint. Pointer exit restores the base orientation. A click alone retains the hint; a drag beyond 6px or keyboard rotation dismisses it for the document, including route returns. Reduced motion preserves the hint but disables hover tilt. The helper tests tilt, stationary home content, hint entry/exit, click retention and drag dismissal. Physical-device touch does not have hover and is not claimed tested.
+
+## Distant stars
+Small, sparse lavender points occupy the black sky behind the planet. A fixed sphere of directions follows the same view transform and slow phase as the planet; drag, keyboard, intro and hover rotate the sky coherently. The globe masks background stars. Read-only `data-stars` exposes visible star IDs and projected positions for interaction checks. Verify actual rendered points, movement of shared IDs after rotation, static positions under reduced motion and no changes to foreground layout. Review the full 64-second cycle plus continuation.
