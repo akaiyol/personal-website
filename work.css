@@ -105,7 +105,7 @@ body.work-active main{padding-bottom:0}
  .work-page .stats-rays g:first-child{visibility:visible}
 }
 
-/* Keep experience text and stats connected as the outer shell widens. */
+/* Keep the timeline anchored while experience content uses its growing column. */
 @media(min-width:901px){
- .work-page .layout,.work-page .work-heading{max-width:1100px;margin-inline:auto}
+ .work-page .summary,.work-page .work-focus{max-width:none}
 }

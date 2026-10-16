@@ -20,9 +20,13 @@ async function checkResponsive(page,base,out){
    }
    if([1920,1470,820,390,320].includes(width))await page.screenshot({path:path.join(out,`responsive-${route}-${width}.png`),fullPage:true});
    if(route==='work'&&width>900){
-    const grouping=await page.locator('#work-view .layout').evaluate(el=>{const r=el.getBoundingClientRect(),heading=document.querySelector('.work-heading').getBoundingClientRect();return {width:r.width,centre:r.x+r.width/2,left:r.x,titleLeft:heading.x}});
-    assert(grouping.width<=1101,`${width}: work/stats group stretches too wide`);
-    assert(Math.abs(grouping.centre-width/2)<1&&Math.abs(grouping.left-grouping.titleLeft)<1,`${width}: work group/header alignment`);
+    const grouping=await page.locator('#work-view .layout').evaluate(el=>{
+     const r=el.getBoundingClientRect(),view=document.querySelector('#work-view').getBoundingClientRect(),heading=document.querySelector('.work-heading').getBoundingClientRect();
+     const summary=document.querySelector('#work-view .summary'),s=summary.getBoundingClientRect(),content=summary.parentElement.getBoundingClientRect(),focus=summary.parentElement.querySelector('.work-focus').getBoundingClientRect();
+     return {width:r.width,viewWidth:view.width,left:r.x,viewLeft:view.x,titleLeft:heading.x,summaryWidth:s.width,contentWidth:content.width,focusWidth:focus.width};
+    });
+    assert(Math.abs(grouping.width-grouping.viewWidth)<1&&Math.abs(grouping.left-grouping.viewLeft)<1&&Math.abs(grouping.left-grouping.titleLeft)<1,`${width}: timeline shifted or work group capped`);
+    assert(Math.abs(grouping.summaryWidth-grouping.contentWidth)<1&&Math.abs(grouping.focusWidth-grouping.contentWidth)<1,`${width}: experience content does not fill its column`);
    }
    if(route==='about'){
     assert(Math.abs(state.console.width-state.blurb.width)<1,`${width}: gacha does not match sentence width`);
