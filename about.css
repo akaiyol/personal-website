@@ -421,9 +421,9 @@ body.page-hidden .photo-counter svg{animation-play-state:paused}
 
 /* Size the introduction from the available shell width, preserving readable text. */
 #about-view .introduction{grid-template-columns:clamp(220px,26%,300px) minmax(0,1fr);gap:clamp(28px,4vw,64px)}
-#about-view .story{max-width:none;min-width:0}
+#about-view .story{max-width:none;min-width:0;display:grid;grid-template-columns:fit-content(100%)}
 #about-view .greeting{font-size:clamp(22px,1.65vw,28px)}
-#about-view .background{font-size:clamp(14px,1.1vw,17px);max-width:70ch}
+#about-view .background{font-size:clamp(14px,1.1vw,17px);max-width:none}
 #about-view .portrait .image{height:auto;aspect-ratio:3/4}
 #about-view .fact-machine{--roll-width:clamp(90px,8vw,130px);--reel-gap:clamp(12px,1.6vw,28px);--reel-height:clamp(48px,4.4vw,64px)}
 #about-view .fact-reel,#about-view .fact-track span{height:var(--reel-height)}
@@ -448,3 +448,9 @@ body.page-hidden .photo-counter svg{animation-play-state:paused}
  #about-view .fact-roll{flex:1 0 100%;min-height:44px}
  #about-view .fact-results{grid-template-columns:repeat(2,minmax(0,1fr));padding-right:0;gap:12px;min-height:100px}
 }
+
+/* Let the sentence define the gacha width without random results resizing it. */
+#about-view .fact-machine{contain:inline-size}
+#about-view .greeting{white-space:nowrap}
+#about-view .handwritten-name{width:clamp(160px,14vw,205px);height:auto;aspect-ratio:155/79}
+#about-view .handwritten-name .signal-slice{display:none;animation:none}

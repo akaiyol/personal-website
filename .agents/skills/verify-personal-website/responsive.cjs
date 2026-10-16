@@ -9,7 +9,7 @@ async function checkResponsive(page,base,out){
    await page.goto(base+'/#'+route);await page.waitForTimeout(100);
    const state=await page.evaluate(({route,width,height})=>{
     const box=s=>{const r=document.querySelector(s).getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom}};
-    return {route,width,height,overflow:document.documentElement.scrollWidth-innerWidth,shell:box('.terminal'),footer:box('.terminal > footer'),header:box('.terminal > header'),cat:box('.scroll-caterpillar'),intro:box('.introduction'),story:box('.story'),console:box('.fact-console')};
+    return {route,width,height,overflow:document.documentElement.scrollWidth-innerWidth,shell:box('.terminal'),footer:box('.terminal > footer'),header:box('.terminal > header'),cat:box('.scroll-caterpillar'),intro:box('.introduction'),story:box('.story'),blurb:box('.background'),console:box('.fact-console')};
    },{route,width,height});observations.push(state);
    assert(state.overflow<=1,`${route} ${width}: document overflow`);
    assert(Math.abs(state.footer.x-state.shell.x)<1 && Math.abs(state.footer.width-state.shell.width)<1,`${route} ${width}: footer/shell mismatch`);
@@ -20,7 +20,9 @@ async function checkResponsive(page,base,out){
    }
    if([1920,1470,820,390,320].includes(width))await page.screenshot({path:path.join(out,`responsive-${route}-${width}.png`),fullPage:true});
    if(route==='about'){
-    assert(Math.abs(state.console.right-state.intro.right)<1,`${width}: gacha leaves unused story space`);
+    assert(Math.abs(state.console.width-state.blurb.width)<1,`${width}: gacha does not match sentence width`);
+    if(width>=1280)assert(await page.locator('.background').evaluate(el=>{const r=document.createRange();r.selectNodeContents(el);return r.getClientRects().length===1}),`${width}: desktop blurb should fit one line`);
+    assert(await page.locator('.handwritten-name .signal-slice').evaluateAll(nodes=>nodes.every(n=>getComputedStyle(n).animationName==='none'&&getComputedStyle(n).display==='none')),'Name animation remains enabled');
     if(width<=600){
      const layout=await page.locator('.fact-machine').evaluate(el=>{const reels=el.querySelector('.fact-reels').getBoundingClientRect(),roll=el.querySelector('.fact-roll').getBoundingClientRect();return {below:roll.top>=reels.bottom,columns:getComputedStyle(el.querySelector('.fact-results')).gridTemplateColumns.split(' ').length}});
      assert(layout.below&&layout.columns===2,`${width}: phone gacha layout is cramped`);
