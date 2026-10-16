@@ -132,7 +132,7 @@
   });
   const filterGroup = view.querySelector('.work-filters');
   const status = view.querySelector('.work-filter-status');
-  const workTypes = ['AI product', 'Data', 'Engineering', 'Strategy', 'Growth', 'Research'];
+  const workTypes = ['AI product', 'Data', 'Engineering', 'Strategy', 'Growth', 'GTM', 'Research'];
   ['', ...workTypes].forEach(workType => {
     const button = document.createElement('button');
     button.type = 'button';
