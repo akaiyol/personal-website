@@ -131,7 +131,7 @@ body.about-active main { padding: 48px clamp(58px,7vw,112px) 18px; overflow: vis
 .about-page .memory[aria-pressed="true"] { z-index: 60; transform: translateY(-12px) rotate(0deg) scale(1.08); }
 .about-page .memory:focus-visible { outline: 2px dashed var(--ink); outline-offset: 6px; }
 .about-page .memory.dragging { z-index: 100; cursor: grabbing; transition: none; transform: translate(var(--drag-x, 0px), var(--drag-y, 0px)) rotate(0deg) scale(1.06); }
-.about-page .term { background: transparent; color: inherit; cursor: default; outline-offset: 3px; }
+.about-page .term { background: transparent; color: inherit; cursor:var(--site-cursor,default); outline-offset: 3px; }
 .about-page .term:is(.emphasized,:focus-visible,[aria-pressed="true"]) { background: var(--ink); color: var(--ground); }
 .about-page .term:focus-visible { outline: 1px dashed var(--ink); }
 @media (max-width: 1150px) and (min-width: 1001px) {
@@ -182,7 +182,7 @@ body.page-hidden .handwritten-name .signal-slice,.about-page[hidden] .handwritte
 .about-page .fact-reel{height:48px;overflow:hidden;border-right:1px dotted var(--ink);position:relative}
 .about-page .fact-reel:first-child{border-left:1px dotted var(--ink)}
 .about-page .fact-track span{height:48px;display:flex;align-items:center;justify-content:center;font-size:30px;line-height:1;font-weight:400;letter-spacing:3px}
-.about-page .fact-roll{flex:0 0 var(--roll-width);font:inherit;white-space:nowrap;min-height:48px;padding:8px 10px;cursor:pointer}
+.about-page .fact-roll{flex:0 0 var(--roll-width);font:inherit;white-space:nowrap;min-height:48px;padding:8px 10px;cursor:var(--site-pointer,pointer)}
 .about-page .fact-roll:disabled{cursor:wait}
 .about-page .fact-roll:focus-visible{outline:1px dashed var(--ink);outline-offset:3px}
 .about-page .fact-results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;min-height:72px;padding:12px calc(var(--roll-width) + var(--reel-gap)) 0 0}
@@ -269,9 +269,9 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 /* A modest enlargement retains the original paper and animated ink. */
 .photo-zoom{position:fixed;inset:0;margin:auto;padding:48px 22px 22px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);border:0;background:transparent;color:var(--text);overflow:visible}
 .photo-zoom::backdrop{background:rgb(0 0 0 / .7)}
-.photo-zoom.about-page .memory{position:relative;left:auto;top:auto;width:var(--zoom-width);max-width:calc(100vw - 72px);margin:0;transform:none!important;cursor:default;transition:none}
+.photo-zoom.about-page .memory{position:relative;left:auto;top:auto;width:var(--zoom-width);max-width:calc(100vw - 72px);margin:0;transform:none!important;cursor:var(--site-cursor,default);transition:none}
 .photo-zoom .photo-zoom-content{pointer-events:none}
-.photo-zoom-close{position:absolute;top:0;right:16px;min-height:36px;padding:4px 8px;font:inherit;color:inherit;background:var(--bg);border:0;cursor:pointer}
+.photo-zoom-close{position:absolute;top:0;right:16px;min-height:36px;padding:4px 8px;font:inherit;color:inherit;background:var(--bg);border:0;cursor:var(--site-pointer,pointer)}
 .photo-zoom-close:focus-visible{outline:1px dashed var(--text);outline-offset:2px}
 .photo-zoom-content{width:var(--zoom-width);max-width:calc(100vw - 72px)}
 .photo-song{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px 0;border-top:1px dotted var(--text);color:var(--text);background:var(--bg);text-decoration:none;pointer-events:auto}
@@ -304,7 +304,7 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 .about-page .portrait-socials a:hover{border-color:var(--ink)}
 .about-page .portrait-socials a:focus-visible{outline:2px dashed var(--ink);outline-offset:3px}
 
-.about-page .copy-email{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;padding:4px;background:none;color:var(--ink);border:1px solid transparent;font:inherit;font-size:12px;cursor:pointer}
+.about-page .copy-email{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;padding:4px;background:none;color:var(--ink);border:1px solid transparent;font:inherit;font-size:12px;cursor:var(--site-pointer,pointer)}
 .about-page .copy-email span{overflow-wrap:anywhere;user-select:text}
 .about-page .copy-email svg{width:15px;height:15px;flex:none;fill:none;stroke:currentColor;stroke-width:1.4}
 .about-page .copy-email:hover{color:#dfd2ff}
@@ -322,7 +322,7 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 
 /* One portrait wink per activation; all decoration stays inside the stamp. */
 .about-page .portrait:not(.frame-drawing) .image{position:relative}
-.about-page .portrait-wink-trigger{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:transparent;color:var(--text);font-family:inherit;cursor:pointer}
+.about-page .portrait-wink-trigger{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:transparent;color:var(--text);font-family:inherit;cursor:var(--site-pointer,pointer)}
 .about-page .portrait-wink-trigger:focus-visible{outline:2px dashed var(--text);outline-offset:-6px}
 .about-page .portrait-wink-art,.about-page .portrait-spark{display:none;pointer-events:none;text-shadow:1px 1px var(--ground),-1px -1px var(--ground),1px -1px var(--ground),-1px 1px var(--ground)}
 .about-page .portrait-wink-art{position:absolute;left:50%;top:36%;width:174px;margin-left:-87px;font-size:32px;line-height:1.1}
@@ -349,7 +349,7 @@ body.page-hidden .about-page :is(.frame-drawing,.clip),
 .photo-zoom.about-page .portrait:not(.frame-drawing){width:100%;margin:0;transform:none}
 .photo-zoom.about-page .portrait .image{height:auto;aspect-ratio:3 / 4}
 .photo-zoom.about-page .portrait.frame-drawing .image{height:100%}
-.photo-zoom .portrait-wink-trigger{cursor:default;text-align:center;pointer-events:none}
+.photo-zoom .portrait-wink-trigger{cursor:var(--site-cursor,default);text-align:center;pointer-events:none}
 
 /* Dense purple dots and a black edge keep the overlay legible on photography. */
 .about-page .portrait-wink-art,.about-page .portrait-spark{-webkit-text-stroke:.65px currentColor;filter:drop-shadow(1px 1px #000) drop-shadow(-1px -1px #000)}

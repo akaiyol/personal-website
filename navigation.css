@@ -17,7 +17,7 @@ a:focus-visible { outline: 2px dashed var(--accent); outline-offset: 4px; }
 @keyframes cursor-blink { 0%, 100% { visibility: visible; } 50% { visibility: hidden; } }
 .go-button { font: inherit; width: 44px; flex-shrink: 0; padding: 8px 0; }
 #suggestions { position: absolute; bottom: calc(100% + 15px); left: -29px; right: -29px; margin: 0; padding: 8px 28px; list-style: none; border: 1px solid var(--line); background: var(--bg); max-height: min(280px, 42svh); overflow-y: auto; z-index: 2; font: inherit; }
-#suggestions li { min-height: 44px; padding: 9px 1ch; display: flex; justify-content: space-between; align-items: center; gap: 2ch; cursor: pointer; font: inherit; }
+#suggestions li { min-height: 44px; padding: 9px 1ch; display: flex; justify-content: space-between; align-items: center; gap: 2ch; cursor:var(--site-pointer,pointer); font: inherit; }
 #suggestions li[aria-selected="true"] { background: var(--accent); color: var(--bg); }
 .suggestion-kind { font: inherit; }
 

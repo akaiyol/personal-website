@@ -57,7 +57,7 @@ body.work-active main{overflow:visible;display:block;padding:48px 58px 60px}
 .work-page .work-heading{display:flex;flex-direction:column;align-items:flex-start;gap:16px;margin-bottom:40px}
 .work-page .work-heading h1{margin:0;flex:none;line-height:1.4}
 .work-page .work-filters{display:flex;flex-wrap:wrap;gap:6px;padding-top:2px}
-.work-page button.work-tag{min-height:32px;cursor:pointer;font-family:inherit}
+.work-page button.work-tag{min-height:32px;cursor:var(--site-pointer,pointer);font-family:inherit}
 .work-page button[data-work-type]:hover{border-color:var(--ink)}
 .work-page button[data-work-type][aria-pressed="true"]{background:#61497f;color:#fff;border-color:var(--ink)}
 .work-page button[data-work-type]:focus-visible{outline:2px dashed var(--ink);outline-offset:3px}
@@ -71,7 +71,7 @@ body.work-active main{overflow:visible;display:block;padding:48px 58px 60px}
 
 .work-page .stats-overall{fill:#c5b5ec;fill-opacity:.10;stroke:#c5b5ec;stroke-opacity:.55;stroke-width:1.5;stroke-dasharray:5 4;stroke-linejoin:round}
 
-.work-page .strengths-graph.can-compare{cursor:pointer}
+.work-page .strengths-graph.can-compare{cursor:var(--site-pointer,pointer)}
 .work-page .strengths-graph:focus-visible{outline:1px dashed var(--ink);outline-offset:3px}
 
 .work-page .strengths-graph:focus:not(:focus-visible){outline:none}

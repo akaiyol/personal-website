@@ -26,3 +26,5 @@ Preconditions: launch from the canonical checkout as documented in ../SKILL.md.
 Number keys do not override focused controls. External profile destinations leave the website; verify hrefs without navigating away.
 
 Projects is temporarily archived: it must not appear in suggestions, help or the prompt demonstration. Submitting Projects does not open its view; a direct #projects bookmark shows Home. Its source definition remains available for restoration.
+
+Cursor: body uses the standard lavender arrow, links and buttons use the matching hand. Verify cursor assets load and preserve native text-entry and planet grab cursors. Browser screenshots omit the OS cursor; cursor-artwork.png renders the actual SVG assets separately for visual inspection.
