@@ -30,10 +30,18 @@
     const Y=y*Math.cos(viewPitch)-Z*Math.sin(viewPitch),depth=y*Math.sin(viewPitch)+Z*Math.cos(viewPitch);
     return [X*Math.cos(roll)-Y*Math.sin(roll),-(X*Math.sin(roll)+Y*Math.cos(roll)),depth];
   }
-  // Fixed distant directions: rotation moves the sky without regenerating stars.
+  // Seed once: irregular gaps and sizes stay fixed while the sky rotates.
+  let starSeed=0x51A7C0DE;
+  function starRandom(){
+    starSeed=(starSeed+0x6D2B79F5)>>>0;
+    let n=starSeed;
+    n=Math.imul(n^(n>>>15),n|1);
+    n^=n+Math.imul(n^(n>>>7),n|61);
+    return ((n^(n>>>14))>>>0)/4294967296;
+  }
   const stars=Array.from({length:960},(_,id)=>{
-    const y=1-2*(id+.5)/960,a=id*Math.PI*(3-Math.sqrt(5)),r=Math.sqrt(1-y*y);
-    return {id,x:r*Math.cos(a),y,z:r*Math.sin(a),size:id%19===0?.8:id%5===0?.65:.48};
+    const y=1-2*starRandom(),a=starRandom()*TAU,r=Math.sqrt(1-y*y);
+    return {id,x:r*Math.cos(a),y,z:r*Math.sin(a),size:.5+Math.pow(starRandom(),2)*1.05};
   });
   function drawStars(cx,cy,radius){
     const visible=[],focal=Math.max(width,height)*.65,turn=Math.cos(phase),spin=Math.sin(phase);
@@ -42,7 +50,7 @@
       if(q[2]<=.12)continue;
       const x=width*.5+q[0]/q[2]*focal,y=height*.5+q[1]/q[2]*focal;
       if(x<2||x>width-2||y<2||y>height-2||Math.hypot(x-cx,y-cy)<radius+3)continue;
-      ctx.beginPath();ctx.arc(x,y,star.size*1.4,0,TAU);ctx.fill();
+      ctx.beginPath();ctx.arc(x,y,star.size,0,TAU);ctx.fill();
       visible.push({id:star.id,x:+x.toFixed(3),y:+y.toFixed(3)});
     }
     canvas.dataset.stars=JSON.stringify(visible);
