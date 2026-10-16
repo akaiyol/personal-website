@@ -40,16 +40,8 @@ async function checkResponsive(page,base,out){
     assert(Math.abs(rail.centre-rail.group)<2,`${width}: gallery is not centred`);
     await page.getByRole('button',{name:'Enlarge Yolanda’s photo',exact:true}).click();
     const dialog=page.getByRole('dialog',{name:'Enlarged photo'});await dialog.waitFor();
-    const star=dialog.locator('.player-card-star');
-    assert.equal(await star.count(),1,'Striped star is missing');
-    assert(await star.evaluate(el=>{
-     const style=getComputedStyle(el),details=el.closest('.player-details'),shape=el.querySelector('svg > use:last-child'),b=shape.getBBox(),m=shape.getScreenCTM();
-     const points=[[b.x,b.y],[b.x+b.width,b.y],[b.x,b.y+b.height],[b.x+b.width,b.y+b.height]].map(([x,y])=>new DOMPoint(x,y).matrixTransform(m));
-     const left=Math.min(...points.map(p=>p.x)),top=Math.min(...points.map(p=>p.y)),right=Math.max(...points.map(p=>p.x)),bottom=Math.max(...points.map(p=>p.y));
-     const walker=document.createTreeWalker(details,NodeFilter.SHOW_TEXT);let node,clear=true;
-     while(node=walker.nextNode()){if(!node.textContent.trim()||el.contains(node))continue;const range=document.createRange();range.selectNodeContents(node);for(const text of range.getClientRects())if(left<text.right&&right>text.left&&top<text.bottom&&bottom>text.top)clear=false;}
-     return style.color==='rgb(197, 181, 236)'&&style.position==='absolute'&&style.pointerEvents==='none'&&getComputedStyle(details).paddingTop==='0px'&&clear;
-    }),'Star is invisible, changes formatting, or overlaps card text');
+    assert.equal(await dialog.locator('.player-card-star').count(),0,'Removed card star remains');
+    assert.equal(await dialog.locator('.player-details').evaluate(el=>getComputedStyle(el).paddingTop),'0px');
     assert(await dialog.evaluate(el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth}),`${width}: character card outside viewport`);
     if([1470,390,320].includes(width))await page.screenshot({path:path.join(out,`responsive-card-${width}.png`)});
     await page.keyboard.press('Escape');

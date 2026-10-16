@@ -30,6 +30,4 @@ Coverage limits: mouse/touch photo drag, clipboard failure/fallback and external
 
 The current About markup has no `.term` controls; dormant source handlers do not constitute a user-facing feature.
 
-Social profiles now include GitHub and LinkedIn only; Twitter/X is removed. The character card has a decorative soft striped star inside its upper-right rim, floating beside the name without added padding or grid changes. The responsive workflow checks visible lavender colour, inert input behavior and no overlap with actual text glyphs and zero added details padding at all twelve sizes. Inspect the actual desktop and narrow card screenshots; inherited frame ink can otherwise make decorations transparent.
-
-The striped star uses the photo frame’s fine line weight and three-impression .72-second line boil. The About workflow observes all three impressions and verifies card/text geometry stays fixed, then checks pausing when closed. Reduced motion is static.
+Social profiles include GitHub and LinkedIn only; Twitter/X is removed. The horizontal character card retains its original photo, frame animation and details, with no decorative star or added details padding. The responsive workflow checks the removed decoration stays absent and the original padding is preserved.

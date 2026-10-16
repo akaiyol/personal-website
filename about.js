@@ -345,13 +345,8 @@
     enlarged.setAttribute('aria-label', 'Yolanda’s character card');
     enlarged.querySelector('.frame-drawing').classList.add('player-card');
     enlarged.append(document.querySelector('#player-card-details').content.cloneNode(true));
-    const star=document.createElement('span');
-    star.className='player-card-star';star.setAttribute('aria-hidden','true');
-    star.innerHTML=`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><path id="card-star-shape" d="M45.30 12.25 Q50.00 4.00 54.70 12.25 L61.76 24.62 Q64.69 29.77 70.51 30.98 L84.45 33.86 Q93.75 35.79 87.36 42.81 L77.77 53.34 Q73.78 57.73 74.43 63.62 L75.99 77.78 Q77.04 87.21 68.39 83.31 L55.41 77.44 Q50.00 75.00 44.59 77.44 L31.61 83.31 Q22.96 87.21 24.01 77.78 L25.57 63.62 Q26.22 57.73 22.23 53.34 L12.64 42.81 Q6.25 35.79 15.55 33.86 L29.49 30.98 Q35.31 29.77 38.24 24.62 Z"/><clipPath id="card-star-clip"><use href="#card-star-shape"/></clipPath></defs><use href="#card-star-shape" fill="#000"/><g clip-path="url(#card-star-clip)" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M-10 8L110 38M-10 20L110 50M-10 32L110 62M-10 44L110 74M-10 56L110 86M-10 68L110 98"/></g><use href="#card-star-shape" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
-
     zoom.classList.add('player-card-open');
     enlarged.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
-    enlarged.querySelector('.player-details').append(star);
     const art = document.createElement('div');
     art.className = 'portrait-wink-trigger';
     art.setAttribute('aria-hidden', 'true');
