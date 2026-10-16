@@ -1,6 +1,6 @@
 # Acknowledgements page outline
 
-Status: page implemented; current technology credits updated2026-10-16. Cloudflare setup is pending.
+Status: page implemented; current technology credits updated2026-10-16. Public credits are curated to JavaScript, Canvas 2D, OpenAI Codex and Cloudflare, arranged across the full content width.
 
 Purpose: credit the tools, creative influences, and published work that contributed to this website.
 
@@ -24,7 +24,7 @@ These items are present in the current source. No framework or third-party runti
 - **Git:** version control.
 - **OpenAI Codex:** coding assistance during development. Describe its contribution to implementation, debugging, and iteration; retain Yolanda's authorship and creative direction.
 - **Playwright:** browser interaction checks and responsive verification.
-- **Cloudflare:** selected for hosting, DNS, analytics and security; display “setup pending” until deployment and domain configuration are confirmed.
+- **Cloudflare:** selected for hosting, DNS, analytics and security; no setup note appears in the public credit. Hosting, domain and analytics configuration still require separate verification.
 - **Other tools or libraries:** include only those actually used in the final site. Identify any copied or adapted code and its source where applicable.
 
 Keep the coding-agent credit within this section, under its own entry. An exact model name is unnecessary unless it is verified and relevant.

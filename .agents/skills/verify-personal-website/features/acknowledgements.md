@@ -22,6 +22,6 @@ Preconditions: launch from the canonical checkout as documented in ../SKILL.md.
 
 ## Gotchas
 
-The content has a readable maximum width; tool icons remain centred in their own grid cells, while the whole page is left aligned.
+The technology grid fills the available page width, with four columns on desktop and two on phones. Citations retain a readable maximum width and left alignment.
 
-Technology credits: HTML, CSS, JavaScript, Canvas2D, SVG, Git, Playwright, OpenAI Codex and Cloudflare. Cloudflare must remain marked “setup pending” until configured and verified; it is not yet the confirmed live host. Inspect the three-column desktop / two-column phone icon grid.
+Public technology credits are JavaScript, Canvas 2D, OpenAI Codex and Cloudflare, without setup or deployment notes. Routine markup, graphics formats, version control and testing tools are intentionally omitted from this curated list. Cloudflare configuration still requires separate verification before claiming hosting or analytics is live.
