@@ -118,7 +118,7 @@
 .about-page .oval .clip{top:-23px}
 @media(min-width:1001px) and (max-width:1150px){.about-page .notepad,.about-page .oval{flex-basis:145px}}
 .about-page { --ink: var(--text); --ground: var(--bg); font-size: 14px; line-height: 1.8; }
-body.about-active main { padding: 48px 58px 18px; overflow: visible; justify-content: flex-start; }
+body.about-active main { padding: 48px clamp(58px,7vw,112px) 18px; overflow: visible; justify-content: flex-start; }
 .about-page #about-title { outline: none; }
 .about-page .gallery { overflow: visible; margin-top: 55px; padding-bottom: 30px; scrollbar-width: none; }
 .about-page .gallery::-webkit-scrollbar { display: none; }
@@ -138,12 +138,12 @@ body.about-active main { padding: 48px 58px 18px; overflow: visible; justify-con
  .about-page .memory { width: 145px; }.about-page .memory.polaroid { width: 174px; }.about-page .memory.notepad { width: 145px; }.about-page .memory.negative { width: 145px; }
 }
 @media (max-width: 1000px) {
- body.about-active main { padding: 38px 34px 16px; }
+ body.about-active main { padding: 38px 44px 16px; }
  .about-page .gallery { overflow-x: auto; overflow-y: hidden; padding-top: 50px; }
  .about-page .memories { width: 1160px; height: 300px; }
  .about-page .wire { width: 1136px; }
 }
-@media (max-width: 600px) { body.about-active main { padding: 30px 22px 12px; } .about-page .gallery { margin-top: 25px; } }
+@media (max-width: 600px) { body.about-active main { padding: 30px 28px 12px; } .about-page .gallery { margin-top: 25px; } }
 @media (prefers-reduced-motion: reduce) {
  .about-page .memory { transition: none; }
  .about-page .memory:is(:hover,:focus-visible,[aria-pressed="true"]) { transform: rotate(var(--tilt)); }
@@ -420,19 +420,19 @@ body.page-hidden .photo-counter svg{animation-play-state:paused}
 .photo-zoom .player-card .portrait-spark{font-size:clamp(3px,3cqw,8px)}
 
 /* Size the introduction from the available shell width, preserving readable text. */
-#about-view .introduction{grid-template-columns:clamp(220px,26%,350px) minmax(0,1fr);gap:clamp(28px,4vw,64px)}
+#about-view .introduction{grid-template-columns:clamp(220px,26%,300px) minmax(0,1fr);gap:clamp(28px,4vw,64px)}
 #about-view .story{max-width:none;min-width:0}
 #about-view .greeting{font-size:clamp(22px,1.65vw,28px)}
 #about-view .background{font-size:clamp(14px,1.1vw,17px);max-width:70ch}
 #about-view .portrait .image{height:auto;aspect-ratio:3/4}
-#about-view .fact-machine{--roll-width:clamp(90px,8vw,130px);--reel-gap:clamp(12px,1.6vw,28px);--reel-height:clamp(48px,5vw,72px)}
+#about-view .fact-machine{--roll-width:clamp(90px,8vw,130px);--reel-gap:clamp(12px,1.6vw,28px);--reel-height:clamp(48px,4.4vw,64px)}
 #about-view .fact-reel,#about-view .fact-track span{height:var(--reel-height)}
 #about-view .fact-track span:not(.braille-star){font-size:clamp(26px,2.4vw,36px)}
 #about-view .fact-results p{font-size:clamp(13px,1vw,15px)}
 #about-view .memories > .memory{left:calc(var(--slot) + var(--rail-offset,0px))}
 @media(max-width:800px){
  #about-view .introduction{display:flex;flex-direction:column;align-items:stretch;gap:28px}
- #about-view .portrait-column{width:min(280px,calc(100% - 12px));align-self:center}
+ #about-view .portrait-column{width:min(260px,calc(100% - 12px));align-self:center}
  #about-view .portrait{width:100%;margin:8px 0 22px}
  #about-view .story{width:100%}
 }
