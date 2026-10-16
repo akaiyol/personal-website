@@ -129,7 +129,7 @@
       if (!dialog.matches('.photo-zoom') || !dialog.querySelector('.photo-zoom-tag')) return;
       event.preventDefault();
       dialog.close();
-      button.focus({preventScroll: true});
+      button.blur();
       roll();
       return;
     }

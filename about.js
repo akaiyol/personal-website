@@ -32,7 +32,7 @@
         field.select();
         let copied;
         try { copied = document.execCommand('copy'); }
-        finally { field.remove(); copyEmail.focus({preventScroll: true}); }
+        finally { field.remove(); copyEmail.blur(); }
         if (!copied) throw new Error('Copy unavailable');
       }
       emailStatus.textContent = 'Copied';
@@ -56,7 +56,7 @@
   zoom.addEventListener('close', () => {
     photos.forEach(photo => photo.setAttribute('aria-pressed', 'false'));
     zoomContent.replaceChildren();
-    if (document.activeElement?.matches('.fact-photo-tag')) document.activeElement.blur();
+    if (document.activeElement?.matches('.fact-photo-tag, .memory, .portrait-wink-trigger')) document.activeElement.blur();
   });
   const factPhotos = new Map([
     ['#cloudy-day', document.querySelector('#fact-photo-cloudy').content.querySelector('figure')],
