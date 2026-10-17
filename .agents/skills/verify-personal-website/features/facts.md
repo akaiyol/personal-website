@@ -23,3 +23,7 @@ Preconditions: launch from the canonical checkout as documented in ../SKILL.md.
 ## Gotchas
 
 Results are random; repeats across rolls are valid. Normal rolls draw four distinct facts; a rare jackpot displays four star reels and one labubu label. Conditional photo/Steam links may not appear in a run; their external destinations are not opened.
+
+Phones show the four reels in a 2×2 grid, each result beneath its symbol and Roll below the complete grid. The label rows reserve space while rolling. Desktop keeps four reels across.
+
+For the phone-specific regression pass, run `verify-phone-about.py --base URL --out FRESH_DIRECTORY` through the upstream `with_server.py` and `serve-public.py` workflow in screens.md. It exercises six viewport configurations, all eight photo dialogs, real touch swipes, keyboard rerolls, settled and rolling geometry, and reduced motion. Disposable browser contexts supply controlled entropy to reach long labels, conditional photo tags and the rare jackpot through the actual Roll control; production RNG is unchanged. Inspect its screenshots and ordered animation frames before acceptance.

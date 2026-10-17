@@ -82,3 +82,30 @@
  .photo-zoom .player-details dl>div+div{margin-top:15px}
  .photo-zoom .player-details dt{font-size:11px;margin-bottom:4px}
 }
+
+/* Approved phone gallery A and gacha C. */
+@media(max-width:700px),(pointer:coarse) and (max-height:500px){
+ #about-view .gallery{margin:28px 0 0;padding:32px 10px;overflow:visible;min-height:0}
+ #about-view .gallery .wire{left:50%;right:auto;top:32px;bottom:40px;width:0;height:auto;border:0;border-left:1px solid var(--text);border-radius:0;transform:none}
+ #about-view .gallery .wire:before{top:0;left:-5px}
+ #about-view .gallery .wire:after{top:auto;bottom:0;left:-5px;right:auto}
+ #about-view .memories{display:flex;flex-direction:column;align-items:center;width:100%;height:auto;margin:0;padding:0;gap:42px}
+ #about-view .memories>.memory{position:relative;left:auto!important;top:auto!important;width:180px;max-width:100%;margin:0;transform:rotate(var(--tilt))!important;transform-origin:50% 0;touch-action:pan-y;cursor:var(--site-pointer,pointer);transition:none}
+ #about-view .fact-machine{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:98px minmax(84px,auto) 98px minmax(84px,auto) 64px;gap:0;--reel-height:76px;border-top:1px solid var(--ink)}
+ #about-view .fact-console,#about-view .fact-reels,#about-view .fact-results{display:contents}
+ #about-view .fact-reel{height:76px;border:0;margin:16px 0 6px}
+ #about-view .fact-track span:not(.braille-star){font-size:30px}
+ #about-view .fact-reel:nth-child(1){grid-column:1;grid-row:1}
+ #about-view .fact-reel:nth-child(2){grid-column:2;grid-row:1}
+ #about-view .fact-reel:nth-child(3){grid-column:1;grid-row:3}
+ #about-view .fact-reel:nth-child(4){grid-column:2;grid-row:3}
+ #about-view .fact-results p{min-width:0;min-height:64px;padding:0 8px 16px;margin:0;font-size:12px;line-height:1.7;border-bottom:1px dotted var(--ink)}
+ #about-view .fact-results p:nth-child(1){grid-column:1;grid-row:2}
+ #about-view .fact-results p:nth-child(2){grid-column:2;grid-row:2}
+ #about-view .fact-results p:nth-child(3){grid-column:1;grid-row:4}
+ #about-view .fact-results p:nth-child(4){grid-column:2;grid-row:4}
+ #about-view .fact-machine:before{content:"";position:absolute;left:50%;top:0;bottom:64px;border-left:1px dotted var(--ink);pointer-events:none}
+ #about-view .fact-roll{grid-column:1/-1;grid-row:5;min-height:56px;width:100%;margin-top:8px;border-bottom:1px solid var(--ink)}
+ #about-view .fact-machine.is-jackpot .fact-results .jackpot{grid-column:1/-1;grid-row:4;margin-top:12px;padding:12px;min-height:0}
+ #about-view .fact-machine.is-jackpot:before{bottom:125px}
+}

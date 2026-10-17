@@ -44,6 +44,7 @@
 
   const rail = page.querySelector('.memories');
   const photos = [...page.querySelectorAll('.memory')];
+  const verticalGallery = matchMedia('(max-width:700px), (pointer:coarse) and (max-height:500px)');
   const terms = [...page.querySelectorAll('.term')];
   const zoom = document.createElement('dialog');
   zoom.className = 'about-page photo-zoom';
@@ -180,12 +181,13 @@
     photo.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); select(photo); }
       if (event.key === 'Escape') { select(null); photo.blur(); }
-      if (event.altKey && ['ArrowLeft', 'ArrowRight'].includes(event.key)) {
+      if (!verticalGallery.matches && event.altKey && ['ArrowLeft', 'ArrowRight'].includes(event.key)) {
         event.preventDefault();
         pin(photo, photo.offsetLeft + (event.key === 'ArrowLeft' ? -24 : 24));
       }
     });
     photo.addEventListener('pointerdown', event => {
+      if (verticalGallery.matches) return;
       // Touch drags from the pin, leaving the photo body free for rail scrolling.
       const touchPin = event.pointerType === 'touch' && event.target.closest('.clip');
       if ((!touchPin && event.pointerType !== 'mouse') || event.button !== 0) return;
@@ -224,6 +226,7 @@
     photo.addEventListener('pointercancel', finishDrag);
   });
   function centreRail() {
+    if (verticalGallery.matches) { rail.style.removeProperty('--rail-offset'); return; }
     if (page.hidden || !rail.clientWidth || drag?.active) return;
     // Use the resting tilt, independent of hover/selection transforms.
     const edges = photos.map(photo => {
@@ -291,6 +294,7 @@
       drag = null; ignoreClick = false;
     }
   };
+  verticalGallery.addEventListener('change', () => { pause(); centreRail(); });
   window.addEventListener('site:route', () => { pause(); select(null); });
   window.addEventListener('scroll', () => { pointer = null; clearTerms(); }, {passive: true});
   document.addEventListener('visibilitychange', pause);
