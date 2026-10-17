@@ -5,6 +5,7 @@ Home actions, number shortcuts, identity return and terminal routing.
 ## Sub-features
 
 - Home → about me button; Home → my work button.
+- Home browser title is `Yolanda | home`, including initial load, route returns and archived Projects fallback.
 - From Home, 1 opens About and 2 opens Work unless an editable/control target owns the key.
 - Projects is temporarily unavailable; its former placeholder is preserved in source for restoration.
 - Terminal text, Tab completion, arrows, Enter, Escape and no-match guidance.

@@ -121,7 +121,7 @@ function showRoute(focus = false) {
     link.textContent = `[ /${item.label} ↗ ]`;
     links.append(link);
   });
-  document.title = `Yolanda | /${pageName}`;
+  document.title = pageName === "home" ? "Yolanda | home" : `Yolanda | /${pageName}`;
   if (focus && acknowledgements) document.querySelector("#acknowledgements-title").focus();
   else if (focus && about) document.querySelector("#about-title").focus();
   else if (focus && work && !location.hash.includes("/")) document.querySelector("#work-title").focus();

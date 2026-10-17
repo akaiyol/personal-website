@@ -51,7 +51,7 @@ with sync_playwright() as pw:
                     capture(f'work-full-{width}',True)
                 if page.evaluate('document.documentElement.scrollHeight>innerHeight+40'):
                     page.evaluate('scrollTo(0,document.documentElement.scrollHeight)');page.wait_for_function('Math.abs(scrollY+innerHeight-document.documentElement.scrollHeight)<3');capture(f'{route}-bottom-{width}')
-            page.goto(args.base+'/#projects');page.wait_for_load_state('networkidle');assert page.locator('.hero').is_visible();assert page.title()=='Yolanda | /home'
+            page.goto(args.base+'/#projects');page.wait_for_load_state('networkidle');assert page.locator('.hero').is_visible();assert page.title()=='Yolanda | home'
         assert not errors,errors
     except Exception as error:
         errors.append(f'{type(error).__name__}: {error}')
