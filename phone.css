@@ -67,3 +67,18 @@
 }
 
 @media(max-width:600px){#about-view .portrait-column{width:min(220px,calc(100% - 12px))}}
+
+/* Approved stacked character card on narrow screens; landscape stays compact. */
+@media(max-width:700px) and (min-height:501px){
+ .photo-zoom.player-card-open{width:min(390px,calc(100vw - 16px))}
+ .photo-zoom.player-card-open .photo-zoom-content{width:100%;max-width:100%}
+ .photo-zoom.about-page .player-card{grid-template-columns:minmax(0,1fr);gap:18px;padding:24px 20px;align-items:start}
+ .photo-zoom.about-page .player-card>.image,.photo-zoom.about-page .player-card.frame-drawing>.image{width:min(156px,100%);justify-self:center;align-self:start}
+ .photo-zoom .player-details{font-size:14px;line-height:1.55}
+ .photo-zoom .player-name{text-align:center;font-size:18px;line-height:1.45}
+ .photo-zoom .player-name [lang="zh"]{display:block;font-size:15px;margin-top:3px}
+ .photo-zoom .player-study{text-align:center;font-size:12px;line-height:1.5;margin-top:7px}
+ .photo-zoom .player-details dl{margin-top:18px;border-top:1px dotted var(--text);padding-top:16px}
+ .photo-zoom .player-details dl>div+div{margin-top:15px}
+ .photo-zoom .player-details dt{font-size:11px;margin-bottom:4px}
+}

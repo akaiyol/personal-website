@@ -45,6 +45,9 @@ async function checkResponsive(page,base,out){
     assert.equal(await dialog.locator('.player-card-star').count(),0,'Removed card star remains');
     assert.equal(await dialog.locator('.player-details').evaluate(el=>getComputedStyle(el).paddingTop),'0px');
     assert(await dialog.evaluate(el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth}),`${width}: character card outside viewport`);
+    const cardLayout=await dialog.evaluate(el=>{const image=el.querySelector('.player-card:not(.frame-drawing)>.image').getBoundingClientRect(),details=el.querySelector('.player-details').getBoundingClientRect();return {image:{left:image.left,right:image.right,bottom:image.bottom},details:{left:details.left,top:details.top},font:parseFloat(getComputedStyle(el.querySelector('.player-details')).fontSize)}});
+    if(width<=700){assert(cardLayout.details.top>=cardLayout.image.bottom,`${width}: phone card must stack details below photo`);assert(cardLayout.font>=14,`${width}: phone card text too small`);assert(await dialog.evaluate(el=>{const photo=el.querySelector('.player-card:not(.frame-drawing)>.image').getBoundingClientRect(),frame=el.querySelector('.frame-drawing>.image').getBoundingClientRect();return Math.abs(photo.width-frame.width)<1&&Math.abs(photo.height-frame.height)<1}),`${width}: animated photo outline does not match portrait`);}
+    else assert(cardLayout.details.left>=cardLayout.image.right,`${width}: desktop card must stay horizontal`);
     if([1470,390,320].includes(width))await page.screenshot({path:path.join(out,`responsive-card-${width}.png`)});
     await page.keyboard.press('Escape');
     if([1470,390,320].includes(width)){
