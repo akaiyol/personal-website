@@ -4,5 +4,12 @@
   "compatibility_date": "2026-10-16",
   "assets": {
     "directory": "."
-  }
+  },
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "yolandachen.me",
+      "custom_domain": true
+    }
+  ]
 }
