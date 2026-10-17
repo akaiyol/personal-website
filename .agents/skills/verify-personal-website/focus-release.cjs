@@ -49,5 +49,6 @@ async function checkFocusRelease(page,base,out){
  await page.goto(base+'/#home');await page.locator('[data-command="about"]').focus();assert((await page.locator('[data-command="about"]').evaluate(el=>document.activeElement===el)));await page.keyboard.press('Enter');await page.locator('#about-view').waitFor({state:'visible'});await page.keyboard.press('1');await page.waitForFunction(()=>!document.querySelector('.fact-roll').disabled);await page.locator('.identity').click();await page.locator('.hero').waitFor({state:'visible'});await page.keyboard.press('2');await page.locator('#work-view').waitFor({state:'visible'});
  await page.setViewportSize({width:390,height:844});await activate(page.locator('.stats-toggle'),'mouse','Narrow stats');await page.screenshot({path:path.join(out,'focus-work-390.png')});await page.setViewportSize({width:1280,height:900});
  fs.writeFileSync(path.join(out,'focus-coverage.json'),JSON.stringify(coverage,null,2));
+ await page.emulateMedia({reducedMotion:'no-preference'});await page.goto(base+'/#home');
 }
 module.exports={checkFocusRelease};

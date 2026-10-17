@@ -12,8 +12,10 @@ Read the matching file before driving. Use the canonical checkout, the bundled N
 - [Work experience and animated flowers](./work.md)
 - [Acknowledgements](./acknowledgements.md)
 
-- [Responsive layout](./responsive.md): five routes across 320–1920px, shell/footer/caterpillar geometry, About rail centring, sentence-width gacha, character-card containment and live reel resizing. Run after shared shell or About sizing changes; inspect the resulting route and card screenshots.
+- [Responsive layout](./responsive.md): four active routes across 320–1920px, shell/footer/caterpillar geometry, About rail centring, sentence-width gacha, character-card containment and live reel resizing. Run after shared shell or About sizing changes; inspect the resulting route and card screenshots.
 
 - Flower entrance (`flowerIntro`): first-view growth, offscreen pause, post-completion hints for mouse/trackpad/touch, shared ruler scale and bud endpoints. See [work experience](./work.md).
 
 - [Activation focus release](./focus.md): mouse, Enter and Space for buttons and role buttons, retained toggle state, dialog focus and restored shortcuts.
+
+- [Rendered screen inventory](./screens.md): all active routes, legacy Connect, terminal menu, character card, gallery photo, gacha, stats, flower field and all work filters across five widths.

@@ -5,7 +5,7 @@ async function checkResponsive(page,base,out){
  await page.emulateMedia({reducedMotion:'reduce'});
  for(const [width,height] of sizes){
   await page.setViewportSize({width,height});
-  for(const route of ['home','about','work','projects','acknowledgements']){
+  for(const route of ['home','about','work','acknowledgements']){
    await page.goto(base+'/#'+route);await page.waitForTimeout(100);
    const state=await page.evaluate(({route,width,height})=>{
     const box=s=>{const r=document.querySelector(s).getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom}};

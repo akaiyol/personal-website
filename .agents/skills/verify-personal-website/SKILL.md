@@ -42,3 +42,7 @@ A `finally` block closes the isolated browser context, browser and exact HTTP se
 ## Maintenance
 
 Use [maintain-personal-website-verification](../maintain-personal-website-verification/SKILL.md) when auditing coverage or refreshing this skill after feature changes. It preserves local-only delivery and distinguishes product bugs from test or documentation drift.
+
+## Upstream testing and rendered screen coverage
+
+Apply [Anthropic webapp-testing](../webapp-testing/SKILL.md) with this project-specific skill. Follow [the screen inventory](features/screens.md): render every active route and overlay at desktop, tablet and phone sizes, inspect the actual screenshots, and record the review. Archived Projects is a tested Home fallback, not an active page. The `responsive` case covers four active terminal pages; the Python screen renderer also inspects legacy Connect. A render manifest with pending review entries is not a completed visual review.
