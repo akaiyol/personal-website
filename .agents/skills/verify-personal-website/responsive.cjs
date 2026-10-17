@@ -9,8 +9,10 @@ async function checkResponsive(page,base,out){
    await page.goto(base+'/#'+route);await page.waitForTimeout(100);
    const state=await page.evaluate(({route,width,height})=>{
     const box=s=>{const r=document.querySelector(s).getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom}};
-    return {route,width,height,overflow:document.documentElement.scrollWidth-innerWidth,shell:box('.terminal'),footer:box('.terminal > footer'),header:box('.terminal > header'),cat:box('.scroll-caterpillar'),intro:box('.introduction'),story:box('.story'),blurb:box('.background'),console:box('.fact-console')};
+    return {route,width,height,overflow:document.documentElement.scrollWidth-innerWidth,shell:box('.terminal'),footer:box('.terminal > footer'),header:box('.terminal > header'),cat:box('.scroll-caterpillar'),intro:box('.introduction'),story:box('.story'),blurb:box('.background'),console:box('.fact-console'),footerCover:(()=>{const footer=document.querySelector('.terminal > footer'),r=footer.getBoundingClientRect(),style=getComputedStyle(footer),cover=getComputedStyle(footer,'::after');return {top:r.top+parseFloat(style.borderTopWidth)+parseFloat(cover.top),bottom:r.top+parseFloat(style.borderTopWidth)+parseFloat(cover.top)+parseFloat(cover.height),background:cover.backgroundColor}})()};
    },{route,width,height});observations.push(state);
+   assert(state.footerCover.top<=state.footer.bottom&&state.footerCover.bottom>=height,`${route} ${width}: footer cover leaves viewport bottom exposed`);
+   assert.equal(state.footerCover.background,'rgb(0, 0, 0)','Footer cover must remain opaque black');
    assert(state.overflow<=1,`${route} ${width}: document overflow`);
    assert(Math.abs(state.footer.x-state.shell.x)<1 && Math.abs(state.footer.width-state.shell.width)<1,`${route} ${width}: footer/shell mismatch`);
    if(route!=='home'){

@@ -8,7 +8,6 @@
  .terminal>header .identity{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
  .terminal>header .photo-counter-home{flex:none}
  .terminal>footer{bottom:14px;width:calc(100% - 28px);min-height:70px;padding:10px 16px}
- .terminal>footer::after{height:14px}
  .terminal{padding-bottom:70px}
  .command-navigation{font-size:12px}
  .command-input,#command{font-size:16px}
