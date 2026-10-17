@@ -1,0 +1,26 @@
+# Publish only the active website and its public assets.
+/*
+!/index.html
+!/*.css
+!/*.js
+!/assets/
+/assets/*
+!/assets/cursors/
+!/assets/fonts/
+!/assets/planet/
+!/assets/flower-study/
+/assets/flower-study/*
+!/assets/flower-study/field.js
+!/assets/poem/
+/assets/poem/*
+!/assets/poem/Untitled_Artwork.jpg
+!/assets/poem/handwritten-name.jpg
+!/photos/
+/photos/*
+!/photos/about-me.jpg
+!/photos/photo-line/
+/photos/photo-line/*
+!/photos/photo-line/web/
+
+# Exclude hidden files even within public directories.
+**/.*

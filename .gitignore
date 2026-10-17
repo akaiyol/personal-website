@@ -55,3 +55,7 @@ output/
 !/AGENTS.md
 !/ACKNOWLEDGEMENTS.md
 !/WORKFLOW.md
+
+# Cloudflare local output and deployment specification
+.wrangler/
+!/DEPLOYMENT.md
