@@ -27,3 +27,12 @@ screens.json starts with review=pending for every screenshot. A reviewer must ex
 ## Phone-specific review
 
 Use `render-screens.py --phone` for touch-enabled mobile emulation at320×740,375×812,390×844,430×932 and844×390. The renderer activates buttons and photo dialogs with touchscreen taps, captures phone stats as an overlay, verifies stable backing timeline geometry, input text of at least16px, shared shell/footer bounds, visible landscape Home actions and reachable photo details. Visible lazy images are awaited only when their clipped viewport region is relevant; long pages are scrolled before full-page capture. Inspect all portrait and landscape captures. Emulator checks do not replace physical iPhone/Android testing or the OS virtual keyboard.
+
+Landscape phone full-page coverage uses overlapping scrolled viewport captures, preserving the actual short-screen media query. Native full-page capture may temporarily expand the layout height and show a different layout; do not use it as landscape composition evidence. The manifest records each scroll offset, document height and coverage group.
+
+## Confirmed outstanding failures, 2026-10-17
+
+- Desktop/tablet Work stats shown → Home → resize below 701px: placeStats opens a modal inside hidden Work. Home looks normal but pointer actions hit HTML and fail; Escape recovers navigation. A hidden route must not open a modal.
+- Phone landscape 844×390 character card: dialog client width620px, scroll width712px, content width680px; the right edge is clipped. The renderer now asserts dialog-internal width after saving its screenshot.
+
+No product fixes were applied during the verification-only request.

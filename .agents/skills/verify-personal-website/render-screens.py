@@ -44,8 +44,24 @@ with sync_playwright() as pw:
             if name.startswith('gallery-photo-'):
                 assert page.locator('.photo-zoom-close').evaluate('(el)=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight}'),'Photo close control outside viewport'
                 if page.locator('.photo-song').count():assert page.locator('.photo-song').evaluate('(el)=>el.getBoundingClientRect().bottom<=innerHeight-10'),'Photo details run beyond viewport'
+        if full and args.phone and page.viewport_size['width']>page.viewport_size['height']:
+            # Full-page capture can expand layout height and deactivate short-screen media queries.
+            old_y=page.evaluate('scrollY');total=page.evaluate('document.documentElement.scrollHeight');seen=set()
+            for y in range(0,total,max(100,page.viewport_size['height']-160)):
+                page.evaluate('(y)=>scrollTo(0,y)',y);page.wait_for_function(ready_images)
+                actual=page.evaluate('scrollY')
+                if actual in seen:continue
+                seen.add(actual)
+                assert page.evaluate('matchMedia("(pointer:coarse) and (max-height:500px)").matches'),'Landscape capture changed the viewport media query'
+                filename=f'{name}-scroll-{len(seen):02}.png';page.screenshot(path=str(args.out/filename))
+                records.append({'screen':name+f'-scroll-{len(seen):02}','file':filename,'width':page.viewport_size['width'],'height':page.viewport_size['height'],'url':page.url,'full_page':False,'scroll_y':actual,'document_height':total,'full_coverage_group':name,'review':'pending'})
+            page.evaluate('(y)=>scrollTo(0,y)',old_y)
+            return
         filename=name+'.png';page.screenshot(path=str(args.out/filename),full_page=full)
         records.append({'screen':name,'file':filename,'width':page.viewport_size['width'],'height':page.viewport_size['height'],'url':page.url,'full_page':full,'review':'pending'})
+        if args.phone and name.startswith('character-card-'):
+            assert page.locator('dialog.photo-zoom').evaluate('(el)=>el.scrollWidth<=el.clientWidth+1'),'Character card content is wider than its dialog and is clipped'
+
     try:
         doctor=page.request.get(args.base+'/__doctor').json();assert doctor=={'root':str(ROOT),'revision':revision}
         if args.phone:
