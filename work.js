@@ -55,14 +55,50 @@
   const title = view.querySelector('#work-title');
   title.before(titleRow);
   titleRow.append(title, statsToggle);
+  const phoneStats = matchMedia('(max-width:700px), (pointer:coarse) and (max-height:500px)');
+  const statsHome = document.createComment('Desktop stats position');
+  stats.before(statsHome);
+  const statsDialog = document.createElement('dialog');
+  statsDialog.className = 'stats-dialog';
+  statsDialog.setAttribute('aria-labelledby', 'character-stats-title');
+  const statsClose = document.createElement('button');
+  statsClose.type = 'button';
+  statsClose.className = 'stats-dialog-close';
+  statsClose.setAttribute('aria-label', 'Close stats');
+  statsClose.textContent = '[ close × ]';
+  statsDialog.append(statsClose);
+  view.append(statsDialog);
+  function setStatsShown(shown) {
+    view.classList.toggle('stats-hidden', !shown);
+    stats.inert = !shown;
+    stats.setAttribute('aria-hidden', String(!shown));
+    const changed = statsToggle.getAttribute('aria-expanded') !== String(shown);
+    statsToggle.setAttribute('aria-expanded', String(shown));
+    if (changed) statsToggle.textContent = shown ? '[ hide stats ]' : '[ show stats ]';
+    if (phoneStats.matches && shown && !statsDialog.open) statsDialog.showModal();
+    if (!shown && statsDialog.open) statsDialog.close();
+  }
+  function placeStats() {
+    const shown = !view.classList.contains('stats-hidden');
+    if (phoneStats.matches) statsDialog.append(stats);
+    else { if (statsDialog.open) statsDialog.close(); statsHome.after(stats); }
+    setStatsShown(shown);
+  }
   statsToggle.addEventListener('click', () => {
     statsToggle.classList.remove('is-undiscovered');
-    const hidden = view.classList.toggle('stats-hidden');
-    stats.inert = hidden;
-    stats.setAttribute('aria-hidden', String(hidden));
-    statsToggle.setAttribute('aria-expanded', String(!hidden));
-    statsToggle.textContent = hidden ? '[ show stats ]' : '[ hide stats ]';
+    setStatsShown(view.classList.contains('stats-hidden'));
   });
+  statsClose.addEventListener('click', () => setStatsShown(false));
+  statsDialog.addEventListener('click', event => { if (event.target === statsDialog) setStatsShown(false); });
+  statsDialog.addEventListener('cancel', event => { event.preventDefault(); setStatsShown(false); });
+  statsDialog.addEventListener('close', () => {
+    // A queued close from an earlier opening must not close a reopened dialog.
+    if (statsDialog.open) return;
+    if (document.activeElement === statsToggle) statsToggle.blur();
+  });
+  phoneStats.addEventListener('change', placeStats);
+  addEventListener('site:route', () => { if (view.hidden && statsDialog.open) setStatsShown(false); });
+  placeStats();
   const graph = view.querySelector('.strengths-graph');
   const context = view.querySelector('.stats-context');
   const overallOverlay = graph.querySelector('.stats-shape').cloneNode();

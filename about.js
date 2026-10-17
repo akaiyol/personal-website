@@ -131,7 +131,7 @@
     enlarged.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
     const ratio = Number(image.getAttribute('width')) / Number(image.getAttribute('height'));
     const hasDetails = photo.dataset.songUrl || photo.dataset.photoTag;
-    const zoomWidth = `min(${ratio > 1 ? 546 : 390}px, calc((100dvh - ${hasDetails ? 280 : 200}px) * ${ratio}))`;
+    const zoomWidth = `min(${ratio > 1 ? 546 : 390}px, calc((100dvh - var(--phone-photo-reserve, ${hasDetails ? 280 : 200}px)) * ${ratio}))`;
     enlarged.style.setProperty('--zoom-width', zoomWidth);
     zoomContent.style.setProperty('--zoom-width', zoomWidth);
     zoomContent.replaceChildren(enlarged);

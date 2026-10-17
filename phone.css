@@ -1,0 +1,70 @@
+/* Phone composition; retain the desktop terminal and artwork. */
+@media(max-width:700px),(pointer:coarse) and (max-height:500px){
+ :root{--shell-gutter:14px}
+ :is(a,button,[role="button"],canvas){-webkit-tap-highlight-color:transparent}
+ body{padding:14px}
+ .terminal{min-height:calc(100svh - 28px)}
+ .terminal>header{flex-wrap:nowrap;gap:12px;padding:12px 16px}
+ .terminal>header .identity{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+ .terminal>header .photo-counter-home{flex:none}
+ .terminal>footer{bottom:14px;width:calc(100% - 28px);min-height:70px;padding:10px 16px}
+ .terminal>footer::after{height:14px}
+ .terminal{padding-bottom:70px}
+ .command-navigation{font-size:12px}
+ .command-input,#command{font-size:16px}
+ #suggestions{left:-17px;right:-17px;padding:8px 16px;font-size:14px;max-height:min(300px,48dvh)}
+ .hero .intro,.hero .description{background:var(--bg);box-shadow:0 0 0 4px var(--bg)}
+ .photo-zoom{max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+ .photo-zoom-close{min-height:44px;right:12px}
+ .photo-zoom:not(.player-card-open) .photo-zoom-content{width:min(390px,calc(100vw - 72px));max-width:100%}
+ .photo-zoom:not(.player-card-open) .memory{margin-inline:auto;max-width:100%}
+ .photo-zoom .photo-song{font-size:12px;gap:10px}
+ .photo-zoom .photo-song>span{min-width:0;flex:1}
+ .photo-zoom .photo-song small{white-space:nowrap}
+ .photo-zoom .player-name{font-size:16px}
+}
+@media(pointer:coarse) and (max-height:500px){
+ .photo-zoom{--phone-photo-reserve:150px}
+ .photo-zoom:has(.photo-song){--phone-photo-reserve:210px}
+ .hero>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:28px;row-gap:8px;align-items:start}
+ .hero h1{grid-column:1;grid-row:1/4;margin:0}
+ .hero .title{font-size:clamp(3px,.48vw,4px)}
+ .hero .intro,.hero .description,.hero .home-actions{grid-column:2;margin:0}
+ .hero .intro{font-size:18px}
+ .hero .description{font-size:12px}
+ .hero .home-actions{gap:0}
+ body:not(.about-active):not(.work-active):not(.acknowledgements-active) main{padding:24px 32px}
+ .photo-zoom.player-card-open{max-width:min(620px,calc(100vw - 32px));padding:48px 16px 16px}
+ .photo-zoom.about-page .player-card{grid-template-columns:110px minmax(0,1fr);gap:20px;padding:16px;align-items:start}
+ .photo-zoom .player-details{font-size:12px;line-height:1.5}
+ .photo-zoom .player-details dl{margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+ .photo-zoom .player-details dl>div+div{margin-top:0}
+ .photo-zoom .player-details dt{font-size:11px}
+ .photo-zoom .player-name{font-size:17px}
+ .photo-zoom .player-name [lang="zh"]{font-size:14px}
+}
+
+/* Stats stay outside document flow on phones, so opening them cannot move work. */
+.stats-dialog{border:1px solid var(--text);background:var(--bg);color:var(--text);padding:48px 14px 14px;margin:auto;width:min(420px,calc(100vw - 28px));max-height:calc(100dvh - 28px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.stats-dialog::backdrop{background:rgb(0 0 0 / .85)}
+.stats-dialog-close{position:absolute;top:0;right:14px;min-height:44px;font-size:13px}
+.work-page .stats-dialog .character-stats{position:static;width:100%;margin:0}
+@media(max-width:700px),(pointer:coarse) and (max-height:500px){
+ body.work-active main{padding:28px 20px 0}
+ .work-page .layout{grid-template-columns:minmax(0,1fr);gap:22px}
+ .work-page .years{grid-column:1;grid-row:1;flex-direction:row;justify-content:space-between;gap:4px;top:0;z-index:3;padding:0;border-left:0;border-bottom:1px dotted var(--ink);background:var(--ground)}
+ .work-page .years a{min-width:44px;min-height:44px;font-size:12px}
+ .work-page .timeline{grid-column:1;grid-row:2}
+ .work-page .timeline section{padding-left:18px;scroll-margin-top:60px}
+ .work-page .entry:before{left:-22px}
+ .work-page .work-heading{gap:14px;margin-bottom:22px}
+ .work-page .work-heading h1{font-size:clamp(22px,5.8vw,27px)}
+ .work-page .work-filters{gap:6px}
+ .work-page .work-filters button{font-size:12px;min-height:44px;padding:6px 9px}
+ .work-page .work-tags button{font-size:12px;min-height:40px;padding:6px 8px}
+ .work-page .summary,.work-page .role{font-size:14px;line-height:1.8}
+ .work-page .work-focus li{font-size:13px}
+ .work-page .stats-dialog .strengths-graph{max-height:calc(100dvh - 165px);min-height:180px;object-fit:contain}
+}
+
+@media(max-width:600px){#about-view .portrait-column{width:min(220px,calc(100% - 12px))}}
