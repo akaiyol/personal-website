@@ -27,11 +27,12 @@
     [1,1014,265,.83,7], [0,1103,141,.75,-5]
   ];
   function build() {
-    const mobile=width<=600, indices=mobile?[0,2,3,5,8,9]:fieldLayout.map((_,i)=>i);
+    const mobile=width<=600, indices=mobile?[0,2,7]:fieldLayout.map((_,i)=>i);
+    field.classList.toggle('flowers-narrow',mobile);
     plants=indices.map((index,i)=>{
       const [variant,x,h,size,lean]=fieldLayout[index];
-      return {id:i, variant, x:mobile?[150,260,365,455,560,620][i]/760:x/1200,
-        h:h*Math.cos(lean*Math.PI/180), lean:h*Math.sin(lean*Math.PI/180),
+      return {id:i, variant, x:mobile?[145,240,315][i]/440:x/1200,
+        h:h*(mobile?1.18:1)*Math.cos(lean*Math.PI/180), lean:h*Math.sin(lean*Math.PI/180),
         headScale:size, angle:(rand(index,4)-.5)*.13,
         elevation:(variant===1?12:8)*Math.PI/180, phase:rand(index,6)*TAU, sprite:null, stage:-1};
     });
@@ -169,8 +170,8 @@
   }
   function draw() {
     const dpr=Math.min(devicePixelRatio||1,2);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
-    const world=width<=600?760:1200;scale=width/world;
-    // Preserve useful bloom size on desktop; mobile uses six complete plants.
+    const world=width<=600?440:1200;scale=width/world;
+    // Preserve useful bloom size on desktop; narrow fields use three taller complete plants.
     const unit=width<=600?scale:Math.min(scale,1.2), bottom=height;
     let visible=0;const stages=[],rulers=[];
     for(const p of plants){

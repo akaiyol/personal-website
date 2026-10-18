@@ -109,3 +109,9 @@
  #about-view .fact-machine.is-jackpot .fact-results .jackpot{grid-column:1/-1;grid-row:4;margin-top:12px;padding:12px;min-height:0}
  #about-view .fact-machine.is-jackpot:before{bottom:125px}
 }
+
+/* Give the handwritten poem the phone shell's usable width. */
+@media(max-width:700px){
+ #about-view .handwritten-poem{width:calc(100% + 48px);max-width:none;left:-24px;margin:12px 0 36px}
+ #about-view .handwritten-poem figcaption{font-size:14px;margin-top:-20px;line-height:1.7;padding:0 24px 0 6px}
+}

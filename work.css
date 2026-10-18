@@ -109,3 +109,6 @@ body.work-active main{padding-bottom:0}
 @media(min-width:901px){
  .work-page .summary,.work-page .work-focus{max-width:none}
 }
+
+/* Match the canvas coordinate system to the available field width. */
+.work-page .timeline-flowers.flowers-narrow{aspect-ratio:440/490}

@@ -107,7 +107,7 @@ async function checkStatsToggle(page, name) {
   const edge=await page.locator('.timeline-flowers').evaluate(el=>({flower:el.getBoundingClientRect().bottom,main:el.closest('main').getBoundingClientRect().bottom}));assert(Math.abs(edge.flower-edge.main)<2,'Flowers do not end at content edge');
   await checkFlowerField(page,11);await evidence(page,'work-timeline-desktop');
   await page.locator('.identity').click();
-  for(const width of [390,320]){await page.setViewportSize({width,height:844});await page.locator('[data-command="work"]').click();await checkStatsToggle(page,String(width));await page.locator('.timeline-end').scrollIntoViewIfNeeded();await checkLayout(page);await checkFlowerField(page,6);await evidence(page,`work-timeline-${width}`);await page.locator('.identity').click()}
+  for(const width of [390,320]){await page.setViewportSize({width,height:844});await page.locator('[data-command="work"]').click();await checkStatsToggle(page,String(width));await page.locator('.timeline-end').scrollIntoViewIfNeeded();await checkLayout(page);await checkFlowerField(page,3);await evidence(page,`work-timeline-${width}`);await page.locator('.identity').click()}
   await page.setViewportSize({width:1280,height:900});
  },
  flowerIntro:async()=>{log('flowerIntro','Automatic growth, offscreen pause, post-growth hints, shared-scale rulers, narrow and reduced-motion views');await checkFlowerIntro(page,base,out)},
