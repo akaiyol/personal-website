@@ -45,6 +45,27 @@
   const rail = page.querySelector('.memories');
   const photos = [...page.querySelectorAll('.memory')];
   const verticalGallery = matchMedia('(max-width:700px), (pointer:coarse) and (max-height:500px)');
+  const collection = page.querySelector('.gallery');
+  const galleryToggle = document.createElement('button');
+  galleryToggle.type = 'button';
+  galleryToggle.className = 'phone-gallery-toggle';
+  galleryToggle.textContent = '[ all 8 photos ]';
+  galleryToggle.setAttribute('aria-expanded', 'false');
+  rail.id = 'life-photos';
+  galleryToggle.setAttribute('aria-controls', rail.id);
+  collection.append(galleryToggle);
+  galleryToggle.addEventListener('click', () => {
+    galleryToggle.setAttribute('aria-expanded', 'true');
+    collection.classList.add('phone-gallery-expanded');
+    if (verticalGallery.matches) photos[4].focus({preventScroll:true});
+  });
+  photos.forEach(photo => {
+    if (!photo.dataset.photoTag) return;
+    const tag = document.createElement('span');
+    tag.className = 'phone-photo-tag';
+    tag.textContent = photo.dataset.photoTag;
+    photo.append(tag);
+  });
   const terms = [...page.querySelectorAll('.term')];
   const zoom = document.createElement('dialog');
   zoom.className = 'about-page photo-zoom';

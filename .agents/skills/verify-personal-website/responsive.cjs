@@ -15,7 +15,7 @@ async function checkResponsive(page,base,out){
    assert.equal(state.footerCover.background,'rgb(0, 0, 0)','Footer cover must remain opaque black');
    assert(state.overflow<=1,`${route} ${width}: document overflow`);
    assert(Math.abs(state.footer.x-state.shell.x)<1 && Math.abs(state.footer.width-state.shell.width)<1,`${route} ${width}: footer/shell mismatch`);
-   if(route!=='home'){
+   if(route!=='home'&&width>700){
     assert(Math.abs(state.shell.right-state.cat.right-3)<1,`${route} ${width}: caterpillar right alignment`);
     assert(state.cat.y>=state.header.bottom,`${route} ${width}: caterpillar overlaps header`);
     assert(state.cat.bottom<=state.footer.y-6,`${route} ${width}: caterpillar overlaps footer`);
@@ -37,7 +37,7 @@ async function checkResponsive(page,base,out){
     if(width<=700){
      const layout=await page.locator('.fact-machine').evaluate(el=>{const reels=[...el.querySelectorAll('.fact-reel')].map(n=>n.getBoundingClientRect()),roll=el.querySelector('.fact-roll').getBoundingClientRect(),labels=[...el.querySelectorAll('.fact-results p')].map(n=>n.getBoundingClientRect());return {below:roll.top>=Math.max(...reels.map(r=>r.bottom)),twoRows:Math.abs(reels[0].top-reels[1].top)<1&&Math.abs(reels[2].top-reels[3].top)<1&&reels[2].top>reels[0].bottom,labelsAttached:labels.length===1||labels.every((r,i)=>r.top>=reels[i].bottom&&Math.abs(r.left-reels[i].left)<1)}});
      assert(layout.below&&layout.twoRows&&layout.labelsAttached,`${width}: phone gacha must pair each label with a reel in a 2x2 grid`);
-     assert(await page.locator('.memories').evaluate(el=>{const cards=[...el.children];return getComputedStyle(el).flexDirection==='column'&&cards.every((c,i)=>Math.abs(c.offsetLeft+c.offsetWidth/2-el.clientWidth/2)<1&&(!i||c.offsetTop>=cards[i-1].offsetTop+cards[i-1].offsetHeight))}),`${width}: gallery must be one centred vertical column`);
+     assert(await page.locator('.memories').evaluate(el=>{const cards=[...el.children].filter(c=>getComputedStyle(c).display!=='none');return getComputedStyle(el).display==='grid'&&getComputedStyle(el).gridTemplateColumns.split(' ').length===2&&cards.length===(el.closest('.gallery').classList.contains('phone-gallery-expanded')?8:4)}),`${width}: phone gallery must preview four photos in two columns`);
     }else{
      const rail=await page.locator('.memories').evaluate(el=>{const r=el.getBoundingClientRect(),cards=[...el.children].map(c=>c.getBoundingClientRect());return {centre:r.x+r.width/2,group:(Math.min(...cards.map(c=>c.left))+Math.max(...cards.map(c=>c.right)))/2}});
      assert(Math.abs(rail.centre-rail.group)<2,`${width}: gallery is not centred`);
@@ -55,7 +55,7 @@ async function checkResponsive(page,base,out){
     if([1470,390,320].includes(width)){
      await page.locator('.fact-machine').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(out,`responsive-gacha-${width}.png`)});
      await page.locator('.gallery').scrollIntoViewIfNeeded();await page.mouse.move(10,10);await page.screenshot({path:path.join(out,`responsive-gallery-${width}.png`)});
-     if(width<=390){await page.locator('.memories>.memory').last().scrollIntoViewIfNeeded();assert.equal(await page.locator('.gallery').evaluate(el=>el.scrollLeft),0,'Vertical gallery must not scroll horizontally');await page.screenshot({path:path.join(out,`responsive-gallery-end-${width}.png`)});}
+     if(width<=390){if(await page.locator('.phone-gallery-toggle').isVisible())await page.locator('.phone-gallery-toggle').click();await page.locator('.memories>.memory').last().scrollIntoViewIfNeeded();assert.equal(await page.locator('.gallery').evaluate(el=>el.scrollLeft),0,'Vertical gallery must not scroll horizontally');await page.screenshot({path:path.join(out,`responsive-gallery-end-${width}.png`)});}
     }
    }
   }

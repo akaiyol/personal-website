@@ -18,6 +18,7 @@ const cursor = document.querySelector("#block-cursor");
 const response = document.querySelector("#response");
 const hint = document.querySelector("#navigation-hint");
 const normalHint = hint.textContent;
+const phoneNavigation = matchMedia("(max-width:700px), (pointer:coarse) and (max-height:500px)");
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const normalize = value => value.trim().toLowerCase().replace(/^\//, "").replace(/\s+/g, " ");
 let matches = [], selected = 0, dismissed = false;
@@ -215,6 +216,7 @@ function promptTick() {
   promptTimer = setTimeout(promptTick, delay);
 }
 function startPrompt() {
+  if (phoneNavigation.matches) { stopPrompt(); return; }
   stopPrompt();
   if (reducedMotion.matches) { finishPrompt(); return; }
   if (promptFinished || document.activeElement === input || input.value) { updateCursor(); return; }
@@ -237,6 +239,7 @@ startPrompt();
 document.addEventListener('keydown', event => {
   if (event.defaultPrevented || event.isComposing || event.repeat || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
   if (event.target.closest('input, textarea, select, button, a, [role="button"], [contenteditable]:not([contenteditable="false"]), dialog')) return;
+  if (phoneNavigation.matches) return;
   const onHome = !document.querySelector('.hero').hidden;
   if (onHome && (event.key === '1' || event.key === '2')) {
     event.preventDefault();
@@ -249,3 +252,5 @@ document.addEventListener('keydown', event => {
     updateCursor();
   }
 });
+
+phoneNavigation.addEventListener("change", () => { if (phoneNavigation.matches) { input.blur(); closeSuggestions(); } startPrompt(); });

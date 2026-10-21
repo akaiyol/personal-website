@@ -69,19 +69,20 @@
   statsDialog.append(statsClose);
   view.append(statsDialog);
   function setStatsShown(shown) {
+    shown = shown && !phoneStats.matches;
     view.classList.toggle('stats-hidden', !shown);
     stats.inert = !shown;
     stats.setAttribute('aria-hidden', String(!shown));
     const changed = statsToggle.getAttribute('aria-expanded') !== String(shown);
     statsToggle.setAttribute('aria-expanded', String(shown));
     if (changed) statsToggle.textContent = shown ? '[ hide stats ]' : '[ show stats ]';
-    if (phoneStats.matches && shown && !statsDialog.open) statsDialog.showModal();
+    // Phone stats are intentionally omitted; desktop keeps its fixed grid footprint.
     if (!shown && statsDialog.open) statsDialog.close();
   }
   function placeStats() {
     const shown = !view.classList.contains('stats-hidden');
-    if (phoneStats.matches) statsDialog.append(stats);
-    else { if (statsDialog.open) statsDialog.close(); statsHome.after(stats); }
+    if (statsDialog.open) statsDialog.close();
+    statsHome.after(stats);
     setStatsShown(shown);
   }
   statsToggle.addEventListener('click', () => {
@@ -211,7 +212,7 @@
   }
   view.addEventListener('click', event => {
     const button = event.target.closest('[data-work-type]');
-    if (!button) return;
+    if (!button || phoneStats.matches) return;
     filter(button.dataset.workType);
     if (!filterGroup.contains(button)) filterGroup.scrollIntoView({behavior: 'instant', block: 'nearest'});
   });
@@ -262,6 +263,7 @@
   addEventListener('resize', update);
   const timelineSizeObserver = new ResizeObserver(extendVisibleTimeline);
   entries.forEach(entry => timelineSizeObserver.observe(entry));
+  phoneStats.addEventListener('change', () => { if (phoneStats.matches) filter(''); });
   extendVisibleTimeline();
   showProfile('overall');
   document.addEventListener('visibilitychange', () => {

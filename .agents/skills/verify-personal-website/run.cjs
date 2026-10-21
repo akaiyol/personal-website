@@ -5,6 +5,7 @@ const {checkFlowerField}=require('./flower-field.cjs');
 const {checkHomePlanet}=require('./planet.cjs');
 const {checkResponsive}=require('./responsive.cjs');
 const {checkFlowerIntro}=require('./flower-intro.cjs');
+const {checkPhone}=require('./phone.cjs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'/Users/yolanda/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root=path.resolve(__dirname,'../../..'),out=path.resolve(process.argv[2]||`/private/tmp/website-verification-${Date.now()}`),only=process.argv[3]||'all';
 fs.mkdirSync(out,{recursive:true});const revision=cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
@@ -15,6 +16,7 @@ async function evidence(page,name){await page.screenshot({path:path.join(out,nam
 async function checkLayout(page){assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Horizontal overflow');}
 async function checkStatsToggle(page, name) {
  const toggle=page.locator('.stats-toggle'), stats=page.locator('#work-stats');
+ if(name!=='desktop'){assert(await toggle.isHidden());assert(await stats.isHidden());assert(await stats.evaluate(e=>e.inert));assert(!(await page.locator('.stats-dialog').evaluate(e=>e.open)));return;}
  await toggle.scrollIntoViewIfNeeded();
  if(name==='desktop'){
   assert(await stats.isHidden(),'Stats should default to hidden');
@@ -75,6 +77,7 @@ async function checkStatsToggle(page, name) {
  await context.tracing.start({screenshots:true,snapshots:true,sources:true});const page=await context.newPage();page.on('pageerror',e=>errors.push(String(e)));page.on('response',r=>{if(r.status()>=400&&r.url().startsWith(base))errors.push(`${r.status()} ${r.url()}`)});
  await page.goto(base);await page.waitForLoadState('networkidle');
  const cases={
+ phone:async()=>{log('phone','Direct navigation, More menu, retained gacha/frames/tags, vertical cards, complete timeline and desktop-to-phone regressions');await checkPhone(page,base,out)},
  focus:async()=>{log('focus','Mouse, Enter and Space activation releases buttons, links and role buttons');await checkFocusRelease(page,base,out)},
  planet:async()=>{log('planet','Home planet: responsive crop, foreground, drag, keys, reduced motion, route pause/resume and buttons');await checkHomePlanet(page,base,out)},
  navigation:async()=>{
@@ -114,7 +117,7 @@ async function checkStatsToggle(page, name) {
  responsive:async()=>{log('responsive','Four active routes at twelve sizes; shell/caterpillar alignment, centred gallery, character card and live gacha resizing');await checkResponsive(page,base,out)},
  acknowledgements:async()=>{
   log('acknowledgements','Terminal → acknowledgements; left alignment and narrow layouts');await page.locator('#command').fill('acknowledgements');await page.keyboard.press('Enter');await page.locator('#acknowledgements-view').waitFor({state:'visible'});assert.equal(await page.title(),'Yolanda | acknowledgements');const positions=await page.locator('#acknowledgements-view').evaluate(el=>({left:el.getBoundingClientRect().left,parent:el.parentElement.getBoundingClientRect().left,padding:parseFloat(getComputedStyle(el.parentElement).paddingLeft)}));assert(Math.abs(positions.left-positions.parent-positions.padding)<2);assert.deepEqual(await page.locator('#acknowledgements-view .tool span').allTextContents(),['JavaScript','Canvas 2D','OpenAI Codex','Cloudflare']);const grid=await page.locator('#acknowledgements-view .tools').evaluate(el=>({width:el.getBoundingClientRect().width,parent:el.closest('.acknowledgements-page').getBoundingClientRect().width,columns:getComputedStyle(el).gridTemplateColumns.split(' ').length}));assert(Math.abs(grid.width-grid.parent)<2);assert.equal(grid.columns,4);await evidence(page,'acknowledgements-desktop');await page.goto(base+'/#acknowledgements');await page.locator('#acknowledgements-view').waitFor({state:'visible'});
-  for(const route of ['about','home','acknowledgements']){await page.setViewportSize({width:390,height:844});await page.locator('#command').fill(route);await page.keyboard.press('Enter');await page.locator(route==='home'?'.hero':'#'+route+'-view').waitFor({state:'visible'});await checkLayout(page);await evidence(page,route+'-390')}await page.setViewportSize({width:320,height:844});await checkLayout(page);assert.equal(await page.locator('#acknowledgements-view .tools').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length),2);await evidence(page,'acknowledgements-320');await page.setViewportSize({width:1280,height:900});
+  for(const route of ['about','home','acknowledgements']){await page.setViewportSize({width:390,height:844});await page.goto(base+'/#'+route);await page.locator(route==='home'?'.hero':'#'+route+'-view').waitFor({state:'visible'});await checkLayout(page);await evidence(page,route+'-390')}await page.setViewportSize({width:320,height:844});await checkLayout(page);assert.equal(await page.locator('#acknowledgements-view .tools').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length),2);await evidence(page,'acknowledgements-320');await page.setViewportSize({width:1280,height:900});
  }
  };
  for(const [name,run] of Object.entries(cases)){if(only!=='all'&&only!==name)continue;await run();results.push({feature:name,status:'passed'});fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({revision,results,errors,actions},null,2))}

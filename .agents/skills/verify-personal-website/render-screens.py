@@ -18,7 +18,9 @@ with sync_playwright() as pw:
         if not args.phone:
             control.click();return
         control.scroll_into_view_if_needed()
-        point=control.evaluate("""el=>{const r=el.getBoundingClientRect();for(let y=3;y<r.height;y+=4)for(let x=3;x<r.width;x+=4){const px=r.left+x,py=r.top+y;if(px<0||px>=innerWidth||py<0||py>=innerHeight)continue;const hit=document.elementFromPoint(px,py);if(hit&&el.contains(hit))return {x:px,y:py};}return null;}""")
+        page.evaluate('() => new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
+        target=control.locator('.image').first if control.evaluate("el=>el.matches('.memory')") else control
+        point=target.evaluate("""el=>{const r=el.getBoundingClientRect();const cx=r.left+r.width/2,cy=r.top+r.height/2;if(cy>0&&cy<innerHeight&&cx>0&&cx<innerWidth&&el.contains(document.elementFromPoint(cx,cy)))return {x:cx,y:cy};for(let y=3;y<r.height;y+=4)for(let x=3;x<r.width;x+=4){const px=r.left+x,py=r.top+y;if(px<0||px>=innerWidth||py<0||py>=innerHeight)continue;const hit=document.elementFromPoint(px,py);if(hit&&el.contains(hit))return {x:px,y:py};}return null;}""")
         assert point,'No exposed touch target'
         page.touchscreen.tap(point['x'],point['y'])
     def capture(name,full=False):
@@ -31,14 +33,15 @@ with sync_playwright() as pw:
                 page.evaluate('(y)=>scrollTo(0,y)',y);page.wait_for_function(ready_images)
             page.evaluate('(y)=>scrollTo(0,y)',old_y)
         page.wait_for_function(ready_images)
-        if args.phone:
-            assert page.locator('#command').evaluate('(el)=>parseFloat(getComputedStyle(el).fontSize)>=16'),f'Phone input zoom risk: {name}'
+        is_phone=page.evaluate('matchMedia("(max-width:700px), (pointer:coarse) and (max-height:500px)").matches')
+        if is_phone:
+            assert page.locator('.phone-nav').is_visible(),f'Phone navigation missing: {name}'
             geometry=page.evaluate("""() => {const shell=document.querySelector('.terminal').getBoundingClientRect(),footer=document.querySelector('.terminal>footer').getBoundingClientRect();return Math.abs(shell.left-footer.left)<1&&Math.abs(shell.width-footer.width)<1}""")
             assert geometry,f'Phone footer/shell mismatch: {name}'
             if name.startswith('home-top-') and page.viewport_size['width']>page.viewport_size['height']:
                 assert page.locator('.home-actions').evaluate("(el)=>el.getBoundingClientRect().bottom<=document.querySelector('.terminal>footer').getBoundingClientRect().top"),'Landscape Home actions are hidden'
             if name.startswith('work-top-'):
-                assert page.locator('.years').evaluate("el=>getComputedStyle(el).flexDirection==='row'"),'Phone year links still squeeze the timeline'
+                assert page.locator('.years').is_hidden(),'Phone year navigation should be omitted'
                 if page.viewport_size['width']<=430:
                     assert page.locator('.timeline .entry h3').first.evaluate("el=>el.getBoundingClientRect().bottom<document.querySelector('.terminal>footer').getBoundingClientRect().top"),'First employer is hidden below the initial phone viewport'
             if name.startswith('gallery-photo-'):
@@ -67,7 +70,7 @@ with sync_playwright() as pw:
         if args.phone:
             page.set_viewport_size({'width':390,'height':844});page.goto(args.base+'/#work');page.wait_for_load_state('networkidle')
             def phone_contracts():
-                return {'horizontal_years':page.locator('.years').evaluate("el=>getComputedStyle(el).flexDirection==='row'"),'input_at_least_16px':page.locator('#command').evaluate('el=>parseFloat(getComputedStyle(el).fontSize)>=16')}
+                return {'no_phone_stats':page.locator('.stats-toggle').is_hidden(),'no_phone_terminal':page.locator('.command-navigation').is_hidden()}
             positive=phone_contracts();assert all(positive.values()),positive
             page.route('**/phone.css?*',lambda route:route.fulfill(status=200,content_type='text/css',body=''))
             page.reload();page.wait_for_load_state('networkidle');negative=phone_contracts();assert not any(negative.values()),'Regression checks failed to reject missing phone styles'
@@ -80,26 +83,28 @@ with sync_playwright() as pw:
                 capture(f'{route}-top-{width}')
                 if route!='work':capture(f'{route}-full-{width}',True)
                 if route=='home':
-                    page.locator('#command').focus();capture(f'terminal-menu-{width}');page.keyboard.press('Escape');page.locator('#command').blur()
+                    if page.locator('.phone-nav').is_visible():activate(page.locator('.phone-menu-toggle'));capture(f'phone-menu-{width}');page.keyboard.press('Escape')
+                    else:page.locator('#command').focus();capture(f'terminal-menu-{width}');page.keyboard.press('Escape');page.locator('#command').blur()
                 if route=='about':
                     page.wait_for_function('!document.querySelector(".fact-roll").disabled')
                     for name,selector in [('gacha','.fact-machine'),('gallery','.gallery')]:
                         page.locator(selector).scroll_into_view_if_needed();capture(f'about-{name}-{width}')
+                    if page.locator('.phone-gallery-toggle').is_visible():activate(page.locator('.phone-gallery-toggle'));page.locator('.memories>.memory').last.scroll_into_view_if_needed();capture(f'gallery-expanded-{width}')
                     activate(page.get_by_role('button',name='Enlarge Yolanda’s photo',exact=True));page.locator('dialog[open]').wait_for();capture(f'character-card-{width}');activate(page.get_by_role('button',name='Close enlarged photo',exact=True));page.wait_for_function('!document.querySelector("dialog.photo-zoom").open && !document.activeElement.matches(".memory, .portrait-wink-trigger, .fact-photo-tag")')
                     activate(page.locator('#about-view .memories .memory').first);page.locator('dialog[open]').wait_for();capture(f'gallery-photo-{width}');activate(page.get_by_role('button',name='Close enlarged photo',exact=True));page.wait_for_function('!document.querySelector("dialog.photo-zoom").open && !document.activeElement.matches(".memory, .portrait-wink-trigger, .fact-photo-tag")')
                 if route=='work':
                     toggle=page.locator('.stats-toggle')
-                    backing=page.locator('.timeline').bounding_box()
-                    if toggle.get_attribute('aria-expanded')=='false':activate(toggle)
-                    if args.phone:
-                        assert page.locator('.stats-dialog').is_visible(),'Phone stats did not open as overlay'
-                        assert page.locator('.timeline').bounding_box()==backing,'Opening phone stats moved timeline'
-                    page.evaluate('scrollTo(0,0)');capture(f'work-stats-{width}')
-                    if page.locator('.stats-dialog').is_visible():activate(page.get_by_role('button',name='Close stats',exact=True));page.wait_for_function('!document.querySelector(".stats-dialog").open')
+                    if toggle.is_visible():
+                        if toggle.get_attribute('aria-expanded')=='false':activate(toggle)
+                        page.evaluate('scrollTo(0,0)');capture(f'work-stats-{width}')
+                    else:
+                        assert page.locator('#work-stats').is_hidden()
+                        assert page.locator('.work-filters').is_hidden()
+                        assert page.locator('#work-view .entry:visible').count()==7
                     page.locator('.timeline-flowers').scroll_into_view_if_needed()
                     page.wait_for_function('''() => {const c=document.querySelector('#flower-art');if(!Number(c.dataset.frame)||!Number(c.dataset.plants))return false;const pixels=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let ink=0;for(let i=3;i<pixels.length;i+=4)if(pixels[i]&&++ink>100)return true;return false;}''')
                     capture(f'flower-field-{width}')
-                    if width in (1470,390):
+                    if page.locator('.work-filters').is_visible() and width in (1470,390):
                         for button in page.locator('.work-filters button').all():
                             activate(button);page.evaluate('scrollTo(0,0)');capture(f'filter-{button.inner_text().lower().replace(" ","-")}-{width}')
                         activate(page.locator('.work-filters button').filter(has_text='All'))
@@ -109,11 +114,10 @@ with sync_playwright() as pw:
                     page.evaluate('scrollTo(0,document.documentElement.scrollHeight)');page.wait_for_function('Math.abs(scrollY+innerHeight-document.documentElement.scrollHeight)<3');capture(f'{route}-bottom-{width}')
             page.goto(args.base+'/#projects');page.wait_for_load_state('networkidle');assert page.locator('.hero').is_visible();assert page.title()=='Yolanda | home'
         if args.phone:
-            page.set_viewport_size({'width':390,'height':844});page.goto(args.base+'/#work');page.wait_for_load_state('networkidle')
-            activate(page.locator('.stats-toggle'));assert page.locator('.stats-dialog').is_visible()
-            page.set_viewport_size({'width':1280,'height':900});page.wait_for_function('!document.querySelector(".stats-dialog").open && document.querySelector("#work-stats").parentElement.classList.contains("layout")')
-            page.set_viewport_size({'width':390,'height':844});page.locator('.stats-dialog').wait_for(state='visible');capture('phone-stats-after-rotation')
-            activate(page.get_by_role('button',name='Close stats',exact=True));page.wait_for_function('!document.querySelector(".stats-dialog").open')
+            page.set_viewport_size({'width':1280,'height':900});page.goto(args.base+'/#work');page.wait_for_load_state('networkidle')
+            activate(page.locator('.stats-toggle'));page.goto(args.base+'/#home');page.wait_for_load_state('networkidle')
+            page.set_viewport_size({'width':390,'height':844});assert not page.locator('.stats-dialog').evaluate('e=>e.open')
+            activate(page.locator('.phone-nav a[href="#about"]'));page.locator('#about-view').wait_for(state='visible');capture('phone-navigation-after-desktop-stats')
             page.goto(args.base+'/#about');page.wait_for_load_state('networkidle');activate(page.locator('#about-view .memories .memory').first);page.locator('dialog[open]').wait_for()
             page.set_viewport_size({'width':844,'height':390});page.wait_for_function('document.querySelector(".photo-song").getBoundingClientRect().bottom<innerHeight-10');capture('phone-photo-after-rotation')
             activate(page.get_by_role('button',name='Close enlarged photo',exact=True));page.wait_for_function('!document.querySelector("dialog.photo-zoom").open')

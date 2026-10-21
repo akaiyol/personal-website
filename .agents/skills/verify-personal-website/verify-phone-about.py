@@ -25,6 +25,7 @@ with sync_playwright() as p:
    page.wait_for_function('!document.querySelector(".fact-roll").disabled');after=button.bounding_box();assert abs(before['y']-after['y'])<1,(width,'roll jumped after animation',before,after,page.locator('.fact-machine').evaluate('el=>({rows:getComputedStyle(el).gridTemplateRows,scrollY,labels:[...el.querySelectorAll(".fact-results p")].map(p=>({text:p.innerText,height:p.getBoundingClientRect().height}))})'));assert page.locator('.fact-results p').count()==4
    page.locator('#about-title').click();page.keyboard.press('1');page.wait_for_function('document.querySelector(".fact-roll").disabled');page.wait_for_function('!document.querySelector(".fact-roll").disabled')
    photos=page.locator('#about-view .memories>.memory');assert photos.count()==8
+   if touch:page.locator('.phone-gallery-toggle').click()
    for i in range(8):
     photo=photos.nth(i);photo.scroll_into_view_if_needed();photo.locator('img').evaluate('el=>el.decode()');page.mouse.move(5,5);page.screenshot(path=str(out/f'gallery-{width}-{i}.png'))
     if touch:

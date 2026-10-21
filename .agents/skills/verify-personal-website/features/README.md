@@ -19,3 +19,5 @@ Read the matching file before driving. Use the canonical checkout, the bundled N
 - [Activation focus release](./focus.md): mouse, Enter and Space for buttons and role buttons, retained toggle state, dialog focus and restored shortcuts.
 
 - [Rendered screen inventory](./screens.md): all active routes, legacy Connect, terminal menu, character card, gallery photo, gacha, stats, flower field and all work filters across five widths.
+
+- Phone (`phone`): approved direct navigation, More menu, current-destination top reset, four-photo preview and eight-photo expansion, vertical card including landscape, both work tag types, all seven summaries, omitted stats/filters and resize regressions.

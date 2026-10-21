@@ -32,7 +32,7 @@ async function checkHomePlanet(page,base,out){
    const stars=JSON.parse(el.dataset.stars),dpr=el.width/el.clientWidth,ctx=el.getContext('2d');
    return stars.filter(star=>{const pixels=ctx.getImageData(Math.floor(star.x*dpr)-1,Math.floor(star.y*dpr)-1,3,3).data;return [...pixels].some((value,i)=>i%4===3&&value>0)}).length>3;
   }),'Projected stars are missing from actual canvas pixels');
-  const layer=await page.locator('.hero .cta').first().evaluate(el=>({foreground:Number(getComputedStyle(el.closest('.hero')).zIndex),planet:Number(getComputedStyle(document.querySelector('#home-planet')).zIndex),rim:getComputedStyle(el).boxShadow}));
+  const layer=await page.locator('.hero .cta').first().evaluate((el,{width})=>({foreground:Number(getComputedStyle(el.closest('.hero')).zIndex),planet:Number(getComputedStyle(document.querySelector('#home-planet')).zIndex),rim:width<=700?getComputedStyle(el).filter:getComputedStyle(el).boxShadow}), {width});
   assert(layer.foreground>layer.planet&&layer.rim!=='none','Buttons must be above artwork with black rim');
   await page.screenshot({path:path.join(out,`planet-${width}.png`)});
  }

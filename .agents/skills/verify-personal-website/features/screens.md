@@ -1,6 +1,6 @@
 # Required rendered screen inventory
 
-Render Home, About, Work and Acknowledgements, plus legacy Connect, at 1470×864, 1280×900, 820×1180, 390×844 and 320×740. Capture top viewport, full page and the scrolled bottom of every long page. Capture terminal suggestions, About gacha and gallery, the desktop horizontal / phone stacked character card and gallery-photo dialog, Work stats shown and the full flower field at every size. Capture every work filter at 1470 and 390 pixels. Verify archived #projects resolves to Home. External GitHub/LinkedIn pages, historical studies and archived Projects are not application screens.
+Render Home, About, Work and Acknowledgements, plus legacy Connect, at 1470×864, 1280×900, 820×1180, 390×844 and 320×740. Capture top viewport, full page and the scrolled bottom of every long page. Capture terminal suggestions, About gacha and gallery, the desktop horizontal / phone stacked character card and gallery-photo dialog, Work stats shown and the full flower field at every size. Capture every work filter on desktop; on phones verify the filter bar and stats are omitted and all seven roles remain. Verify archived #projects resolves to Home. External GitHub/LinkedIn pages, historical studies and archived Projects are not application screens.
 
 Use render-screens.py with the installed upstream webapp-testing/scripts/with_server.py helper and serve-public.py. The server only exposes public website assets on localhost and /__doctor. The renderer confirms canonical root and revision, waits for networkidle and fonts, checks visible images, rendered flower-canvas pixels and overflow, captures screenshots plus a trace, and closes its browser context. The upstream helper owns server teardown. Do not attach to an existing user server or browser.
 
@@ -26,13 +26,13 @@ screens.json starts with review=pending for every screenshot. A reviewer must ex
 
 ## Phone-specific review
 
-Use `render-screens.py --phone` for touch-enabled mobile emulation at320×740,375×812,390×844,430×932 and844×390. The renderer activates buttons and photo dialogs with touchscreen taps, captures phone stats as an overlay, verifies stable backing timeline geometry, input text of at least16px, shared shell/footer bounds, visible landscape Home actions and reachable photo details. Visible lazy images are awaited only when their clipped viewport region is relevant; long pages are scrolled before full-page capture. Inspect all portrait and landscape captures. Emulator checks do not replace physical iPhone/Android testing or the OS virtual keyboard.
+Use `render-screens.py --phone` for touch-enabled mobile emulation at320×740,375×812,390×844,430×932 and844×390. The renderer activates buttons and photo dialogs with touchscreen taps, captures the direct phone navigation and expanded photo collection, verifies omitted phone stats/terminal, shared shell/footer bounds, visible landscape Home actions and reachable photo details. Visible lazy images are awaited only when their clipped viewport region is relevant; long pages are scrolled before full-page capture. Inspect all portrait and landscape captures. Emulator checks do not replace physical iPhone/Android testing or the OS virtual keyboard.
 
 Landscape phone full-page coverage uses overlapping scrolled viewport captures, preserving the actual short-screen media query. Native full-page capture may temporarily expand the layout height and show a different layout; do not use it as landscape composition evidence. The manifest records each scroll offset, document height and coverage group.
 
-## Confirmed outstanding failures, 2026-10-17
+## Resolved phone regressions — 2026-10-21
 
-- Desktop/tablet Work stats shown → Home → resize below 701px: placeStats opens a modal inside hidden Work. Home looks normal but pointer actions hit HTML and fail; Escape recovers navigation. A hidden route must not open a modal.
-- Phone landscape 844×390 character card: dialog client width620px, scroll width712px, content width680px; the right edge is clipped. The renderer now asserts dialog-internal width after saving its screenshot.
+Phone stats are omitted, so desktop stats → Home → phone resize must never open a hidden-route modal. The vertical character card clamps content to the dialog and is checked for internal overflow in portrait and landscape. The earlier failures are now regression cases.
 
-No product fixes were applied during the verification-only request.
+## Superseding phone contract — 2026-10-21
+Phones (≤700px or coarse short landscape) use direct bottom Home/About/Work and More links. Stats, terminal input, filter bar, year links, caterpillar and detailed work icon lists are omitted. All seven roles retain shortened summaries, solid category labels and outlined tools; phone category labels do not filter. About retains the 2×2 four-reel gacha labelled “press”, original animated photo frames/tags, four photo previews with an All 8 control, and a vertical card in portrait and landscape. Desktop content, terminal, filters, stats and horizontal card remain. Render expanded gallery and every original photo variant. Desktop stats → Home → phone resize must leave no open dialog and working navigation. Earlier phone overlay/vertical-gallery recipes are superseded.

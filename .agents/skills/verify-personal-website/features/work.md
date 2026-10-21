@@ -2,7 +2,7 @@
 
 ## Sub-features
 
-Desktop stats show/hide preserves the chart footprint; phones use an overlay, removes hidden chart input/accessibility, and supports keyboard operation, unchanged content positions and dimensions in both states; work type filters and per-role filter buttons; year links; role-linked strengths graph with keyboard comparison; an interactive procedural flower field below the timeline.
+Desktop stats show/hide preserves the chart footprint; phones omit the chart, removes hidden chart input/accessibility, and supports keyboard operation, unchanged content positions and dimensions in both states; work type filters and per-role filter buttons; year links; role-linked strengths graph with keyboard comparison; an interactive procedural flower field below the timeline.
 
 ## How to get to it
 
@@ -28,4 +28,7 @@ RBC uses AI product, GTM, Data and Engineering tags. GTM is filterable from the 
 
 Stats have six corners: Strategy, Engineering, Design, Curiosity, Execution and Taste. Communication is omitted from every role and the overall chart; grids, labels and comparison polygons share the six-axis geometry.
 
-Phone layout (2026-10-17): stats use a native dialog at widths up to700px and coarse-pointer landscape up to500px tall. No chart slot is reserved in the phone timeline. Year links form a horizontal sticky row; work content fills the available width. Show/close/Escape/Enter/Space preserve timeline geometry; dialog focus stays within the modal. Desktop stats retain their existing column and visibility footprint. Resize moves the same chart between its desktop home and the phone dialog. Closing the route closes phone stats.
+Phone layout (2026-10-21): omit stats, filters and year navigation; retain compact role summaries, work-category labels and tool tags. Desktop stats retain the existing grid footprint.
+
+## Superseding phone contract — 2026-10-21
+Phones (≤700px or coarse short landscape) use direct bottom Home/About/Work and More links. Stats, terminal input, filter bar, year links, caterpillar and detailed work icon lists are omitted. All seven roles retain shortened summaries, solid category labels and outlined tools; phone category labels do not filter. About retains the 2×2 four-reel gacha labelled “press”, original animated photo frames/tags, four photo previews with an All 8 control, and a vertical card in portrait and landscape. Desktop content, terminal, filters, stats and horizontal card remain. Render expanded gallery and every original photo variant. Desktop stats → Home → phone resize must leave no open dialog and working navigation. Earlier phone overlay/vertical-gallery recipes are superseded.
