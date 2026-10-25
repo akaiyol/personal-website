@@ -30,6 +30,10 @@
   }
   function updateRoute() {
     const route = location.hash.slice(1).split('/')[0] || 'home';
+    // Fix the Home shell to the current viewport; long routes retain document scrolling.
+    const homeLocked = phone.matches && !document.querySelector('.hero').hidden;
+    document.documentElement.classList.toggle('phone-home', homeLocked);
+    if (homeLocked) window.scrollTo({top:0,behavior:'instant'});
     document.querySelectorAll('[data-phone-route]').forEach(a => {
       if (a.dataset.phoneRoute === route) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');

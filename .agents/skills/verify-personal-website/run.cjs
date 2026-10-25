@@ -6,6 +6,7 @@ const {checkHomePlanet}=require('./planet.cjs');
 const {checkResponsive}=require('./responsive.cjs');
 const {checkFlowerIntro}=require('./flower-intro.cjs');
 const {checkPhone}=require('./phone.cjs');
+const {checkPhoneHomeScroll}=require('./phone-home-scroll.cjs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'/Users/yolanda/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root=path.resolve(__dirname,'../../..'),out=path.resolve(process.argv[2]||`/private/tmp/website-verification-${Date.now()}`),only=process.argv[3]||'all';
 fs.mkdirSync(out,{recursive:true});const revision=cp.execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
@@ -77,6 +78,7 @@ async function checkStatsToggle(page, name) {
  await context.tracing.start({screenshots:true,snapshots:true,sources:true});const page=await context.newPage();page.on('pageerror',e=>errors.push(String(e)));page.on('response',r=>{if(r.status()>=400&&r.url().startsWith(base))errors.push(`${r.status()} ${r.url()}`)});
  await page.goto(base);await page.waitForLoadState('networkidle');
  const cases={
+ phoneHome:async()=>{log('phoneHome','Real vertical touch rotates planet without scrolling; wheel, viewport resizing, normal long-route scrolling and desktop unlock');await checkPhoneHomeScroll(page,base,out)},
  phone:async()=>{log('phone','Direct navigation, More menu, retained gacha/frames/tags, vertical cards, complete timeline and desktop-to-phone regressions');await checkPhone(page,base,out)},
  focus:async()=>{log('focus','Mouse, Enter and Space activation releases buttons, links and role buttons');await checkFocusRelease(page,base,out)},
  planet:async()=>{log('planet','Home planet: responsive crop, foreground, drag, keys, reduced motion, route pause/resume and buttons');await checkHomePlanet(page,base,out)},

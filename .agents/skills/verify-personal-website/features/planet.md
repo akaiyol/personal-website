@@ -22,3 +22,5 @@ After intro, hovering the globe or ring footprint gives a slight eased tilt and 
 
 ## Distant stars
 Small, sparse lavender points occupy the black sky behind the planet. A fixed sphere of directions follows the same view transform and slow phase as the planet; drag, keyboard, intro and hover rotate the sky coherently. The globe masks background stars. Read-only `data-stars` exposes visible star IDs and projected positions for interaction checks. Verify actual rendered points, movement of shared IDs after rotation, static positions under reduced motion and no changes to foreground layout. Review the full 64-second cycle plus continuation.
+
+Phone Home (2026-10-25): the root receives phone-home only while the Home hero is visible in phone composition. Fix the body to 100dvh, hide root/body overflow and overscroll, and give the canvas touch-action:none. phoneHome verifies CDP up/down touch changes planet rotation while scrollY stays zero, wheel/programmatic scroll containment, shell/footer alignment, dynamic-height changes, normal About/Work touch scrolling, route return and desktop unlock. Physical iOS rubber-banding still requires device confirmation.
