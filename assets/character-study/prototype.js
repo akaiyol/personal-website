@@ -1,86 +1,274 @@
-// Character study: paths are sampled into Unicode Braille, never displayed as vector art.
-const style = document.createElement('link');
-style.rel = 'stylesheet'; style.href = 'assets/character-study/prototype.css'; document.head.append(style);
+// A monochrome character rig rendered as 2×4 Braille dot cells.
+const stylesheet = document.createElement('link');
+stylesheet.rel = 'stylesheet';
+stylesheet.href = 'assets/character-study/prototype.css?v=2';
+document.head.append(stylesheet);
 document.title = 'Yolanda | character prototype';
 document.body.className = 'character-study';
-document.body.insertAdjacentHTML('beforeend', `<section class="study-shell" aria-label="Character prototype"><div class="study-header"><span>yolanda@web:~/character-study</span><a href="index.html#about-me">[ back to site ]</a></div><div class="study-stage"><canvas width="384" height="528" class="actor" role="img" aria-label="Yolanda in Braille artwork, wearing a captain’s cap, bow dress and boots, with short hair and a cheek bandage"></canvas><div class="dialogue"><span class="speaker">yolanda</span><p>I hope everyone looks ahead with excitement and curiosity rather than tenseness and mistrust.</p></div><div class="panel left" aria-hidden="true"></div><div class="panel right" aria-hidden="true"></div></div><div class="study-controls" role="group" aria-label="Character movements"><button data-mode="idle" aria-pressed="true">[ idle ]</button><button data-mode="delight" aria-pressed="false">[ delight ]</button><button data-mode="curious" aria-pressed="false">[ curious ]</button><button id="entrance">[ entrance ]</button><button id="pause" aria-pressed="false">[ pause ]</button></div></section>`);
-const actor = document.querySelector('.actor'), canvas = document.createElement('canvas');
-canvas.width=192; canvas.height=256;
-const display=actor.getContext('2d');
-const c=canvas.getContext('2d',{willReadFrequently:true});
-const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-let mode='idle', paused=false, elapsed=0, previous=0, raf=0, lastDraw=-100, entering=false, entranceStart=0;
-function path(d,fill='#aaa',stroke='#fff',width=2){const p=new Path2D(d);if(fill){c.fillStyle=fill;c.fill(p)}if(stroke){c.strokeStyle=stroke;c.lineWidth=width;c.stroke(p)}}
-function ellipse(x,y,rx,ry,fill,stroke){c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);if(fill){c.fillStyle=fill;c.fill()}if(stroke){c.strokeStyle=stroke;c.lineWidth=1.3;c.stroke()}}
-function limb(x,y,angle,shape,fill){c.save();c.translate(x,y);c.rotate(angle);path(shape,fill);c.restore()}
-function draw(t){
- c.clearRect(0,0,192,256);
- const walking=entering&&!reduced.matches, gait=walking?Math.sin(t*11):Math.sin(t*1.8), joy=mode==='delight', curious=mode==='curious';
- const breath=Math.sin(t*2.1)*.8, bounce=joy?Math.abs(Math.sin(t*4))*2:0;
- c.save();c.translate(0,breath-bounce);
- // Boots, legs, swing from the hip rather than detached feet.
- for(const [x,phase] of [[83,1],[108,-1]])limb(x,207,walking?gait*.24*phase:0,'M-5 0 L6 0 L6 17 L9 27 Q4 31 -8 28 L-7 15 Z','#555');
- // Arms attach behind the sleeves; delight raises both hands.
- limb(66,157,joy?2+Math.sin(t*4)*.12:walking?gait*.35:-.12,'M-5 0 Q-11 10 -9 25 Q-14 34 -5 37 Q3 37 2 29 L5 4 Z','#aaa');
- limb(126,157,joy?-2-Math.sin(t*4)*.12:curious?-.55:walking?-gait*.35:.12,'M-5 0 L5 4 Q11 18 9 27 Q15 35 6 38 Q-2 38 -1 29 Z','#aaa');
- // Bell-shaped sailor dress with double hem and separate collar/bow.
- path('M78 146 Q95 139 113 146 L128 159 L121 170 Q120 189 133 211 Q96 227 59 211 Q72 188 70 170 L62 161 Z','#666');
- path('M62 161 L70 166 M122 166 L129 160 M61 207 Q95 222 131 207',null);
- path('M82 137 L81 151 Q96 162 111 151 L109 137','#bbb');
- path('M77 148 L94 157 L85 169 L75 151 M114 148 L97 157 L106 169 L117 152','#ddd');
- path('M95 159 Q79 150 82 165 L91 172 L95 164 L99 174 L108 165 Q111 152 97 159','#aaa');
- ellipse(96,162,2.8,3,'#fff');
- for(const y of [180,192,204])ellipse(96,y,1.8,2,'#fff');
- // Narrow shoulder bag from the supplied outfit.
- path('M67 151 L57 190',null,'#fff',2);
- path('M54 175 L64 177 L57 209 L47 207 Z','#222');
- path('M57 180 L52 202',null,'#fff',1.4);
- // Head and hat lean together; body stays rooted.
- c.save();c.translate(96,112);c.rotate(curious?-.12+Math.sin(t*1.4)*.025:Math.sin(t*1.2)*.025);c.translate(-96,-112);
- ellipse(96,107,44,43,'#555','#fff');
- ellipse(54,117,7,10,'#aaa','#fff');ellipse(138,117,7,10,'#aaa','#fff');
- path('M57 99 Q58 72 96 75 Q133 76 135 99 L133 121 Q125 148 97 150 Q68 148 59 125 Z','#111');
- // Side-swept hair and curved side locks.
- path('M56 100 Q56 73 92 73 Q128 72 136 99 L133 127 L127 135 Q129 113 124 103 Q104 104 85 88 Q77 103 63 105 L65 126 L60 131 Z','#111');
- const blink=!reduced.matches&&(t%5.4>5.13), happy=joy;
- for(const x of [78,113]){
-  if(blink||happy)path(`M${x-7} 117 Q${x} ${happy?106:119} ${x+7} 117`,null,'#fff',2.4);
-  else {ellipse(x,114,8,11,'#fff');ellipse(x+2,115,4,8,'#111');ellipse(x+3,111,1.6,2,'#fff');path(`M${x-7} 108 l-3 -4`,null);}
- }
- path('M93 123 Q96 120 100 123 L97 126 Z','#fff',null);
- path(joy?'M87 131 Q96 146 106 130 Q96 135 87 131':'M87 133 Q96 139 105 132',null,'#fff',1.8);
- c.save();c.translate(120,131);c.rotate(-.5);path('M-8 -3 L7 -3 L7 3 L-8 3 Z','#ddd');path('M-3 -2 L-3 2 M2 -2 L2 2',null,'#555',.8);c.restore();
- // Wide captain cap, band, visor and winged badge.
- path('M49 82 Q43 44 75 37 Q98 28 121 39 Q150 48 143 83 Q100 97 49 82 Z','#555');
- path('M49 76 Q94 87 143 76 L144 86 Q97 99 49 86 Z','#ddd');
- path('M47 86 Q95 99 146 84 Q133 107 97 101 Q65 99 47 86 Z','#333');
- path('M57 88 Q95 99 136 89',null);
- ellipse(97,61,6,7,'#ddd');path('M89 59 L75 53 L78 63 L90 67 M105 59 L119 53 L116 63 L104 67','#ddd');
- c.restore();
- if(joy){for(const [x,y] of [[40,89],[152,100]])path(`M${x} ${y-7} L${x+2} ${y-2} L${x+7} ${y} L${x+2} ${y+2} L${x} ${y+7} L${x-2} ${y+2} L${x-7} ${y} L${x-2} ${y-2} Z`,'#fff',null)}
- if(curious){c.fillStyle='#fff';c.font='22px monospace';c.fillText('?',149,66)}
- c.restore();
- const sample=document.createElement('canvas'); sample.width=128; sample.height=176; const sc=sample.getContext('2d');sc.drawImage(canvas,0,0,128,176);
- const data=sc.getImageData(0,0,128,176).data, rows=[];
- const bits=[[0,0,1],[0,1,2],[0,2,4],[1,0,8],[1,1,16],[1,2,32],[0,3,64],[1,3,128]];
- for(let y=0;y<176;y+=4){let row='';for(let x=0;x<128;x+=2){let b=0;for(const [dx,dy,bit]of bits){const px=x+dx,py=y+dy,i=(py*128+px)*4;let hash=Math.imul(px+17,374761393)^Math.imul(py+41,668265263);hash=Math.imul(hash^(hash>>>13),1274126177);const threshold=((hash^(hash>>>16))>>>0)/4294967296*240; if(data[i+3]>100&&data[i]>threshold)b|=bit}row+=String.fromCodePoint(0x2800+b)}rows.push(row)}
- display.clearRect(0,0,384,528); display.fillStyle='#c5b5ec';
- rows.forEach((row,cy)=>[...row].forEach((char,cx)=>{const code=char.codePointAt(0)-0x2800;for(const [dx,dy,bit] of bits)if(code&bit){display.beginPath();display.arc((cx*2+dx)*3+1.5,(cy*4+dy)*3+1.5,.94,0,Math.PI*2);display.fill()}}));
+const quote = 'I hope everyone looks ahead with excitement and curiosity rather than tenseness and mistrust.';
+document.body.insertAdjacentHTML('beforeend', `
+  <section class="study-shell" aria-label="Character prototype">
+    <div class="study-header"><span>yolanda@web:~/character-study</span><a href="index.html#about-me">[ back to site ]</a></div>
+    <div class="study-stage">
+      <canvas width="384" height="528" class="actor" role="img" aria-label="Yolanda in purple Braille artwork, with two braids, a cheek bandage, sailor collar and bow, pleated dress, shoulder bag and boots"></canvas>
+      <div class="dialogue"><span class="speaker">yolanda</span><p class="spoken" aria-hidden="true"></p><p class="study-sr">${quote}</p><span class="dialogue-end" aria-hidden="true" hidden>▾</span></div>
+      <div class="panel left" aria-hidden="true"></div><div class="panel right" aria-hidden="true"></div>
+    </div>
+    <div class="study-controls" role="group" aria-label="Character movements">
+      <button data-mode="idle" aria-pressed="true">[ idle ]</button>
+      <button data-mode="delight" aria-pressed="false">[ delight ]</button>
+      <button data-mode="curious" aria-pressed="false">[ curious ]</button>
+      <button id="talk">[ talk ]</button><button id="entrance">[ entrance ]</button>
+      <button id="pause" aria-pressed="false">[ pause ]</button>
+    </div>
+  </section>`);
+const actor = document.querySelector('.actor');
+const output = actor.getContext('2d');
+const surface = document.createElement('canvas');
+surface.width = 192;
+surface.height = 264;
+const ink = surface.getContext('2d', { willReadFrequently: true });
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const spoken = document.querySelector('.spoken');
+const endMark = document.querySelector('.dialogue-end');
+const panels = [...document.querySelectorAll('.panel')];
+const dotBits = [[0,0,1],[0,1,2],[0,2,4],[1,0,8],[1,1,16],[1,2,32],[0,3,64],[1,3,128]];
+
+// Surface patterns are anchored in each moving part's local coordinates.
+// Bright cloth trim and skin contrast with dark hair, fabric folds and leather.
+function material(name) {
+  const tile = document.createElement('canvas');
+  tile.width = 192; tile.height = 264;
+  const ctx = tile.getContext('2d');
+  ctx.fillStyle = '#000'; ctx.fillRect(0,0,192,264);
+  ctx.fillStyle = '#fff';
+  for (let y=0; y<264; y++) for (let x=0; x<192; x++) {
+    let h = Math.imul(x+31,374761393)^Math.imul(y+13,668265263);
+    h = Math.imul(h^(h>>>13),1274126177);
+    const value = ((h^(h>>>16))>>>0)/4294967296;
+    const light = Math.max(0,Math.min(1,1-(x-48)/100));
+    const density = name==='skin' ? .91+.07*light : name==='trim' ? .92 :
+      name==='cloth' ? .10+.16*light : name==='hair' ? .025 : .035;
+    if (value<density) ctx.fillRect(x,y,1,1);
+  }
+  return ink.createPattern(tile,'repeat');
 }
-function frame(now){raf=0;if(paused||document.hidden)return;if(previous)elapsed+=Math.min((now-previous)/1000,.1);previous=now;
- if(entering){const age=elapsed-entranceStart;actor.style.setProperty('--walk-x',`${Math.min(0,-160+age*75)}px`);if(age>2.2){entering=false;actor.style.setProperty('--walk-x','0px')}}
- if(elapsed-lastDraw>1/12){draw(elapsed);lastDraw=elapsed}if(!reduced.matches)raf=requestAnimationFrame(frame)}
-function resume(){previous=0;if(!raf&&!paused&&!document.hidden){draw(elapsed);if(!reduced.matches)raf=requestAnimationFrame(frame)}}
-document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>{mode=button.dataset.mode;document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));draw(elapsed);resume()}));
-document.querySelector('#pause').addEventListener('click',e=>{paused=!paused;e.currentTarget.setAttribute('aria-pressed',String(paused));e.currentTarget.textContent=paused?'[ resume ]':'[ pause ]';if(paused){cancelAnimationFrame(raf);raf=0;panelAnimations.forEach(a=>a.pause())}else{if(!paused)panelAnimations.forEach(a=>a.play());resume()}});
-let panelAnimations=[];
+const materials = Object.fromEntries(['skin','trim','cloth','hair','leather'].map(name=>[name,material(name)]));
+function shape(d, fill='black', stroke='white', width=1.15) {
+  const p = new Path2D(d);
+  if(fill){ink.fillStyle=materials[fill]||fill;ink.fill(p)}
+  if(stroke){ink.strokeStyle=stroke;ink.lineWidth=width;ink.lineCap='round';ink.lineJoin='round';ink.stroke(p)}
+}
+function oval(x,y,rx,ry,fill='black',stroke=null,width=1) {
+  ink.beginPath();ink.ellipse(x,y,rx,ry,0,0,Math.PI*2);
+  if(fill){ink.fillStyle=materials[fill]||fill;ink.fill()}
+  if(stroke){ink.strokeStyle=stroke;ink.lineWidth=width;ink.stroke()}
+}
+function around(x,y,angle,draw) {
+  ink.save();ink.translate(x,y);ink.rotate(angle);ink.translate(-x,-y);draw();ink.restore();
+}
+const clamp = v=>Math.max(0,Math.min(1,v));
+const ease = v=>{v=clamp(v);return v*v*(3-2*v)};
+let clock=0, previous=null, raf=0, lastDraw=-1, paused=false;
+let mode='idle', emoteStart=0, entranceStart=null, talkStart=.65;
+const letters = [];
+let letterTime=0;
+for(const letter of quote){letters.push(letterTime);letterTime+=/[,.!?]/.test(letter)?.25:letter===' '?.025:.037}
+const talkDuration=letterTime+.15;
+function setMode(next) {
+  mode=next;emoteStart=clock;
+  document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===next)));
+}
+function talkState(t) {
+  if(reduced.matches)return {count:quote.length,active:false,syllable:0};
+  const age=t-talkStart;
+  let count=0;
+  while(count<letters.length&&letters[count]<=age)count++;
+  const last=quote[count-1]||'';
+  const active=age>=0&&age<talkDuration;
+  return {count,active,syllable:active&&!/[,.!? ]/.test(last)?Math.floor(age*11)%4:0};
+}
+function braid(x,side,t,strength) {
+  around(x,87,side*.045+Math.sin(t*2.3-side*.7)*(.065+strength*.045),()=>{
+    shape(`M${x-6} 88 Q${x-11} 105 ${x-6} 120 L${x+5} 120 Q${x+10} 101 ${x+5} 88 Z`,'hair');
+    shape(`M${x} 103 Q${x-11} 105 ${x-7} 116 Q${x-11} 121 ${x-6} 127 Q${x-9} 133 ${x-5} 139 Q${x-7} 146 ${x} 151 Q${x+7} 146 ${x+5} 139 Q${x+9} 133 ${x+6} 127 Q${x+11} 121 ${x+7} 116 Q${x+11} 105 ${x} 103 Z`,'hair','white',1.1);
+    for(let i=0;i<4;i++){
+      const y=108+i*10, flip=i%2?1:-1;
+      shape(`M${x-flip*5} ${y} Q${x} ${y+3} ${x+flip*5} ${y+7}`,null,'white',1.25);
+      shape(`M${x-flip*2} ${y+1} Q${x+flip*3} ${y+3} ${x+flip*4} ${y+5}`,null,'white',.6);
+    }
+    shape(`M${x-4} 149 L${x+4} 149 L${x+4} 152 L${x-4} 152 Z`,'trim',null);
+    shape(`M${x-4} 153 Q${x-7} 160 ${x} 165 Q${x+7} 160 ${x+4} 153`,'hair');
+  });
+}
+function arm(x,side,angle) {
+  around(x,139,angle,()=>{
+    shape(`M${x-5} 140 Q${x-8} 154 ${x-5} 169 Q${x-10} 178 ${x-2} 181 Q${x+7} 181 ${x+5} 171 L${x+5} 142 Z`,'skin','white',1.25);
+    shape(`M${x-7} 140 L${x+7} 140 L${x+8} 150 Q${x} 155 ${x-8} 150 Z`,'cloth');
+    shape(`M${x-7} 148 Q${x} 152 ${x+7} 148`,null,'white',1.8);
+    shape(`M${x+side*2} 171 l${side*2} 3`,null,'black',.7);
+  });
+}
+function thinkingArm(amount) {
+  // Bend at an actual elbow, bringing the hand to the chin instead of a sideward pose.
+  around(124,139,-.10-.25*amount,()=>{
+    shape('M119 140 Q116 151 120 159 L129 159 L129 141 Z','skin','white',1.25);
+    around(124,155,amount*3.0,()=>{
+      shape('M120 155 L120 171 Q115 177 121 182 Q130 185 130 177 L128 155 Z','skin','white',1.25);
+      shape('M126 176 l1 3',null,'black',.7);
+    });
+    shape('M117 140 L131 140 L132 150 Q124 155 116 150 Z','cloth');
+    shape('M117 148 Q124 152 131 148',null,'white',1.8);
+  });
+}
+function boot(x,step) {
+  around(x,206,step,()=>{
+    shape(`M${x-5} 205 L${x+5} 205 L${x+5} 218 L${x-5} 218 Z`,'skin');
+    shape(`M${x-7} 217 Q${x} 220 ${x+6} 217 L${x+7} 233 Q${x+12} 238 ${x+7} 241 L${x-8} 241 Q${x-10} 238 ${x-7} 233 Z`,'leather','white',1.4);
+    shape(`M${x-7} 219 Q${x} 222 ${x+6} 219 M${x-8} 237 Q${x} 239 ${x+9} 237`,null,'white',1);
+    shape(`M${x-4} 223 L${x-4} 231`,null,'white',.7);
+  });
+}
+function draw(t) {
+  const still=reduced.matches;
+  if(still)t=0;
+  const talk=talkState(clock);
+  const entryAge=entranceStart===null?-1:clock-entranceStart;
+  const walking=!still&&entryAge>1.05&&entryAge<3.4;
+  const walkPhase=t*10.8;
+  const age=clock-emoteStart;
+  const envelope=still?1:ease(age/.35)*(1-ease((age-2.1)/.7));
+  const joy=mode==='delight'?envelope:0;
+  const curious=mode==='curious'?envelope:0;
+  const sway=still?0:Math.sin(t*.95)*2.8;
+  const breath=still?0:Math.sin(t*2)*1.1;
+  const hop=joy*Math.max(0,Math.sin((age-.25)*7))*4.5;
+  const walkBob=walking?Math.abs(Math.sin(walkPhase))*1.8:0;
+  const gait=walking?Math.sin(walkPhase):0;
+  ink.clearRect(0,0,192,264);
+  boot(83,gait*.23);boot(109,-gait*.23);
+  ink.save();ink.translate(sway,-hop-walkBob);
+  around(96,207,still?0:Math.sin(t*.95)*.018,()=>{
+    // Shoulder and braid attachments move with the torso, with delayed tips.
+    braid(51,-1,t,joy+curious);braid(141,1,t,joy+curious);
+    const speechWeight=talk.active?ease((clock-talkStart)/.3)*ease((talkStart+talkDuration-clock)/.3):0;
+    const gesture=(Math.sin(t*3.1)*.15-.18)*speechWeight;
+    arm(68,-1,.10+joy*1.95+gait*.38+(still?0:Math.sin(t*1.7)*.09));
+    if(mode!=='curious')arm(124,1,-.10-joy*1.95-gait*.38+gesture-(still?0:Math.sin(t*1.7+.6)*.09));
+    // Structured dress: bodice, waist seam, independent pleats, cuffs and double hem.
+    shape('M77 127 Q96 122 115 127 L127 138 L122 154 L117 157 L119 170 Q123 187 133 207 Q96 220 59 207 Q69 187 73 170 L75 157 L70 154 L65 139 Z','cloth','white',1.4);
+    shape('M76 158 Q96 162 116 158',null,'white',.8);
+    shape('M74 171 Q96 175 119 171',null,'white',.9);
+    shape('M79 177 Q76 193 72 204 M90 178 L88 208 M103 178 L105 208 M115 178 Q118 194 121 204',null,'white',.85);
+    shape('M63 202 Q96 214 130 202 L132 207 Q96 220 60 207 Z','trim','white',.8);
+    shape('M65 200 Q96 211 128 200',null,'white',.8);
+    shape('M88 118 L87 130 Q96 138 106 130 L105 118 Z','skin');
+    shape('M77 127 L91 137 L86 149 L74 133 Z','trim');
+    shape('M115 127 L101 137 L106 149 L119 133 Z','trim');
+    shape('M78 132 L86 139 M114 132 L106 139',null,'black',1.3);
+    // Bow has a central knot, two rounded loops and two separated tails.
+    shape('M94 140 Q81 131 81 143 Q84 151 94 145 L89 157 L96 153 L99 157 L100 145 Q111 151 112 141 Q111 132 98 140 Z','cloth','white',1.3);
+    shape('M86 141 L92 143 M108 141 L101 143 M94 148 L93 152 M100 148 L101 152',null,'white',.7);
+    oval(97,142,3,3,'trim','white');
+    shape('M96 159 L96 196',null,'white',.65);
+    for(const y of [163,177,191]){oval(98,y,2,2,'trim','white',.5);oval(98,y,.6,.6,'black')}
+    // Separate leather bag and strap from the fabric, preserving a black border.
+    shape('M77 131 Q63 148 60 182',null,'black',4);
+    shape('M77 131 Q63 148 60 182',null,'white',1.5);
+    shape('M52 173 L65 175 L64 200 Q57 204 49 199 Z','leather','white',1.3);
+    shape('M52 174 L64 176 L63 182 L51 180 Z','cloth');
+    shape('M55 181 L59 181 L59 185 L55 185 Z','trim',null);
+    // Face and hair turn together; head sits in front of the collar.
+    ink.save();ink.translate(0,breath);
+    const nod=Math.sin(t*5.1)*.025*speechWeight;
+    around(96,105,(still?0:Math.sin(t*1.15)*.06)-curious*.19+joy*.025+nod,()=>{
+      oval(96,77,46,48,'hair','white',1.25);
+      oval(51,91,7,10,'skin','white');oval(141,91,7,10,'skin','white');
+      shape('M54 69 Q57 42 96 42 Q135 42 138 69 L136 95 Q131 119 110 128 Q96 133 82 128 Q60 119 56 96 Z','skin','white',1.6);
+      // Swept fringe with large, clean negative-space locks.
+      shape('M51 83 Q44 43 73 30 Q101 17 126 38 Q145 50 141 85 L135 100 L129 88 L129 67 Q113 65 97 49 Q86 68 61 72 L61 93 L56 100 Z','hair','white',1.3);
+      shape('M57 60 Q60 40 79 36 M65 58 Q75 39 89 36 M106 36 Q127 43 133 60 M99 43 Q113 57 124 60',null,'white',.85);
+      // Eyes are solid shapes; highlights, pupils and lashes read without surface noise.
+      const blink=!still&&((t%6.7>6.42&&t%6.7<6.61)||(t%11.3>10.91&&t%11.3<11.06));
+      const happy=joy>.35;
+      for(const [x,side] of [[77,-1],[115,1]]){
+        if(blink||happy){shape(`M${x-9} 92 Q${x} ${happy?79:96} ${x+9} 92`,null,'black',2.8)}
+        else{
+          oval(x,88,10,14,'trim','black',1.5);
+          const look=curious?1.5:(still?0:Math.sin(t*.67)*1.1);
+          oval(x+look,89-curious*2,5.8,10,'black');
+          oval(x-1+look,84-curious*2,2,3,'white');
+          oval(x+2+look,94-curious*2,.9,1.2,'white');
+          shape(`M${x+side*8} 79 l${side*3} -4 M${x+side*9} 84 l${side*4} -1`,null,'black',1.7);
+        }
+        shape(`M${x-6} ${69-curious*side*2} Q${x} ${66-curious*side*2} ${x+6} ${69-curious*side*2}`,null,'white',1.4);
+      }
+      shape('M93 100 Q96 97 100 100 L97 104 Z','black',null);
+      // Mouth shapes follow the letter cadence, then return to a soft closed smile.
+      if(talk.active&&talk.syllable===1)oval(97,113,3.2,4.8,'black');
+      else if(talk.active&&talk.syllable===2)shape('M90 110 Q97 114 104 110 Q102 120 96 120 Q91 119 90 110 Z','black',null);
+      else if(talk.active&&talk.syllable===3)oval(97,113,4.7,2,'black');
+      else if(joy>.35)shape('M88 110 Q97 115 106 110 Q102 121 96 120 Q90 119 88 110 Z','black',null);
+      else if(curious>.5)oval(97,114,2.2,2.5,'black');
+      else shape('M89 112 Q97 119 105 112',null,'black',1.8);
+      // A clean bandage interrupts the cheek texture with two defined pads.
+      around(121,110,-.45,()=>{
+        shape('M113 106 L129 106 L129 113 L113 113 Z','trim','black',.9);
+        shape('M118 108 L124 108 L124 112 L118 112 Z','cloth',null);
+      });
+    });
+    ink.restore();
+    if(mode==='curious')thinkingArm(curious);
+  });
+  ink.restore();
+  if(joy>.3)for(const [x,y,phase] of [[36,58,0],[155,68,1]]){
+    const lift=still?0:Math.sin(age*6+phase)*2;
+    shape(`M${x} ${y-5+lift} L${x+1.5} ${y-1+lift} L${x+5} ${y+lift} L${x+1.5} ${y+1+lift} L${x} ${y+5+lift} L${x-1.5} ${y+1+lift} L${x-5} ${y+lift} L${x-1.5} ${y-1+lift} Z`,'white',null);
+  }
+  if(curious>.4){ink.fillStyle='#fff';ink.font='18px monospace';ink.fillText('?',151,43+(still?0:Math.sin(t*2)))}
+  // Quantize the finished articulated image into Braille cells, then draw only their dots.
+  const pixels=ink.getImageData(0,0,192,264).data;
+  output.clearRect(0,0,384,528);output.fillStyle='#c5b5ec';
+  for(let y=0;y<264;y+=4)for(let x=0;x<192;x+=2){
+    let cell=0;
+    for(const [dx,dy,bit]of dotBits){const i=((y+dy)*192+x+dx)*4;if(pixels[i+3]>100&&pixels[i]>112)cell|=bit}
+    for(const [dx,dy,bit]of dotBits)if(cell&bit){output.beginPath();output.arc((x+dx)*2+.5,(y+dy)*2+.5,.84,0,Math.PI*2);output.fill()}
+  }
+  spoken.textContent=quote.slice(0,talk.count);
+  endMark.hidden=talk.count!==quote.length;
+  let walkX=0,panelProgress=0;
+  if(entranceStart!==null&&!still){
+    const age=clock-entranceStart;
+    panelProgress=age<.55?ease(age/.55):age<.9?1:1-ease((age-.9)/.65);
+    walkX=age<1.05?-170:-170*(1-ease((age-1.05)/2.35));
+    if(age>3.5)entranceStart=null;
+  }
+  actor.style.setProperty('--walk-x',`${walkX}px`);
+  panels.forEach((p,i)=>p.style.transform=`translateX(${(i?1:-1)*(1-panelProgress)*101}%)`);
+  if(mode!=='idle'&&!still&&age>2.85)setMode('idle');
+}
+function tick(now) {
+  raf=0;
+  if(paused||document.hidden)return;
+  if(previous!==null)clock+=Math.min((now-previous)/1000,.08);
+  previous=now;
+  if(clock-lastDraw>=1/30){draw(clock);lastDraw=clock}
+  if(!reduced.matches)raf=requestAnimationFrame(tick);
+}
+function resume(){previous=null;draw(clock);if(!raf&&!paused&&!document.hidden&&!reduced.matches)raf=requestAnimationFrame(tick)}
+document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>{setMode(button.dataset.mode);talkStart=-100;draw(clock);resume()}));
+document.querySelector('#talk').addEventListener('click',()=>{setMode('idle');talkStart=clock;resume()});
 document.querySelector('#entrance').addEventListener('click',()=>{
- if(reduced.matches){entering=false;actor.style.setProperty('--walk-x','0px');draw(elapsed);return}
- if(paused)document.querySelector('#pause').click();
- panelAnimations.forEach(a=>a.cancel());
- panelAnimations=[...document.querySelectorAll('.panel')].map((p,i)=>p.animate([{transform:`translateX(${i?101:-101}%)`},{transform:'translateX(0)',offset:.32},{transform:'translateX(0)',offset:.55},{transform:`translateX(${i?101:-101}%)`}],{duration:1500,easing:'cubic-bezier(.65,0,.35,1)'}));
- entering=true;entranceStart=elapsed+.6;resume();
+  if(paused)document.querySelector('#pause').click();
+  setMode('idle');entranceStart=reduced.matches?null:clock;talkStart=clock+3.5;resume();
 });
-document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf);raf=0;previous=0;panelAnimations.forEach(a=>a.pause())}else{if(!paused)panelAnimations.forEach(a=>a.play());resume()}});
-reduced.addEventListener('change',()=>{cancelAnimationFrame(raf);raf=0;panelAnimations.forEach(a=>a.cancel());entering=false;actor.style.setProperty('--walk-x','0px');resume()});
-draw(0);resume();
+document.querySelector('#pause').addEventListener('click',event=>{
+  paused=!paused;event.currentTarget.setAttribute('aria-pressed',String(paused));
+  event.currentTarget.textContent=paused?'[ resume ]':'[ pause ]';
+  if(paused){cancelAnimationFrame(raf);raf=0;previous=null}else resume();
+});
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){cancelAnimationFrame(raf);raf=0;previous=null}else resume();
+});
+reduced.addEventListener('change',()=>{cancelAnimationFrame(raf);raf=0;entranceStart=null;resume()});
+resume();
