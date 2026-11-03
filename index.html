@@ -499,5 +499,10 @@
     <script src="scroll-caterpillar.js?v=6"></script>
     <script src="focus-release.js?v=1"></script>
     <script src="phone.js?v=2"></script>
+    <script type="module">
+      if (new URLSearchParams(location.search).has('character-prototype')) {
+        await import('./assets/character-study/prototype.js');
+      }
+    </script>
   </body>
 </html>

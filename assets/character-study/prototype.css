@@ -1,0 +1,20 @@
+body.character-study > :not(.study-shell) {display:none!important}
+body.character-study {display:block;padding:24px;font:14px Menlo,Consolas,'Liberation Mono',monospace;color:#c5b5ec;background:#000}
+.character-study * {box-sizing:border-box}
+.character-study .study-shell {width:100%;max-width:1100px;min-height:calc(100svh - 48px);margin:auto;border:1px solid #c5b5ec;display:flex;flex-direction:column}
+.character-study .study-header {padding:16px 24px;border-bottom:1px solid #c5b5ec;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.character-study a {color:inherit;text-decoration:none}
+.character-study a:hover,.character-study a:focus-visible {text-decoration:underline}
+.character-study .study-stage {position:relative;overflow:hidden;flex:1;min-height:640px;display:flex;align-items:center;justify-content:center;padding:18px 20px 164px}
+.character-study .actor {display:block;width:384px;height:528px;max-width:100%;object-fit:contain;margin:0;font:8px/8px Menlo,Consolas,'Liberation Mono',monospace;letter-spacing:0;white-space:pre;color:#c5b5ec;transform:translateX(var(--walk-x,0px));user-select:none}
+.character-study .dialogue {position:absolute;bottom:28px;left:50%;transform:translateX(-50%);width:min(620px,calc(100% - 40px));border:1px solid #c5b5ec;border-radius:35px 42px 32px 39px;padding:25px 28px 24px;background:#000;min-height:126px}
+.character-study .speaker {position:absolute;top:-13px;left:28px;background:#c5b5ec;color:#000;padding:5px 15px;border-radius:12px;transform:rotate(-4deg)}
+.character-study .dialogue p {font:14px/1.65 Menlo,Consolas,'Liberation Mono',monospace;margin:0;max-width:64ch}
+.character-study .panel {position:absolute;top:0;bottom:0;width:50%;background:#c5b5ec;z-index:3;transform:translateX(-101%)}
+.character-study .panel.right {right:0;transform:translateX(101%)}
+.character-study .panel.left {left:0}
+.character-study .study-controls {border-top:1px solid #c5b5ec;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 16px}
+.character-study button {font:inherit;background:#000;color:#c5b5ec;border:0;padding:10px;min-height:44px;cursor:pointer}
+.character-study button[aria-pressed=true] {background:#c5b5ec;color:#000}
+.character-study button:focus-visible {text-decoration:underline;outline:none}
+@media(max-width:600px){body.character-study{padding:12px}.character-study .study-shell{min-height:calc(100svh - 24px)}.character-study .study-header{padding:14px;font-size:12px}.character-study .study-stage{min-height:580px;padding:12px 0 188px}.character-study .actor{width:280px;height:385px}.character-study .dialogue{bottom:22px;width:calc(100% - 24px);padding:24px 20px 18px;min-height:155px}.character-study .dialogue p{font-size:13px}.character-study .study-controls{gap:0;padding:6px;font-size:12px}}
