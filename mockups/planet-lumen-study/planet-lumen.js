@@ -1,7 +1,8 @@
 import { makeRenderer } from './lumen/render.js';
-(() => {
+(async () => {
   'use strict';
   const canvas=document.querySelector('#home-planet'), hero=document.querySelector('.hero');
+  for(const link of document.querySelectorAll('a[href^="#"]'))link.href=location.href.split('#')[0]+link.getAttribute('href');
   const ctx=canvas.getContext('2d'), surface=document.createElement('canvas'), paint=surface.getContext('2d',{willReadFrequently:true});
   const reduce=matchMedia('(prefers-reduced-motion: reduce)'),TAU=Math.PI*2;
   const startPose=Object.freeze({pitch:-1.40,roll:.32}),restPose=Object.freeze({pitch:.40,roll:.32});
@@ -65,20 +66,22 @@ import { makeRenderer } from './lumen/render.js';
   };
   const ramp=(ramps[material]||ramps.prism).map(c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)));
   const textureW=1536,textureH=768,texture=new Uint8ClampedArray(textureW*textureH*3);
-  function hash(x,y){let n=Math.imul(x,374761393)+Math.imul(y,668265263);n=Math.imul(n^(n>>>13),1274126177);return ((n^(n>>>16))>>>0)/4294967295;}
-  function noise(x,y){const a=Math.floor(x),b=Math.floor(y);let u=x-a,v=y-b;u=u*u*(3-2*u);v=v*v*(3-2*v);return (hash(a,b)*(1-u)+hash(a+1,b)*u)*(1-v)+(hash(a,b+1)*(1-u)+hash(a+1,b+1)*u)*v;}
-  function fbm(x,y){return .52*noise(x,y)+.26*noise(x*2.03,y*2.03)+.14*noise(x*4.07,y*4.07)+.08*noise(x*8.13,y*8.13);}
   function colour(t){t=clamp(t,0,.9999)*(ramp.length-1);const i=Math.floor(t),f=t-i;return ramp[i].map((c,k)=>c+(ramp[i+1][k]-c)*f);}
+  // Voyager map: photographic cloud structure, with expressive colour grading.
+  // Source: JPL/Caltech, David Seal, https://space.jpl.nasa.gov/tmaps/jupiter.html
+  const sourceMap=new Image();sourceMap.src=new URL('./jupiter-voyager.jpg',import.meta.url).href;
+  await sourceMap.decode();
+  const mapSurface=document.createElement('canvas');mapSurface.width=textureW;mapSurface.height=textureH;
+  const mapPaint=mapSurface.getContext('2d',{willReadFrequently:true});mapPaint.drawImage(sourceMap,0,0,textureW,textureH);
+  const mapPixels=mapPaint.getImageData(0,0,textureW,textureH).data;
   for(let y=0;y<textureH;y++)for(let x=0;x<textureW;x++){
-    const u=x/textureW,v=y/textureH;
-    const flow=fbm(u*12+1,v*9+7),fine=fbm(u*33+6,v*45);
-    const warped=v+.010*Math.sin(u*TAU*5+flow*5)+.065*(flow-.5);
-    const band=.5+.28*Math.sin(warped*TAU*9+.5*Math.sin(u*TAU*3))+ .12*Math.sin(warped*TAU*26+flow*3);
-    const chroma=clamp(.13+band*.66+(flow-.5)*.42,0,1);
-    const c=colour(chroma),grain=.83+.27*fine;
-    // Thin cream filaments wind through coloured atmospheric strata.
-    const filament=Math.pow(Math.max(0,Math.sin(warped*TAU*48+fine*5)),13)*.22;
-    const i=(y*textureW+x)*3;for(let k=0;k<3;k++)texture[i+k]=c[k]*grain+(245-c[k])*filament;
+    const i=(y*textureW+x)*3,j=(y*textureW+x)*4,v=y/textureH;
+    const red=mapPixels[j]/255,green=mapPixels[j+1]/255,blue=mapPixels[j+2]/255;
+    const luminance=.2126*red+.7152*green+.0722*blue;
+    const tone=clamp((luminance-.15)/.70,0,1);
+    const c=colour(clamp(.14+(1-tone)*.64+(v-.5)*.20,0,1));
+    const filament=Math.pow(tone,4)*.54;
+    for(let k=0;k<3;k++)texture[i+k]=(c[k]*(1-filament)+[252,237,220][k]*filament)*(.50+tone*.65);
   }
   let renderState=null;
   const outputSurface=document.createElement('canvas'),outputPaint=outputSurface.getContext('2d');
@@ -127,8 +130,12 @@ import { makeRenderer } from './lumen/render.js';
         const b=P[0]*L[0]+P[1]*L[1]+P[2]*L[2];
         const shadow=b<0&&ringR*ringR-b*b<1;
         const ringLight=shadow?.08:.54+.12*Math.abs(by[0]*light[0]+by[1]*light[1]+by[2]*light[2]);
-        const c=colour(.2+radial*.65),pearl=.16+.09*Math.sin(radial*13);
-        const R=c.map(n=>(n*(1-pearl)+244*pearl)*ringLight);
+        // Mineral ice and dust differ from the atmosphere; narrow iridescent seams stay subordinate.
+        const mineral=.5+.3*Math.sin(radial*8)+.1*Math.sin(radial*73);
+        const c=[193+mineral*39,170+mineral*36,161+mineral*39];
+        const iridescence=.12*Math.pow(.5+.5*Math.sin(radial*39),6);
+        const accent=colour(.18+radial*.64);
+        const R=c.map((n,k)=>(n*(1-iridescence)+accent[k]*iridescence)*ringLight);
         rgb=rgb.map((n,k)=>n*(1-opacity)+R[k]*opacity);
       }
       const i=(y*w+x)*4;source[i]=rgb[0];source[i+1]=rgb[1];source[i+2]=rgb[2];source[i+3]=255;

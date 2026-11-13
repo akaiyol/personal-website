@@ -2,7 +2,7 @@
 
 Supersedes the first colour study as the current exploration. Yolanda rejected those mocks as too similar to the original and requested semi-realistic volume, extensive colour variation and the reference’s look and feel.
 
-The material is a procedurally shaded gas giant with turbulent cloud bands, directional illumination, a terminator, ring material, planet-on-ring and ring-on-planet shadows. This smooth colour source is processed by Lumen’s actual RGB dither, LED stamp and bloom renderer. It is not a photographic/scientific reconstruction of Saturn.
+The current material uses a Voyager/JPL cloud map with expressive grading, directional illumination, a terminator, mineral ring material, planet-on-ring and ring-on-planet shadows. Earlier procedural versions remain documented in the evaluation record. This smooth colour source is processed by Lumen’s actual RGB dither, LED stamp and bloom renderer. It is not a photographic/scientific reconstruction of Saturn.
 
 Preserved: original radius/crop, projection, entrance, hover, 64-second axial timing, drag, arrow keys, stars and lifecycle handlers. Render-only prototype; production assets remain unchanged. Three alternative materials explore the new treatment.
 
@@ -21,3 +21,9 @@ Open through the local server at `mockups/planet-lumen-study/`. `frame.html` is 
 - Chromium checks passed: material selection, pointer drag, arrow keys, entrance completion and reduced-motion static phase. No page errors. Source comparison confirms original projection, stars, animation timing, lifecycle and input handlers are retained exactly.
 - Original star layer remains behind the new material. Lumen source is vendored locally with its MIT license; runtime makes no third-party requests.
 - Not verified: full 64-second visual rotation cycle, real hidden-tab pause, Safari and physical touch. User aesthetic acceptance remains open. Flowers are outside this study.
+
+## Evaluation loop — 2026-11-13
+
+Read `evaluation/CRITERIA.md` and `evaluation/ITERATIONS.md`. Open `evaluation/index.html` for the matched baseline comparison and current status. Run `node mockups/planet-lumen-study/evaluate.cjs EVIDENCE_DIRECTORY` from the website root; `--quick` omits the full rotation. Use a fresh evidence directory. This is an on-demand artifact loop; visual acceptance remains a reviewed judgment. Source-map attribution and limitations are in `SOURCE.md`.
+
+The latest full run passed 21 automated checks and captured the entrance/full rotation. Natural-detail fidelity and dot dominance remain partial; do not use this checkpoint to claim the design is finished.
