@@ -1,10 +1,13 @@
+import { createPlanetSurface } from './planet-surface.js';
 (() => {
   'use strict';
-  const canvas=document.querySelector('#home-planet'), hero=document.querySelector('.hero');
-  const ctx=canvas.getContext('2d'), surface=document.createElement('canvas'), paint=surface.getContext('2d',{willReadFrequently:true});
+  let canvas=document.querySelector('#home-planet');const hero=document.querySelector('.hero');
+  let ctx=null,contextAvailable=true;const surface=document.createElement('canvas'), paint=surface.getContext('2d',{willReadFrequently:true});
   const reduce=matchMedia('(prefers-reduced-motion: reduce)'),TAU=Math.PI*2;
   const startPose=Object.freeze({pitch:-1.40,roll:.32}),restPose=Object.freeze({pitch:.40,roll:.32});
   let width=0,height=0,phase=0,pitch=reduce.matches?restPose.pitch:startPose.pitch,roll=restPose.roll,yaw=0,raf=null,last=null,lastPaint=0,drag=null,inView=true;
+  const idleSpeed=TAU/64,friction=2.0;
+  let spinVelocity=0;
   let introElapsed=0, introRunning=!reduce.matches, introState=reduce.matches?'complete':'running';
   function finishIntro(reason='complete') {introRunning=false;introState=reason;if(reason==='complete'){roll=restPose.roll;pitch=restPose.pitch;}hoverAt(pointer);}
   const hint=document.createElement('span');hint.id='planet-drag-hint';hint.textContent='[ drag ↔ ]';hint.hidden=true;hint.setAttribute('aria-hidden','true');canvas.after(hint);
@@ -50,12 +53,28 @@
       if(q[2]<=.12)continue;
       const x=width*.5+q[0]/q[2]*focal,y=height*.5+q[1]/q[2]*focal;
       if(x<2||x>width-2||y<2||y>height-2||Math.hypot(x-cx,y-cy)<radius+3)continue;
-      ctx.beginPath();ctx.arc(x,y,star.size,0,TAU);ctx.fill();
-      visible.push({id:star.id,x:+x.toFixed(3),y:+y.toFixed(3)});
+      if(ctx){ctx.beginPath();ctx.arc(x,y,star.size,0,TAU);ctx.fill();}
+      visible.push({id:star.id,x:+x.toFixed(3),y:+y.toFixed(3),size:star.size});
     }
-    canvas.dataset.stars=JSON.stringify(visible);
+    canvas.dataset.stars=JSON.stringify(visible);return visible;
   }
+  let renderer=createPlanetSurface(canvas,()=>{if(active())draw();});
+  if(!renderer){ctx=canvas.getContext('2d');if(!ctx){const replacement=canvas.cloneNode();canvas.replaceWith(replacement);canvas=replacement;ctx=canvas.getContext('2d');}}
+  canvas.addEventListener('webglcontextlost',()=>{contextAvailable=false;update();});
+  canvas.addEventListener('webglcontextrestored',()=>{renderer=createPlanetSurface(canvas,()=>{if(active())draw();});contextAvailable=true;update();});
   function draw(){
+    if(!width||!height)return;
+    const radius=width>700?Math.max(width*.34,height*.58):width*.78;
+    const cx=width-radius*.16,cy=height*.55,dpr=Math.min(devicePixelRatio||1,2);
+    const image=renderer?.draw({width,height,dpr,radius,cx,cy,phase,stars:drawStars(cx,cy,radius),bx:project(1,0,0),by:project(0,1,0),bz:project(0,0,1)});
+    if(!image){if(!renderer){drawLegacy();canvas.dataset.renderer='legacy';}return;}
+    canvas.dataset.renderer='accelerated';
+    canvas.dataset.phase=phase.toFixed(5);canvas.dataset.rotation=[yaw,pitch,roll].map(v=>v.toFixed(4)).join(',');
+    canvas.dataset.intro=introState;canvas.dataset.hover=[hoverYaw,hoverPitch].map(v=>v.toFixed(5)).join(',');
+    canvas.dataset.spin=spinVelocity.toFixed(4);
+    canvas.dataset.frame=String(Number(canvas.dataset.frame||0)+1);
+  }
+  function drawLegacy(){
     if(!width||!height)return;
     const radius=width>700?Math.max(width*.34,height*.58):width*.78;
     const cx=width-radius*.16,cy=height*.55;
@@ -105,13 +124,19 @@
     }ctx.fill();
     canvas.dataset.phase=phase.toFixed(5);canvas.dataset.rotation=[yaw,pitch,roll].map(v=>v.toFixed(4)).join(',');
     canvas.dataset.intro=introState;canvas.dataset.hover=[hoverYaw,hoverPitch].map(v=>v.toFixed(5)).join(',');
+    canvas.dataset.spin=spinVelocity.toFixed(4);
     canvas.dataset.frame=String(Number(canvas.dataset.frame||0)+1);
   }
-  function active(){return !hero.hidden&&!document.hidden&&inView}
+  function active(){return contextAvailable&&!hero.hidden&&!document.hidden&&inView}
   function frame(now){
     raf=null;if(!active()){last=null;return}
     if(last!==null&&!reduce.matches){
-      const dt=now-last;const easeHover=1-Math.exp(-dt/140);hoverYaw+=(targetYaw-hoverYaw)*easeHover;hoverPitch+=(targetPitch-hoverPitch)*easeHover;phase=(phase+dt/1000*TAU/64)%TAU;
+      const dt=now-last;const easeHover=1-Math.exp(-dt/140);hoverYaw+=(targetYaw-hoverYaw)*easeHover;hoverPitch+=(targetPitch-hoverPitch)*easeHover;const seconds=Math.min(dt/1000,.05),decay=Math.exp(-seconds/friction);
+      // Exact exponential integration: equal coasting at 60/120Hz, no Euler speed steps.
+      const momentum=drag?0:spinVelocity*friction*(1-decay);
+      if(!drag)spinVelocity*=decay;
+      if(Math.abs(spinVelocity)<.005)spinVelocity=0;
+      phase=((phase+seconds*idleSpeed+momentum)%TAU+TAU)%TAU;
       if(introRunning){
         introElapsed+=dt;
         const t=clamp((introElapsed-180)/(3000/1.3),0,1),ease=t*t*t*(t*(t*6-15)+10);
@@ -119,29 +144,45 @@
         if(t===1)finishIntro();
       }
     }
-    last=now;if(now-lastPaint>50){draw();lastPaint=now}
+    last=now;if(canvas.dataset.renderer==='accelerated'||now-lastPaint>50){draw();lastPaint=now}
     if(!reduce.matches)raf=requestAnimationFrame(frame);
   }
   function update(){
     if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null;
     if(introRunning&&(reduce.matches||hero.hidden))finishIntro();
     if(hero.hidden){hoverAt(null);hoverYaw=hoverPitch=0;}
-    if(reduce.matches){hoverYaw=hoverPitch=0;hoverAt(pointer);}
+    if(reduce.matches){spinVelocity=0;hoverYaw=hoverPitch=0;hoverAt(pointer);}
+    if(!active())spinVelocity=0;
     if(active()){resize();hoverAt(pointer);draw();if(!reduce.matches)raf=requestAnimationFrame(frame)}
   }
   function resize(){if(hero.hidden)return;width=Math.round(canvas.clientWidth);height=Math.round(canvas.clientHeight);const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);surface.width=width;surface.height=height}
-  canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;if(introRunning)finishIntro('interrupted');drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY};targetYaw=targetPitch=hoverYaw=hoverPitch=0;canvas.setPointerCapture(e.pointerId);canvas.classList.add('is-dragging')});
+  canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;if(introRunning)finishIntro('interrupted');spinVelocity=0;drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,samples:[{x:e.clientX,y:e.clientY,t:e.timeStamp}]};targetYaw=targetPitch=hoverYaw=hoverPitch=0;canvas.setPointerCapture(e.pointerId);canvas.classList.add('is-dragging')});
   canvas.addEventListener('pointermove',e=>{
     const box=canvas.getBoundingClientRect();
     if(!drag){if(e.pointerType==='mouse')hoverAt({x:e.clientX-box.left,y:e.clientY-box.top});return}
     if(drag.id!==e.pointerId)return;
     const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
     if(Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)>6){hasDragged=true;hint.hidden=true;}
-    yaw+=dx*.006;roll-=dx*.0015;pitch=clamp(pitch+dy*.006,-1.4,1.4);drag.x=e.clientX;drag.y=e.clientY;draw();
+    yaw+=dx*.006;roll-=dx*.0015;pitch=clamp(pitch+dy*.006,-1.4,1.4);drag.x=e.clientX;drag.y=e.clientY;
+    drag.samples.push({x:e.clientX,y:e.clientY,t:e.timeStamp});
+    drag.samples=drag.samples.filter(sample=>e.timeStamp-sample.t<=90).slice(-10);
+    if(reduce.matches)draw();
   });
   canvas.addEventListener('pointerleave',()=>hoverAt(null));
-  function end(e){if(drag?.id===e.pointerId){drag=null;canvas.classList.remove('is-dragging');hoverAt(pointer)}}canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
-  canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();if(introRunning)finishIntro('interrupted');hasDragged=true;hint.hidden=true;targetYaw=targetPitch=hoverYaw=hoverPitch=0;if(e.key==='ArrowLeft')yaw-=.12;if(e.key==='ArrowRight')yaw+=.12;if(e.key==='ArrowUp')pitch=clamp(pitch-.12,-1.4,1.4);if(e.key==='ArrowDown')pitch=clamp(pitch+.12,-1.4,1.4);draw()});
+  function end(e){if(drag?.id===e.pointerId){
+    const samples=drag.samples,first=samples[0],lastSample=samples[samples.length-1];
+    if(e.type==='pointerup'&&!reduce.matches&&e.timeStamp-lastSample.t<80&&samples.length>1){
+      const elapsed=lastSample.t-first.t;
+      const dx=lastSample.x-first.x,dy=lastSample.y-first.y;
+      const speed=elapsed>8?Math.hypot(dx,dy)/elapsed:0;
+      if(Math.hypot(dx,dy)>12&&speed>.45){
+        const direction=Math.abs(dx)>=Math.abs(dy)?Math.sign(dx):-Math.sign(dy);
+        spinVelocity=direction*Math.min(9,speed*4.5);
+      }
+    }
+    drag=null;canvas.classList.remove('is-dragging');hoverAt(pointer);
+  }}canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
+  canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();spinVelocity=0;if(introRunning)finishIntro('interrupted');hasDragged=true;hint.hidden=true;targetYaw=targetPitch=hoverYaw=hoverPitch=0;if(e.key==='ArrowLeft')yaw-=.12;if(e.key==='ArrowRight')yaw+=.12;if(e.key==='ArrowUp')pitch=clamp(pitch-.12,-1.4,1.4);if(e.key==='ArrowDown')pitch=clamp(pitch+.12,-1.4,1.4);if(e.shiftKey&&!reduce.matches)spinVelocity=['ArrowLeft','ArrowDown'].includes(e.key)?-5:5;draw()});
   new ResizeObserver(update).observe(canvas);
   new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;update()}).observe(canvas);
   document.addEventListener('visibilitychange',update);window.addEventListener('site:route',update);reduce.addEventListener('change',update);update();

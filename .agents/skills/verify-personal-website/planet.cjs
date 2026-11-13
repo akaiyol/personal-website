@@ -1,3 +1,4 @@
+const {checkPlanetFlick}=require('../../../scripts/verify-planet-flick.cjs');
 const assert=require('assert'),path=require('path');
 async function checkHomePlanet(page,base,out){
  await page.goto(base+'/?planet-intro-check#home');const planet=page.locator('#home-planet');
@@ -10,11 +11,11 @@ async function checkHomePlanet(page,base,out){
    const w=el.width,h=el.height,dpr=w/el.clientWidth,r=el.clientWidth>700?Math.max(el.clientWidth*.34,el.clientHeight*.58):el.clientWidth*.78;
    const cx=el.clientWidth-r*.16,cy=el.clientHeight*.55;
    const x=Math.round((cx-r*.40)*dpr),y=Math.round((cy-r*.35)*dpr),sw=Math.round(r*.50*dpr),sh=Math.round(r*.70*dpr);
-   const pixels=el.getContext('2d').getImageData(x,y,sw,sh).data;let ink=0;
+   const pixels=new Uint8Array(sw*sh*4);if(el.dataset.renderer==='accelerated'){const gl=el.getContext('webgl');gl.readPixels(x,h-y-sh,sw,sh,gl.RGBA,gl.UNSIGNED_BYTE,pixels);}else pixels.set(el.getContext('2d').getImageData(x,y,sw,sh).data);let ink=0;
    for(let i=0;i<pixels.length;i+=4)if(pixels[i+3]>0)ink++;
    return ink/(sw*sh);
   });
-  assert(globeInk<.002,'Opening globe should be black, not filled with the reflected ring band');
+  assert(await planet.getAttribute('data-renderer')==='accelerated'?globeInk>.02:globeInk<.002,'Opening texture or graceful fallback is missing');
 
   const before=await page.locator('.hero').boundingBox();
   await page.screenshot({path:path.join(out,'planet-intro-start.png')});
@@ -29,8 +30,8 @@ async function checkHomePlanet(page,base,out){
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Planet creates overflow');
   assert(JSON.parse(await planet.getAttribute('data-stars')).length>3,'No distant stars rendered at this width');
   assert(await planet.evaluate(el=>{
-   const stars=JSON.parse(el.dataset.stars),dpr=el.width/el.clientWidth,ctx=el.getContext('2d');
-   return stars.filter(star=>{const pixels=ctx.getImageData(Math.floor(star.x*dpr)-1,Math.floor(star.y*dpr)-1,3,3).data;return [...pixels].some((value,i)=>i%4===3&&value>0)}).length>3;
+   const stars=JSON.parse(el.dataset.stars),dpr=el.width/el.clientWidth;
+   return stars.filter(star=>{const x=Math.floor(star.x*dpr)-1,y=Math.floor(star.y*dpr)-1,pixels=new Uint8Array(36);if(el.dataset.renderer==='accelerated'){const gl=el.getContext('webgl');gl.readPixels(x,el.height-y-3,3,3,gl.RGBA,gl.UNSIGNED_BYTE,pixels);}else pixels.set(el.getContext('2d').getImageData(x,y,3,3).data);return [...pixels].some((value,i)=>i%4===3&&value>0)}).length>3;
   }),'Projected stars are missing from actual canvas pixels');
   const layer=await page.locator('.hero .cta').first().evaluate((el,{width})=>({foreground:Number(getComputedStyle(el.closest('.hero')).zIndex),planet:Number(getComputedStyle(document.querySelector('#home-planet')).zIndex),rim:width<=700?getComputedStyle(el).filter:getComputedStyle(el).boxShadow}), {width});
   assert(layer.foreground>layer.planet&&layer.rim!=='none','Buttons must be above artwork with black rim');
@@ -64,5 +65,6 @@ async function checkHomePlanet(page,base,out){
  await page.locator('[data-command="about"]').click();await page.locator('#about-view').waitFor({state:'visible'});const stopped=await planet.getAttribute('data-frame');await page.waitForTimeout(250);assert.equal(await planet.getAttribute('data-frame'),stopped,'Hidden route kept rendering planet');
  await page.locator('.identity').click();await planet.waitFor({state:'visible'});assert.equal(await planet.getAttribute('data-intro'),'complete','Intro replayed on route return');await page.waitForTimeout(150);assert.notEqual(await planet.getAttribute('data-frame'),stopped,'Planet did not resume');
  await page.locator('[data-command="work"]').click();await page.locator('#work-view').waitFor({state:'visible'});await page.locator('.identity').click();
+ await checkPlanetFlick(page,base,out);
 }
 module.exports={checkHomePlanet};

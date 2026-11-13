@@ -24,3 +24,6 @@
 
 # Exclude hidden files even within public directories.
 **/.*
+
+# Component documentation is source material, not a hosted asset.
+**/*.md
