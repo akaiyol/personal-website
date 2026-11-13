@@ -1,4 +1,4 @@
-import { createPlanetSurface } from './planet-surface.js';
+import { createPlanetSurface } from './planet-surface.js?v=2';
 (() => {
   'use strict';
   let canvas=document.querySelector('#home-planet');const hero=document.querySelector('.hero');
@@ -7,7 +7,7 @@ import { createPlanetSurface } from './planet-surface.js';
   const startPose=Object.freeze({pitch:-1.40,roll:.32}),restPose=Object.freeze({pitch:.40,roll:.32});
   let width=0,height=0,phase=0,pitch=reduce.matches?restPose.pitch:startPose.pitch,roll=restPose.roll,yaw=0,raf=null,last=null,lastPaint=0,drag=null,inView=true;
   const idleSpeed=TAU/64,friction=2.0;
-  let spinVelocity=0;
+  let spinVelocity=0,pendingSpin=0,skyPhase=0;
   let introElapsed=0, introRunning=!reduce.matches, introState=reduce.matches?'complete':'running';
   function finishIntro(reason='complete') {introRunning=false;introState=reason;if(reason==='complete'){roll=restPose.roll;pitch=restPose.pitch;}hoverAt(pointer);}
   const hint=document.createElement('span');hint.id='planet-drag-hint';hint.textContent='[ drag ↔ ]';hint.hidden=true;hint.setAttribute('aria-hidden','true');canvas.after(hint);
@@ -47,7 +47,7 @@ import { createPlanetSurface } from './planet-surface.js';
     return {id,x:r*Math.cos(a),y,z:r*Math.sin(a),size:.5+Math.pow(starRandom(),2)*1.05};
   });
   function drawStars(cx,cy,radius){
-    const visible=[],focal=Math.max(width,height)*.65,turn=Math.cos(phase),spin=Math.sin(phase);
+    const visible=[],focal=Math.max(width,height)*.65,turn=Math.cos(skyPhase),spin=Math.sin(skyPhase);
     for(const star of stars){
       const q=project(star.x*turn-star.z*spin,star.y,star.x*spin+star.z*turn);
       if(q[2]<=.12)continue;
@@ -71,7 +71,7 @@ import { createPlanetSurface } from './planet-surface.js';
     canvas.dataset.renderer='accelerated';
     canvas.dataset.phase=phase.toFixed(5);canvas.dataset.rotation=[yaw,pitch,roll].map(v=>v.toFixed(4)).join(',');
     canvas.dataset.intro=introState;canvas.dataset.hover=[hoverYaw,hoverPitch].map(v=>v.toFixed(5)).join(',');
-    canvas.dataset.spin=spinVelocity.toFixed(4);
+    canvas.dataset.spin=spinVelocity.toFixed(4);canvas.dataset.skyPhase=skyPhase.toFixed(5);
     canvas.dataset.frame=String(Number(canvas.dataset.frame||0)+1);
   }
   function drawLegacy(){
@@ -124,14 +124,28 @@ import { createPlanetSurface } from './planet-surface.js';
     }ctx.fill();
     canvas.dataset.phase=phase.toFixed(5);canvas.dataset.rotation=[yaw,pitch,roll].map(v=>v.toFixed(4)).join(',');
     canvas.dataset.intro=introState;canvas.dataset.hover=[hoverYaw,hoverPitch].map(v=>v.toFixed(5)).join(',');
-    canvas.dataset.spin=spinVelocity.toFixed(4);
+    canvas.dataset.spin=spinVelocity.toFixed(4);canvas.dataset.skyPhase=skyPhase.toFixed(5);
     canvas.dataset.frame=String(Number(canvas.dataset.frame||0)+1);
+  }
+  function launchSpin(speed){
+    if(reduce.matches)return;
+    // If input interrupts the entrance, finish settling before launching momentum.
+    if(Math.abs(pitch-restPose.pitch)>.025||Math.abs(roll-restPose.roll)>.025)pendingSpin=speed;
+    else spinVelocity=speed;
   }
   function active(){return contextAvailable&&!hero.hidden&&!document.hidden&&inView}
   function frame(now){
     raf=null;if(!active()){last=null;return}
     if(last!==null&&!reduce.matches){
       const dt=now-last;const easeHover=1-Math.exp(-dt/140);hoverYaw+=(targetYaw-hoverYaw)*easeHover;hoverPitch+=(targetPitch-hoverPitch)*easeHover;const seconds=Math.min(dt/1000,.05),decay=Math.exp(-seconds/friction);
+      if(!introRunning){
+        const settle=1-Math.exp(-dt/160);
+        pitch+=(restPose.pitch-pitch)*settle;roll+=(restPose.roll-roll)*settle;
+        if(Math.abs(pitch-restPose.pitch)<.00001)pitch=restPose.pitch;
+        if(Math.abs(roll-restPose.roll)<.00001)roll=restPose.roll;
+        if(pendingSpin&&!drag&&Math.abs(pitch-restPose.pitch)<.025&&Math.abs(roll-restPose.roll)<.025){spinVelocity=pendingSpin;pendingSpin=0;}
+      }
+      skyPhase=(skyPhase+seconds*idleSpeed)%TAU;
       // Exact exponential integration: equal coasting at 60/120Hz, no Euler speed steps.
       const momentum=drag?0:spinVelocity*friction*(1-decay);
       if(!drag)spinVelocity*=decay;
@@ -151,19 +165,19 @@ import { createPlanetSurface } from './planet-surface.js';
     if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null;
     if(introRunning&&(reduce.matches||hero.hidden))finishIntro();
     if(hero.hidden){hoverAt(null);hoverYaw=hoverPitch=0;}
-    if(reduce.matches){spinVelocity=0;hoverYaw=hoverPitch=0;hoverAt(pointer);}
-    if(!active())spinVelocity=0;
+    if(reduce.matches){spinVelocity=pendingSpin=0;hoverYaw=hoverPitch=0;hoverAt(pointer);}
+    if(!active())spinVelocity=pendingSpin=0;
     if(active()){resize();hoverAt(pointer);draw();if(!reduce.matches)raf=requestAnimationFrame(frame)}
   }
   function resize(){if(hero.hidden)return;width=Math.round(canvas.clientWidth);height=Math.round(canvas.clientHeight);const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);surface.width=width;surface.height=height}
-  canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;if(introRunning)finishIntro('interrupted');spinVelocity=0;drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,samples:[{x:e.clientX,y:e.clientY,t:e.timeStamp}]};targetYaw=targetPitch=hoverYaw=hoverPitch=0;canvas.setPointerCapture(e.pointerId);canvas.classList.add('is-dragging')});
+  canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;if(introRunning)finishIntro('interrupted');spinVelocity=pendingSpin=0;drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,samples:[{x:e.clientX,y:e.clientY,t:e.timeStamp}]};targetYaw=targetPitch=0;canvas.setPointerCapture(e.pointerId);canvas.classList.add('is-dragging')});
   canvas.addEventListener('pointermove',e=>{
     const box=canvas.getBoundingClientRect();
     if(!drag){if(e.pointerType==='mouse')hoverAt({x:e.clientX-box.left,y:e.clientY-box.top});return}
     if(drag.id!==e.pointerId)return;
     const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
     if(Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)>6){hasDragged=true;hint.hidden=true;}
-    yaw+=dx*.006;roll-=dx*.0015;pitch=clamp(pitch+dy*.006,-1.4,1.4);drag.x=e.clientX;drag.y=e.clientY;
+    if(!drag.axis&&Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)>6)drag.axis=Math.abs(e.clientX-drag.startX)>=Math.abs(e.clientY-drag.startY)?'x':'y';yaw+=(drag.axis==='y'?-dy:dx)*.006;drag.x=e.clientX;drag.y=e.clientY;
     drag.samples.push({x:e.clientX,y:e.clientY,t:e.timeStamp});
     drag.samples=drag.samples.filter(sample=>e.timeStamp-sample.t<=90).slice(-10);
     if(reduce.matches)draw();
@@ -174,15 +188,15 @@ import { createPlanetSurface } from './planet-surface.js';
     if(e.type==='pointerup'&&!reduce.matches&&e.timeStamp-lastSample.t<80&&samples.length>1){
       const elapsed=lastSample.t-first.t;
       const dx=lastSample.x-first.x,dy=lastSample.y-first.y;
-      const speed=elapsed>8?Math.hypot(dx,dy)/elapsed:0;
+      const component=drag.axis==='y'?-dy:dx;
+      const speed=elapsed>8?Math.abs(component)/elapsed:0;
       if(Math.hypot(dx,dy)>12&&speed>.45){
-        const direction=Math.abs(dx)>=Math.abs(dy)?Math.sign(dx):-Math.sign(dy);
-        spinVelocity=direction*Math.min(9,speed*4.5);
+        launchSpin(Math.sign(component)*Math.min(9,speed*4.5));
       }
     }
     drag=null;canvas.classList.remove('is-dragging');hoverAt(pointer);
   }}canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
-  canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();spinVelocity=0;if(introRunning)finishIntro('interrupted');hasDragged=true;hint.hidden=true;targetYaw=targetPitch=hoverYaw=hoverPitch=0;if(e.key==='ArrowLeft')yaw-=.12;if(e.key==='ArrowRight')yaw+=.12;if(e.key==='ArrowUp')pitch=clamp(pitch-.12,-1.4,1.4);if(e.key==='ArrowDown')pitch=clamp(pitch+.12,-1.4,1.4);if(e.shiftKey&&!reduce.matches)spinVelocity=['ArrowLeft','ArrowDown'].includes(e.key)?-5:5;draw()});
+  canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();spinVelocity=pendingSpin=0;if(introRunning)finishIntro('interrupted');hasDragged=true;hint.hidden=true;targetYaw=targetPitch=hoverYaw=hoverPitch=0;if(e.key==='ArrowLeft')yaw-=.12;if(e.key==='ArrowRight')yaw+=.12;if(e.key==='ArrowUp')yaw+=.12;if(e.key==='ArrowDown')yaw-=.12;if(e.shiftKey)launchSpin(['ArrowLeft','ArrowDown'].includes(e.key)?-5:5);draw()});
   new ResizeObserver(update).observe(canvas);
   new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;update()}).observe(canvas);
   document.addEventListener('visibilitychange',update);window.addEventListener('site:route',update);reduce.addEventListener('change',update);update();
