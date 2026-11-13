@@ -1,0 +1,46 @@
+{
+  "orchid": {
+    "name": "01 \u00b7 Orchid dusk",
+    "colours": [
+      "#48306e",
+      "#9570d7",
+      "#dcb7ef",
+      "#ed8da9",
+      "#ffc69a"
+    ],
+    "note": "Lavender, orchid and peach. Closest to your current purple, with a warmer illuminated edge."
+  },
+  "lagoon": {
+    "name": "02 \u00b7 Tidal opal",
+    "colours": [
+      "#183b55",
+      "#287e93",
+      "#7bd1bd",
+      "#b2b2ed",
+      "#ebc8eb"
+    ],
+    "note": "Deep teal, sea glass and lilac. Cooler and quieter, with a pearlescent ring."
+  },
+  "ember": {
+    "name": "03 \u00b7 Rose ember",
+    "colours": [
+      "#52244f",
+      "#a34378",
+      "#ed889a",
+      "#f4b27b",
+      "#f8ddac"
+    ],
+    "note": "Plum, rose and amber. Warmest of the four; the strongest connection to the flower reference."
+  },
+  "aurora": {
+    "name": "04 \u00b7 Blue hour",
+    "colours": [
+      "#202e66",
+      "#4b60ba",
+      "#9294ef",
+      "#6ec8cf",
+      "#c4efd5"
+    ],
+    "note": "Indigo, periwinkle and mint. More celestial, with a cool luminous rim."
+  }
+}
