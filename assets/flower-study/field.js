@@ -26,7 +26,10 @@
     [0,714,205,.88,10], [2,838,286,.95,1], [2,920,158,.81,-10],
     [1,1014,265,.83,7], [0,1103,141,.75,-5]
   ];
+  let generation=0;
   function build() {
+    generation++;
+    for(const p of plants)p.sprite?.close?.();
     const mobile=width<=600, indices=mobile?[0,2,7]:fieldLayout.map((_,i)=>i);
     field.classList.toggle('flowers-narrow',mobile);
     plants=indices.map((index,i)=>{
@@ -34,108 +37,44 @@
       return {id:i, variant, x:mobile?[145,240,315][i]/440:x/1200,
         h:h*(mobile?1.18:1)*Math.cos(lean*Math.PI/180), lean:h*Math.sin(lean*Math.PI/180),
         headScale:size, angle:(rand(index,4)-.5)*.13,
-        elevation:(variant===1?12:8)*Math.PI/180, phase:rand(index,6)*TAU, sprite:null, stage:-1};
+        elevation:(variant===1?12:8)*Math.PI/180, phase:rand(index,6)*TAU, sprite:null, anchor:[0,0], stage:-1, wanted:0};
     });
     dirty=true;
   }
-  // Authored ribbon centerlines establish the reference silhouette. Every petal
-  // remains a generated curved surface rooted on the same numeric cup.
-  const petalProfiles = [
-    {a:[-17,0,-10],b:[-28,17,-15],c:[-49,33,-18],d:[-57,34,-16],w:3.5},
-    {a:[-12,0,-17],b:[-16,22,-22],c:[-34,46,-25],d:[-29,46,-22],w:5.5},
-    {a:[-5,0,-22],b:[-10,25,-26],c:[-10,51,-25],d:[-3,49,-22],w:7},
-    {a:[4,0,-22],b:[8,23,-25],c:[23,48,-24],d:[27,45,-20],w:6},
-    {a:[13,0,-17],b:[23,20,-21],c:[48,38,-20],d:[51,33,-16],w:3.2},
-    {a:[20,0,-8],b:[36,14,-10],c:[65,23,-10],d:[74,18,-5],w:4.2},
-    {a:[-22,0,-3],b:[-41,12,-2],c:[-71,11,2],d:[-83,-9,6],w:6.3},
-    {a:[22,0,-2],b:[43,13,2],c:[71,9,7],d:[83,-11,10],w:7.1},
-    {a:[-17,0,15],b:[-32,6,20],c:[-57,1,24],d:[-65,-14,25],w:7},
-    {a:[-6,0,22],b:[-18,7,30],c:[-28,9,42],d:[-34,2,48],w:11},
-    {a:[13,0,19],b:[26,10,26],c:[47,11,35],d:[56,0,39],w:7.5}
-  ];
-  function bloom(p,g) {
-    const sprite=document.createElement('canvas');sprite.width=520;sprite.height=600;sprite.anchor=[0,0];
-    const c=sprite.getContext('2d');c.translate(260,350);c.scale(2,2);
-    const yaw=params.yaw*Math.PI/180+p.angle, elevation=p.elevation+params.pitch*Math.PI/180;
-    const tilt=p.variant===1?-.25:p.variant===2?.10:-.06;
-    const project=([x,y,z])=>{
-      const X=x*Math.cos(yaw)-z*Math.sin(yaw),Z=x*Math.sin(yaw)+z*Math.cos(yaw);
-      const Y=-y*Math.cos(elevation)+Z*Math.sin(elevation);
-      return [X*Math.cos(tilt)-Y*Math.sin(tilt),X*Math.sin(tilt)+Y*Math.cos(tilt),Z*Math.cos(elevation)+y*Math.sin(elevation)];
-    };
-    const open=smooth((g-.53)/.47), bowl=smooth((g-.4)/.32), radius=24*bowl, depth=params.centerDepth*122*bowl*(p.variant===2?.8:1);
-    if(!bowl)return sprite;
-    sprite.anchor=project([0,-depth,0]);
-    const cubic=(profile,t)=>profile.a.map((a,k)=>(1-t)**3*a+3*(1-t)**2*t*profile.b[k]+3*(1-t)*t*t*profile.c[k]+t**3*profile.d[k]);
-    const petals=[];
-    for(let j=0;j<params.petalCount;j++){
-      const profile=petalProfiles[j%petalProfiles.length];
-      const extra=j>=petalProfiles.length?(j-petalProfiles.length+1)*.15:0;
-      const variation=.94+rand(p.id*43+j,12)*.12;
-      const center=t=>{
-        const q=cubic(profile,t),reach=params.petalLength*variation;
-        let x=profile.a[0]+(q[0]-profile.a[0])*reach;
-        let y=q[1]*reach*(p.variant===2?.48:p.variant===0?.62:1.12),z=q[2];
-        const opening=open*params.openness/.83;
-        x=profile.a[0]*(1-t*.7)+(x-profile.a[0]*(1-t*.7))*opening;
-        y=(1-opening)*t*55*reach+opening*y;
-        y+=params.petalCurl*9*Math.sin(Math.PI*t)-params.petalCurl*8*t*t;
-        if(p.variant===1)x-=y*.12;
-        z=z*bowl+extra*x;
-        return [x*bowl,y*bowl,z];
+  // Keep procedural petal rasterization off the input/animation thread. Only one
+  // job is in flight, so rapid scrubbing cannot accumulate stale growth frames.
+  let bloomWorker=null,bloomJob=null,bloomCursor=0;
+  function disableBloomWorker(event){event?.preventDefault?.();bloomWorker?.terminate();bloomWorker=null;bloomJob=null;invalidate();}
+  if(typeof Worker==='function'&&typeof OffscreenCanvas==='function'){
+    try{
+      bloomWorker=new Worker('assets/flower-study/bloom-worker.js?v=1');
+      bloomWorker.onerror=disableBloomWorker;
+      bloomWorker.onmessage=({data})=>{
+        const job=bloomJob;bloomJob=null;
+        const p=job&&job.generation===generation?plants[job.index]:null;
+        if(p&&data.stage===job.stage){p.sprite?.close?.();p.sprite=data.bitmap;p.anchor=data.anchor;p.stage=data.stage;dirty=true;}
+        else data.bitmap?.close();
+        schedule();dispatchBloom();
       };
-      const point=(t,v)=>{
-        const q=center(t),before=center(Math.max(0,t-.002)),after=center(Math.min(1,t+.002));
-        const dx=after[0]-before[0],dy=after[1]-before[1],len=Math.hypot(dx,dy)||1;
-        const w=profile.w*Math.sin(Math.PI*t)**.65*(.15+.85*open)*v;
-        return [q[0]-dy/len*w,q[1]+dx/len*w+Math.abs(v)**1.8*Math.sin(Math.PI*t)*profile.w*.16,q[2]+w*.18];
-      };
-      const boundary=[];for(let k=0;k<=44;k++)boundary.push(project(point(k/44,-1)));
-      for(let k=44;k>=0;k--)boundary.push(project(point(k/44,1)));
-      petals.push({j,point,boundary,z:project(center(.5))[2]});
+    }catch{disableBloomWorker();}
+  }
+  function dispatchBloom(){
+    if(!bloomWorker||bloomJob||!inView||document.hidden)return;
+    for(let n=0;n<plants.length;n++){
+      const index=(bloomCursor+n)%plants.length,p=plants[index];
+      if(p.wanted<=.4||p.wanted===p.stage)continue;
+      bloomCursor=(index+1)%plants.length;
+      bloomJob={index,stage:p.wanted,generation};
+      bloomWorker.postMessage({plant:{id:p.id,variant:p.variant,angle:p.angle,elevation:p.elevation},stage:p.wanted,params});return;
     }
-    const paintPetal=petal=>{
-      const path=new Path2D();petal.boundary.forEach((q,i)=>i?path.lineTo(q[0],q[1]):path.moveTo(q[0],q[1]));path.closePath();
-      c.fillStyle='#000';c.fill(path);c.save();c.clip(path);c.fillStyle=ink;
-      // Sample along the ribbon without painting individual opaque mesh tiles.
-      // Its continuous silhouette is more important than random fold noise.
-      const samples=2300;
-      for(let k=0;k<samples;k++){
-        const seed=p.id*700001+petal.j*5003+k;
-        const t=rand(seed,41),v=rand(seed,42)*2-1;
-        if(rand(seed,43)>(v<0?.82:.98))continue;
-        const q=project(petal.point(t,v));c.globalAlpha=.78+rand(seed,44)*.22;
-        c.fillRect(q[0],q[1],.48+rand(seed,45)*.22,.58);
-      }
-      c.restore();c.globalAlpha=1;
-    };
-    petals.sort((a,b)=>a.z-b.z);
-    petals.filter(q=>q.z<9).forEach(paintPetal);
-    const cupPoint=(u,a)=>{const r=radius*(.08+.92*u**.85);return project([r*Math.cos(a),-depth*(1-u),r*Math.sin(a)])};
-    const cup=new Path2D();
-    for(let k=0;k<=30;k++){const q=cupPoint(1,k*TAU/30);k?cup.lineTo(q[0],q[1]):cup.moveTo(q[0],q[1])}
-    for(let k=30;k>=0;k--){const q=cupPoint(0,k*TAU/30);cup.lineTo(q[0],q[1])}cup.closePath();c.fillStyle='#000';c.fill(cup);
-    // Individual glyphs follow the visible half of the bowl; each row encodes u.
-    c.fillStyle=ink;c.textAlign='center';c.textBaseline='middle';
-    for(let row=0;row<7;row++){
-      const u=.12+row*.13, count=Math.max(3,Math.round(14*(.1+.9*u)));
-      const digits=(u.toFixed(2).slice(1)).repeat(4).slice(0,count);
-      for(let k=0;k<digits.length;k++){
-        const a=.12+(Math.PI-.24)*k/(digits.length-1),q=cupPoint(u,a);
-        c.save();c.translate(q[0],q[1]);c.scale(.45+.55*Math.sin(a),1);c.font=`${5.5+u*2.5}px Menlo,monospace`;c.fillText(digits[k],0,0);c.restore();
-      }
-    }
-    petals.filter(q=>q.z>=9).forEach(paintPetal);
-    return sprite;
   }
   function stem(p,t,g) {
     const sway=reduced.matches?0:params.windStrength*(Math.sin(time*TAU*params.windRate+p.phase)*7+Math.sin(time*.93+p.phase)*1.2);
     return {x:p.lean*t*t+sway*t*t,y:-p.h*g*t};
   }
-  function leaf(p,j,g,stemGrowth) {
-    const amount=smooth((g-(j===0?.18:.34))/.3);if(!amount)return;
-    const at=j===0?.29:.57, pos=stem(p,at,stemGrowth),side=(p.id+j)%2?1:-1;
-    ctx.save();ctx.translate(pos.x,pos.y);ctx.scale(side*amount,amount);
+  function leafTexture(p,j) {
+    const sprite=document.createElement('canvas');sprite.width=144;sprite.height=160;
+    const c=sprite.getContext('2d');c.scale(2,2);c.translate(4,60);
     const len=27+rand(p.id,j+31)*17, breadth=7+rand(p.id,j+32)*5;
     const lift=3+rand(p.id,j+33)*6, droop=(rand(p.id,j+34)-.35)*12;
     const petiole=4+rand(p.id,j+35)*4;
@@ -149,24 +88,31 @@
     const outline=new Path2D();outline.moveTo(petiole,-petiole*.55);
     for(let k=1;k<=32;k++){const q=point(k/32,-1);outline.lineTo(q.x,q.y)}
     for(let k=31;k>=0;k--){const q=point(k/32,1);outline.lineTo(q.x,q.y)}outline.closePath();
-    ctx.fillStyle='#000';ctx.fill(outline);
-    ctx.fillStyle=ink;
+    c.fillStyle='#000';c.fill(outline);
+    c.fillStyle=ink;
     for(let k=0;k<2500;k++){
       const t=rand(p.id*1301+j*733+k,61),v=rand(p.id*1301+j*733+k,62)*2-1;
       // Thin the shaded half and center crease; retain a luminous curved edge.
       if(rand(k,p.id*31+j+65)>(v<0?.65:.95))continue;
-      const q=point(t,v);ctx.globalAlpha=.65+Math.abs(v)*.35;ctx.fillRect(q.x,q.y,.6,.6);
+      const q=point(t,v);c.globalAlpha=.65+Math.abs(v)*.35;c.fillRect(q.x,q.y,.6,.6);
     }
-    ctx.globalAlpha=.75;ctx.strokeStyle=ink;ctx.lineWidth=.45;
-    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(petiole,-petiole*.55);
-    for(let k=1;k<=28;k++){const q=mid(k/28);ctx.lineTo(q.x,q.y)}ctx.stroke();
+    c.globalAlpha=.75;c.strokeStyle=ink;c.lineWidth=.45;
+    c.beginPath();c.moveTo(0,0);c.lineTo(petiole,-petiole*.55);
+    for(let k=1;k<=28;k++){const q=mid(k/28);c.lineTo(q.x,q.y)}c.stroke();
     // Short branching veins follow the blade instead of floating over it.
-    ctx.globalAlpha=.38;ctx.setLineDash([.45,1.1]);
+    c.globalAlpha=.38;c.setLineDash([.45,1.1]);
     for(let k=2;k<=6;k++)for(const sign of [-1,1]){
       const t=k/8,a=mid(t),b=point(Math.min(.97,t+.13),sign*.83);
-      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(a.x+len*.07,a.y+(b.y-a.y)*.2,b.x,b.y);ctx.stroke();
+      c.beginPath();c.moveTo(a.x,a.y);c.quadraticCurveTo(a.x+len*.07,a.y+(b.y-a.y)*.2,b.x,b.y);c.stroke();
     }
-    ctx.setLineDash([]);ctx.globalAlpha=1;ctx.restore();
+    return sprite;
+  }
+  function leaf(p,j,g,stemGrowth) {
+    const amount=smooth((g-(j===0?.18:.34))/.3);if(!amount)return;
+    const at=j===0?.29:.57,pos=stem(p,at,stemGrowth),side=(p.id+j)%2?1:-1;
+    p.leaves??=[];const sprite=p.leaves[j]??(p.leaves[j]=leafTexture(p,j));
+    ctx.save();ctx.translate(pos.x,pos.y);ctx.scale(side*amount,amount);
+    ctx.drawImage(sprite,-4,-60,72,80);ctx.restore();
   }
   function draw() {
     const dpr=Math.min(devicePixelRatio||1,2);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
@@ -176,7 +122,7 @@
     let visible=0;const stages=[],rulers=[];
     for(const p of plants){
       const local=clamp((progress*1.6-p.id/(plants.length-1)*.65)/.95),stage=Math.round(local*1000)/1000;
-      const stemGrowth=smooth(local/.65);stages.push(stage);if(local<=0)continue;visible++;
+      p.wanted=stage;const stemGrowth=smooth(local/.65);stages.push(stage);if(local<=0)continue;visible++;
       ctx.save();ctx.translate(p.x*width,bottom);ctx.scale(unit,unit);
       ctx.strokeStyle=ink;ctx.lineWidth=.8;ctx.setLineDash([.5,2]);ctx.beginPath();ctx.moveTo(0,0);
       for(let j=1;j<=40;j++){const s=stem(p,j/40,stemGrowth);ctx.lineTo(s.x,s.y)}ctx.stroke();ctx.setLineDash([]);
@@ -198,16 +144,18 @@
         writeLabel(label(length/300),tip.x+8,tip.y+3);
         rulers.push({id:p.id,length:+length.toFixed(3),value:+(length/300).toFixed(2),tip:{x:+tip.x.toFixed(3),y:+tip.y.toFixed(3)}});
       }ctx.globalAlpha=1;
-      if(stage!==p.stage||!p.sprite){p.sprite=bloom(p,stage);p.stage=stage}
+      if(!bloomWorker&&(stage!==p.stage||!p.sprite)){p.sprite=FlowerBloom.render(p,stage,params);p.anchor=p.sprite.anchor;p.stage=stage}
+      if(stage<=.4||!p.sprite){ctx.restore();continue;}
       const top=stem(p,1,stemGrowth);ctx.translate(top.x,top.y);
       const flutter=reduced.matches?0:params.windStrength*.018*Math.sin(time*1.4+p.phase);
-      ctx.rotate(flutter);ctx.scale(p.headScale,p.headScale);ctx.translate(-p.sprite.anchor[0],-p.sprite.anchor[1]);ctx.drawImage(p.sprite,-130,-175,260,300);ctx.restore();
+      ctx.rotate(flutter);ctx.scale(p.headScale,p.headScale);ctx.translate(-p.anchor[0],-p.anchor[1]);ctx.drawImage(p.sprite,-130,-175,260,300);ctx.restore();
     }
     // Read-only observations for verification; input still uses the production UI.
     canvas.dataset.progress=progress.toFixed(6);canvas.dataset.plants=visible;canvas.dataset.stages=JSON.stringify(stages);canvas.dataset.seed=params.seed;
     canvas.dataset.intro=intro;canvas.dataset.rulers=JSON.stringify(rulers);
     canvas.dataset.time=time.toFixed(4);canvas.dataset.frame=String(Number(canvas.dataset.frame||0)+1);
-    dirty=false;
+    canvas.dataset.bloomPending=String(plants.some(p=>p.wanted>.4&&p.stage!==p.wanted));
+    dirty=false;dispatchBloom();
   }
   function frame(now){
     raf=null;const delta=last===null?0:now-last;time+=delta/1000;last=now;

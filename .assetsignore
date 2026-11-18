@@ -11,10 +11,14 @@
 !/assets/flower-study/
 /assets/flower-study/*
 !/assets/flower-study/field.js
+!/assets/flower-study/bloom-renderer.js
+!/assets/flower-study/bloom-worker.js
 !/assets/poem/
 /assets/poem/*
 !/assets/poem/Untitled_Artwork.jpg
 !/assets/poem/handwritten-name.jpg
+!/assets/poem/poem-ink.png
+!/assets/poem/handwritten-name-ink.png
 !/photos/
 /photos/*
 !/photos/about-me.jpg
@@ -24,3 +28,6 @@
 
 # Exclude hidden files even within public directories.
 **/.*
+
+# Component documentation is source material, not a hosted asset.
+**/*.md

@@ -260,6 +260,7 @@ body.page-hidden .about-page .fact-machine.is-jackpot .star-confetti,.about-page
  33.333% { filter: url("#frame-trace-2"); }
  66.666% { filter: url("#frame-trace-3"); }
 }
+#about-view .ink-offscreen :is(.frame-drawing,.clip),
 body.page-hidden .about-page :is(.frame-drawing,.clip),
 .about-page[hidden] :is(.frame-drawing,.clip) { animation-play-state: paused; }
 @media(prefers-reduced-motion:reduce) {

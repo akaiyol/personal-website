@@ -259,13 +259,19 @@
       return [Math.min(...corners),Math.max(...corners)];
     });
     const left = Math.min(...edges.map(e => e[0])), right = Math.max(...edges.map(e => e[1]));
-    rail.style.setProperty('--rail-offset', `${(rail.clientWidth - left - right) / 2}px`);
+    const offset=`${(rail.clientWidth-left-right)/2}px`;
+    if(rail.style.getPropertyValue('--rail-offset')!==offset)rail.style.setProperty('--rail-offset',offset);
   }
-  const railObserver = new ResizeObserver(centreRail);
+  let centreRailFrame=0;
+  function scheduleCentreRail(){
+    if(centreRailFrame)return;
+    centreRailFrame=requestAnimationFrame(()=>{centreRailFrame=0;centreRail();});
+  }
+  const railObserver = new ResizeObserver(scheduleCentreRail);
   railObserver.observe(rail);
   photos.forEach(photo => railObserver.observe(photo));
-  addEventListener('site:route', () => requestAnimationFrame(centreRail));
-  requestAnimationFrame(centreRail);
+  addEventListener('site:route', scheduleCentreRail);
+  scheduleCentreRail();
   function clearTerms() { terms.forEach(term => term.classList.remove('emphasized')); }
   function highlightNearest() {
     frame = 0;
@@ -343,6 +349,12 @@
     frame.classList.add('has-line-boil');
     frame.append(drawing);
   });
+  // Offscreen decorative frames retain their current ink impression without
+  // continually evaluating SVG turbulence. Dialog copies are outside this scope.
+  const inkVisibility=new IntersectionObserver(entries=>{
+    for(const entry of entries)entry.target.classList.toggle('ink-offscreen',!entry.isIntersecting);
+  });
+  page.querySelectorAll('.portrait:not(.frame-drawing),.memory').forEach(frame=>inkVisibility.observe(frame));
 })();
 
 
