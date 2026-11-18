@@ -2,9 +2,10 @@ const assert=require('assert'),fs=require('fs'),path=require('path');
 // Compare actual pixels across accelerated rendering and the two recovery paths.
 async function checkFlowerRendering(browser,base,out){
  fs.mkdirSync(out,{recursive:true});const reference=new Map(),results=[];
- for(const mode of ['worker','no-worker','worker-load-failure']){
+ for(const mode of ['worker','canvas-worker','no-worker','worker-load-failure']){
   const context=await browser.newContext({viewport:{width:1280,height:900},reducedMotion:'reduce'});
   try{
+   if(mode==='canvas-worker')await context.route('**/assets/flower-study/bloom-gpu.js?*',route=>route.fulfill({contentType:'application/javascript',body:'self.FlowerBloomGPU={create:()=>null};'}));
    if(mode==='no-worker')await context.addInitScript(()=>{window.Worker=undefined});
    if(mode==='worker-load-failure')await context.route('**/assets/flower-study/bloom-worker.js?*',route=>route.abort());
    const page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));
@@ -16,6 +17,7 @@ async function checkFlowerRendering(browser,base,out){
      await page.keyboard.press(state==='full'?'End':'Home');
      if(state==='partial')for(let i=0;i<20;i++)await page.keyboard.press('ArrowRight');
      await page.waitForFunction(expected=>{const art=document.querySelector('#flower-art');return art.dataset.progress===expected&&art.dataset.bloomPending==='false';},state==='full'?'1.000000':state==='partial'?'0.800000':'0.000000');
+     if(mode==='canvas-worker')assert.equal(await art.getAttribute('data-bloom-renderer'),'canvas');
      const pixels=await art.evaluate(el=>Array.from(el.getContext('2d').getImageData(0,0,el.width,el.height).data));
      const alpha=pixels.filter((_,i)=>i%4===3).reduce((n,v)=>n+(v>0),0);
      assert(state==='empty'?alpha===0:alpha>1000,'Missing rendered flowers or stale heads after rewind');

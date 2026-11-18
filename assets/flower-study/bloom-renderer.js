@@ -17,10 +17,39 @@
     {a:[-6,0,22],b:[-18,7,30],c:[-28,9,42],d:[-34,2,48],w:11},
     {a:[13,0,19],b:[26,10,26],c:[47,11,35],d:[56,0,39],w:7.5}
   ];
-  function render(p,g,params) {
+  const preparedBlooms=new Map();
+  function prepare(p,params){
+    const key=JSON.stringify([p.id,p.variant,p.angle,p.elevation,params]);
+    if(preparedBlooms.has(key))return preparedBlooms.get(key);
     const rand=(a,b=0)=>{let x=Math.imul((a+params.seed*101)|0,1597334677)^Math.imul(b|0,3812015801);x=Math.imul(x^(x>>>16),2246822507);return ((x^(x>>>13))>>>0)/4294967296};
-    const sprite=typeof document==='undefined'?new OffscreenCanvas(520,600):document.createElement('canvas');sprite.width=520;sprite.height=600;sprite.anchor=[0,0];
-    const c=sprite.getContext('2d');c.translate(260,350);c.scale(2,2);
+    const petals=[];
+    for(let j=0;j<params.petalCount;j++){
+      const profile=petalProfiles[j%petalProfiles.length],reach=params.petalLength*(.94+rand(p.id*43+j,12)*.12);
+      const coeff=profile.a.map((a,k)=>[a,3*(profile.b[k]-a),3*(a-2*profile.b[k]+profile.c[k]),-a+3*profile.b[k]-3*profile.c[k]+profile.d[k]]);
+      const value=(k,t)=>((coeff[k][3]*t+coeff[k][2])*t+coeff[k][1])*t+coeff[k][0];
+      // Centre coordinates are affine in openness. Cache their coefficients and
+      // finite-difference tangents at the seeded texture samples once per plant.
+      const basis=t=>{
+        const base=profile.a[0]*(1-t*.7),curl=params.petalCurl*(9*Math.sin(Math.PI*t)-8*t*t);
+        let ax=base,bx=profile.a[0]+(value(0,t)-profile.a[0])*reach-base;
+        const ay=t*55*reach+curl,by=value(1,t)*reach*(p.variant===2?.48:p.variant===0?.62:1.12)-t*55*reach;
+        if(p.variant===1){ax-=ay*.12;bx-=by*.12;}
+        return [ax,bx,ay,by,value(2,t)];
+      };
+      const data=new Float32Array(2300*13);let offset=0;
+      for(let k=0;k<2300;k++){
+        const seed=p.id*700001+j*5003+k,t=rand(seed,41),v=rand(seed,42)*2-1;
+        if(rand(seed,43)>(v<0?.82:.98))continue;
+        const q=basis(t),a=basis(Math.max(0,t-.002)),b=basis(Math.min(1,t+.002)),sine=Math.sin(Math.PI*t);
+        data.set([q[0],q[1],q[2],q[3],q[4],b[0]-a[0],b[1]-a[1],b[2]-a[2],b[3]-a[3],profile.w*sine**.65*v,Math.abs(v)**1.8*sine*profile.w*.16,.78+rand(seed,44)*.22,.48+rand(seed,45)*.22],offset);offset+=13;
+      }
+      petals.push(data.subarray(0,offset));
+    }
+    preparedBlooms.set(key,petals);if(preparedBlooms.size>16)preparedBlooms.delete(preparedBlooms.keys().next().value);
+    return petals;
+  }
+  function geometry(p,g,params){
+    const rand=(a,b=0)=>{let x=Math.imul((a+params.seed*101)|0,1597334677)^Math.imul(b|0,3812015801);x=Math.imul(x^(x>>>16),2246822507);return ((x^(x>>>13))>>>0)/4294967296};
     const yaw=params.yaw*Math.PI/180+p.angle, elevation=p.elevation+params.pitch*Math.PI/180;
     const tilt=p.variant===1?-.25:p.variant===2?.10:-.06;
     const cy=Math.cos(yaw),sy=Math.sin(yaw),ce=Math.cos(elevation),se=Math.sin(elevation),ct=Math.cos(tilt),st=Math.sin(tilt);
@@ -29,8 +58,8 @@
       return [X*ct-Y*st,X*st+Y*ct,Z*ce+y*se];
     };
     const open=smooth((g-.53)/.47), bowl=smooth((g-.4)/.32), radius=24*bowl, depth=params.centerDepth*122*bowl*(p.variant===2?.8:1);
-    if(!bowl)return sprite;
-    sprite.anchor=project([0,-depth,0]);
+    if(!bowl)return null;
+    const anchor=project([0,-depth,0]);
     // Compile each cubic once instead of allocating three arrays per dot.
     const coefficients=profile=>profile.a.map((a,k)=>[a,3*(profile.b[k]-a),3*(a-2*profile.b[k]+profile.c[k]),-a+3*profile.b[k]-3*profile.c[k]+profile.d[k]]);
     const evaluate=(c,t)=>((c[3]*t+c[2])*t+c[1])*t+c[0];
@@ -61,18 +90,27 @@
       for(let k=44;k>=0;k--)boundary.push(project(point(k/44,1)));
       petals.push({j,point,boundary,z:project(center(.5))[2]});
     }
+    return {cy,sy,ce,se,ct,st,open,bowl,radius,depth,project,petals,anchor};
+  }
+  function render(p,g,params) {
+    const rand=(a,b=0)=>{let x=Math.imul((a+params.seed*101)|0,1597334677)^Math.imul(b|0,3812015801);x=Math.imul(x^(x>>>16),2246822507);return ((x^(x>>>13))>>>0)/4294967296};
+    const sprite=typeof document==='undefined'?new OffscreenCanvas(520,600):document.createElement('canvas');sprite.width=520;sprite.height=600;sprite.anchor=[0,0];
+    const c=sprite.getContext('2d');c.translate(260,350);c.scale(2,2);
+    const shape=geometry(p,g,params);if(!shape)return sprite;
+    const {cy,sy,ce,se,ct,st,open,bowl,radius,depth,project,petals,anchor}=shape,prepared=prepare(p,params);sprite.anchor=anchor;
     const paintPetal=petal=>{
       const path=new Path2D();petal.boundary.forEach((q,i)=>i?path.lineTo(q[0],q[1]):path.moveTo(q[0],q[1]));path.closePath();
       c.fillStyle='#000';c.fill(path);c.save();c.clip(path);c.fillStyle=ink;
       // Sample along the ribbon without painting individual opaque mesh tiles.
       // Its continuous silhouette is more important than random fold noise.
-      const samples=2300;
-      for(let k=0;k<samples;k++){
-        const seed=p.id*700001+petal.j*5003+k;
-        const t=rand(seed,41),v=rand(seed,42)*2-1;
-        if(rand(seed,43)>(v<0?.82:.98))continue;
-        const q=project(petal.point(t,v));c.globalAlpha=.78+rand(seed,44)*.22;
-        c.fillRect(q[0],q[1],.48+rand(seed,45)*.22,.58);
+      const data=prepared[petal.j],opening=open*params.openness/.83;
+      const extra=petal.j>=petalProfiles.length?(petal.j-petalProfiles.length+1)*.15:0;
+      for(let i=0;i<data.length;i+=13){
+        const x0=data[i]+data[i+1]*opening,y0=data[i+2]+data[i+3]*opening;
+        const dx=(data[i+5]+data[i+6]*opening)*bowl,dy=(data[i+7]+data[i+8]*opening)*bowl,len=Math.hypot(dx,dy)||1,w=data[i+9]*(.15+.85*open);
+        const x=x0*bowl-dy/len*w,y=y0*bowl+dx/len*w+data[i+10],z=data[i+4]*bowl+extra*x0+w*.18;
+        const X=x*cy-z*sy,Z=x*sy+z*cy,Y=-y*ce+Z*se;
+        c.globalAlpha=data[i+11];c.fillRect(X*ct-Y*st,X*st+Y*ct,data[i+12],.58);
       }
       c.restore();c.globalAlpha=1;
     };
@@ -95,5 +133,5 @@
     petals.filter(q=>q.z>=9).forEach(paintPetal);
     return sprite;
   }
-  self.FlowerBloom={render};
+  self.FlowerBloom={prepare,geometry,render};
 })();

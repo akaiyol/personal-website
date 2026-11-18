@@ -28,7 +28,7 @@
   ];
   let generation=0;
   function build() {
-    generation++;
+    generation++;bloomAtlas?.close();bloomAtlas=null;
     for(const p of plants)p.sprite?.close?.();
     const mobile=width<=600, indices=mobile?[0,2,7]:fieldLayout.map((_,i)=>i);
     field.classList.toggle('flowers-narrow',mobile);
@@ -39,34 +39,32 @@
         headScale:size, angle:(rand(index,4)-.5)*.13,
         elevation:(variant===1?12:8)*Math.PI/180, phase:rand(index,6)*TAU, sprite:null, anchor:[0,0], stage:-1, wanted:0};
     });
+    if(width>0)bloomWorker?.postMessage({prepare:plants.map(p=>({id:p.id,variant:p.variant,angle:p.angle,elevation:p.elevation})),params});
     dirty=true;
   }
-  // Keep procedural petal rasterization off the input/animation thread. Only one
-  // job is in flight, so rapid scrubbing cannot accumulate stale growth frames.
-  let bloomWorker=null,bloomJob=null,bloomCursor=0;
-  function disableBloomWorker(event){event?.preventDefault?.();bloomWorker?.terminate();bloomWorker=null;bloomJob=null;invalidate();}
+  // One field atlas per update keeps every bloom on the same animation frame.
+  // A single in-flight batch prevents stale input from accumulating in the worker.
+  let bloomWorker=null,bloomJob=null,bloomAtlas=null;
+  function disableBloomWorker(event){event?.preventDefault?.();bloomWorker?.terminate();bloomWorker=null;bloomJob=null;bloomAtlas?.close();bloomAtlas=null;for(const p of plants)p.stage=-1;invalidate();}
   if(typeof Worker==='function'&&typeof OffscreenCanvas==='function'){
     try{
-      bloomWorker=new Worker('assets/flower-study/bloom-worker.js?v=1');
+      bloomWorker=new Worker('assets/flower-study/bloom-worker.js?v=3');
       bloomWorker.onerror=disableBloomWorker;
       bloomWorker.onmessage=({data})=>{
         const job=bloomJob;bloomJob=null;
-        const p=job&&job.generation===generation?plants[job.index]:null;
-        if(p&&data.stage===job.stage){p.sprite?.close?.();p.sprite=data.bitmap;p.anchor=data.anchor;p.stage=data.stage;dirty=true;}
-        else data.bitmap?.close();
+        if(job&&job.generation===generation){
+          bloomAtlas?.close();bloomAtlas=data.bitmap;canvas.dataset.bloomRenderer=data.renderer;
+          for(const frame of data.frames){const p=plants[frame.id];p.anchor=frame.anchor;p.stage=frame.stage;p.tile=frame.tile;}
+          dirty=true;
+        }else data.bitmap?.close();
         schedule();dispatchBloom();
       };
     }catch{disableBloomWorker();}
   }
   function dispatchBloom(){
-    if(!bloomWorker||bloomJob||!inView||document.hidden)return;
-    for(let n=0;n<plants.length;n++){
-      const index=(bloomCursor+n)%plants.length,p=plants[index];
-      if(p.wanted<=.4||p.wanted===p.stage)continue;
-      bloomCursor=(index+1)%plants.length;
-      bloomJob={index,stage:p.wanted,generation};
-      bloomWorker.postMessage({plant:{id:p.id,variant:p.variant,angle:p.angle,elevation:p.elevation},stage:p.wanted,params});return;
-    }
+    if(!bloomWorker||bloomJob||!inView||document.hidden||!plants.some(p=>p.wanted>.4&&p.wanted!==p.stage))return;
+    bloomJob={generation};
+    bloomWorker.postMessage({batch:plants.map(p=>({plant:{id:p.id,variant:p.variant,angle:p.angle,elevation:p.elevation},stage:p.wanted})),params});
   }
   function stem(p,t,g) {
     const sway=reduced.matches?0:params.windStrength*(Math.sin(time*TAU*params.windRate+p.phase)*7+Math.sin(time*.93+p.phase)*1.2);
@@ -145,10 +143,10 @@
         rulers.push({id:p.id,length:+length.toFixed(3),value:+(length/300).toFixed(2),tip:{x:+tip.x.toFixed(3),y:+tip.y.toFixed(3)}});
       }ctx.globalAlpha=1;
       if(!bloomWorker&&(stage!==p.stage||!p.sprite)){p.sprite=FlowerBloom.render(p,stage,params);p.anchor=p.sprite.anchor;p.stage=stage}
-      if(stage<=.4||!p.sprite){ctx.restore();continue;}
+      if(stage<=.4||(!p.sprite&&!bloomAtlas)){ctx.restore();continue;}
       const top=stem(p,1,stemGrowth);ctx.translate(top.x,top.y);
       const flutter=reduced.matches?0:params.windStrength*.018*Math.sin(time*1.4+p.phase);
-      ctx.rotate(flutter);ctx.scale(p.headScale,p.headScale);ctx.translate(-p.anchor[0],-p.anchor[1]);ctx.drawImage(p.sprite,-130,-175,260,300);ctx.restore();
+      ctx.rotate(flutter);ctx.scale(p.headScale,p.headScale);ctx.translate(-p.anchor[0],-p.anchor[1]);if(bloomWorker&&bloomAtlas&&p.tile)ctx.drawImage(bloomAtlas,...p.tile,-120,-110,240,200);else if(p.sprite)ctx.drawImage(p.sprite,-130,-175,260,300);ctx.restore();
     }
     // Read-only observations for verification; input still uses the production UI.
     canvas.dataset.progress=progress.toFixed(6);canvas.dataset.plants=visible;canvas.dataset.stages=JSON.stringify(stages);canvas.dataset.seed=params.seed;

@@ -13,6 +13,7 @@
 !/assets/flower-study/field.js
 !/assets/flower-study/bloom-renderer.js
 !/assets/flower-study/bloom-worker.js
+!/assets/flower-study/bloom-gpu.js
 !/assets/poem/
 /assets/poem/*
 !/assets/poem/Untitled_Artwork.jpg
